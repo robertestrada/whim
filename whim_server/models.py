@@ -1,4 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import validates
+import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
+import re
 
 db = SQLAlchemy()
 

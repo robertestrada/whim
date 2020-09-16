@@ -2,18 +2,21 @@ import os
 from flask import Flask, render_template, request, session
 from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect, generate_csrf
+from flask_migrate import Migrate
 
 
-from starter_app.models import db, User
-from starter_app.api.user_routes import user_routes
 
-from starter_app.config import Config
+from whim_server.models import db, User
+from whim_server.api.user_routes import user_routes
 
-app = Flask(__name__, static_url_path='')
+from whim_server.config import Config
+
+app = Flask(__name__)
 
 app.config.from_object(Config)
-app.register_blueprint(user_routes, url_prefix='/api/users')
+app.register_blueprint(user_routes)
 db.init_app(app)
+migrate = Migrate(app, db)
 
 ## Application Security
 CORS(app)

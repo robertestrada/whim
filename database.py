@@ -1,8 +1,8 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-from starter_app import app, db
-from starter_app.models import User
+from whim_server import app, db
+from whim_server.models import User
 
 with app.app_context():
   db.drop_all()
