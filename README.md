@@ -1,34 +1,36 @@
-# Flask React Project
+# Whim
 
-This is the backend for the Flask React project.
+Whim, a Wish clone, is a social network for sharing products. Users can find, collect, and share products with their friends, enabling a connected shopping experience.
 
-## Getting started
+[Live Demo: whim-app.herokuapp.com](http://whim-app.herokuapp.com/)
 
-1. Clone this repository
-2. Install dependencies (`pipenv install --python=python3`)
-3. Create a **.env** file based on the example with proper settings for your
-   development environment
-4. Setup your PostgreSQL user, password and database and make sure it matches your **.env** file with CREATEDB privileges
+## Technologies
+* Backend: Flask/SQLAlchemy/Alembic/PostgreSQL
+* Frontend: React/Redux
 
-5. Run
-   * `pipenv run database.py`
-   * `pipenv run flask run`
+## Features
+* Secure frontend to backend user authentication using Werkzeug
+* Dashboard displaying infinite feed of products available for purchase
+* Product search capability by keyword hits in product names, descriptions, and sellers
+* Shopping cart for gathering products for checkout
+* Checkout process to convert shopping cart items into a demonstrative order and shipping confirmation
+* Wishlists for organizing various products that can be added to the cart at a later time
 
-To run the React Client application, checkout the readme inside the client directory.
+#### Authorization
+Users must sign up and login to use any of the apps features.  There are 4 infinite scrolling arrays of random products next the login panel to appeal to the user signing up.
 
+### Dashboard
+Once a user logs in, they are immediately redirected to their dashboard, which shows a product feed, feed filters, and a navbar.
 
-## Deploy to Heroku
+### Feed
+The feed shows a grid of profucts in an infinite scroll container that adjusts the amount of products on each row to the client's window size.
 
-1. Create a new project
-2. Under Resources click "Find more add-ons" and add the add on called "Heroku Postgres"
-3. Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line)
-4. Run `$ heroku login`
-5. Login to the heroku container registry `$ heroku container:login`
-6. Update the `REACT_APP_BASE_URL` variable in the Dockerfile.  This should be the full URL of your react app: i.e. "https://flask-react-aa.herokuapp.com"
-7. Push your docker container to heroku (this will build the dockerfile, and push) `$ heroku container:push web -a {NAME_OF_HEROKU_APP}`
-8. Release your docker container to heroku `$ heroku container:release web -a {NAME_OF_HEROKU_APP}`
-9. set up your database:
-```bash
-    $ heroku run python -m database
-```
-10. profit
+#### Fetching Product Information
+For each product displayed in the feed, an SQLAlchemy query is executed on the backend which produces all the relevant product data, from S3 hosted images to descriptive information.
+
+#### Cart
+A product may be added to the user's shopping cart based on inventory levels and user selected product options like quantity or type.
+
+#### Checkout
+The checkout button takes the user to the shipping and order confirmation pages, when where ordering information must be filled out.  When, it comes to payment information, the fields will be pre-filled and inaccessible to ensure that the clone is only for demonstration purposes.  The user will be able to confirm the order, and shown a final confirmation page before being redirected to the dashboard.
+

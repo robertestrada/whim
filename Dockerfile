@@ -8,14 +8,14 @@ RUN ["pip", "install", "-r", "requirements.txt"]
 
 
 # Build our React App
-RUN ["npm", "install", "--prefix", "client"]
+RUN ["npm", "install", "--prefix", "whim_client"]
 ENV REACT_APP_BASE_URL=https://whim-app.herokuapp.com
-RUN ["npm", "run", "build", "--prefix", "client"]
+RUN ["npm", "run", "build", "--prefix", "whim_client"]
 
 # Move our react build for Flask to serve
 # Use cp here because we're copying files inside our working directory, not from
 # our host machine.
-RUN ["cp", "-r", "client/build/", "whim_server/static"]
+RUN ["cp", "-r", "whim_client/build/", "whim_server/static"]
 
 # Setup Flask environment
 ENV FLASK_APP=whim_server
