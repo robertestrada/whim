@@ -11,10 +11,10 @@ from whim_server.api.user_routes import user_routes
 
 from whim_server.config import Config
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__)
 
 app.config.from_object(Config)
-app.register_blueprint(user_routes, url_prefix='/api/users')
+app.register_blueprint(user_routes)
 db.init_app(app)
 migrate = Migrate(app, db)
 
