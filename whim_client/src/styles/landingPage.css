@@ -1,0 +1,61 @@
+.landing_body {
+  display: flex;
+  height: 500px;
+  margin-top: 60px;
+  justify-content: center;
+}
+
+.landing_iphone {
+  height:487px;
+  width: 245px;
+  position: absolute;
+}
+
+.landing_iphone_video {
+  position: absolute;
+  top: 50px;
+  left: 103px;
+}
+
+.landing__iphone-border {
+  border: solid 2px rgb(95, 95, 95);
+  border-radius: 4px;
+  position: absolute;
+  width: 215px;
+  height: 380px;
+  top: 50px;
+  left: 315px;
+  z-index: 1;
+}
+
+.landing_nexus {
+  height:487px;
+  position: absolute;
+}
+
+.landing_body_text_box {
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  margin-top: 70px;
+  text-align: center;
+  font-size: 35px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 325;
+}
+
+.landing_body_images {
+  position: relative;
+  width: 600px;
+  justify-content: center;
+  display: flex;
+}
+
+.landing_blinking_cursur {
+  position: absolute;
+  width: 4px;
+  height: 17px;
+  z-index: 2;
+  margin-top: 125px;
+  margin-right: 205px;
+}
