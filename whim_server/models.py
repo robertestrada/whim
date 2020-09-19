@@ -63,12 +63,16 @@ class Merchant(db.Model):
   verified = db.Column(db.Boolean, default=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
+  products = db.relationship("Product", foreign_keys= "Product.merchant_id", backref="merchant", cascade="all, delete-orphan", lazy="dynamic")
 
   def to_dict(self):
     return {
-        "id": self.id,
-        "merchant_name": self.merchant_name,
-        "pic_url": self.pic_url,
+      "id": self.id,
+      "merchant_name": self.merchant_name,
+      "pic_url": self.pic_url,
+      "merchant_rating": self.merchant_rating,
+      "merchant_rating_amount": self.merchant_rating_amount,
+      "verified": self.verified,
     }
 
 
@@ -76,36 +80,137 @@ class Product(db.Model):
   __tablename__ = 'products'
 
   id = db.Column(db.Integer, primary_key=True)
+  parent = db.Column(db.Boolean, nullable=False)
   name = db.Column(db.String(255), nullable=False)
   description = db.Column(db.String(2000), nullable=False)
+  product_imgs = db.Column(db.String(255), nullable=False)
+  product_imgs_amt = db.Column(db.Integer, nullable=False)
   category = db.Column(db.String(255), nullable=False)
-  size = db.Column(db.String(255), nullable=False)
-  color = db.Column(db.String(255), nullable=False)
+  instant_buy = db.Column(db.Boolean, nullable=False)
+  add_on = db.Column(db.Boolean, nullable=False)
+  verified = db.Column(db.Boolean, default=False)
+  merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
+  created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+  updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
+  
+  options = db.relationship("Option", back_populates="product", cascade="all, delete-orphan")
+
+  def merchant_main(self):
+    return {
+      "id": self.merchant.id, 
+      "merchant_name": self.merchant.merchant_name, 
+      "pic_url": self.merchant.pic_url, 
+      "merchant_rating": self.merchant.merchant_rating, 
+      "merchant_rating_amount": self.merchant.merchant_rating_amount, 
+      "verified": self.merchant.verified, 
+      }
+    
+  def feed_pricing(self):
+    pricing = {"change": 0, "starting": 0, "ending": 0}
+    for option in self.options:
+      price_delta = (option.price_ending - option.price_starting) / option.price_starting
+      if price_delta < pricing["change"]:
+        pricing = {
+                  "change": price_delta, 
+                  "starting": option.price_starting, 
+                  "ending": option.price_ending
+                  }
+    return pricing
+  
+  def feed_almost_gone(self):
+    for option in self.options:
+      delta = option.inventory_ending / option.inventory_starting
+      if delta < 0.1:
+        return True
+      
+  def feed_shipping_speed(self):
+    max_speed = 0
+    for option in self.options:
+      if option.shipping_speed > max_speed:
+        max_speed = option.shipping_speed
+    return max_speed
+  
+  def feed_shipping_usa(self):
+    for option in self.options:
+      if option.shipping_usa == True:
+        return True
+      
+  def main_options(self):
+    options_list = []
+    for option in self.options:
+      options_list.append({
+                          "size": option.size, 
+                          "color": option.color, 
+                          "price_ending": option.price_ending, 
+                          "inventory_ending": option.inventory_ending, 
+                          "shipping_speed": option.shipping_speed, 
+                          "shipping_usa": option.shipping_usa
+                          })
+  
+  def main_dict(self):
+    return {
+          "id": self.id,
+          "name": self.name,
+          "description": self.description,
+          "product_img": self.product_imgs,
+          "product_img_amt": self.product_imgs_amt,
+          "category": self.category,
+          "options_data": self.main_options(),
+          "instant_buy": self.instant_buy,
+          "add_on": self.add_on,
+          "verified": self.verified,
+          "merchant_main": self.merchant_main,
+          "created_at": self.created_at,
+          "updated_at": self.updated_at,
+        }
+    
+  def feed_dict(self):
+    return {
+          "id": self.id,
+          "name": self.name,
+          "feed_img": self.product_imgs,
+          "category": self.category,
+          "pricing": self.feed_pricing(),
+          "almost_gone": self.feed_almost_gone(),
+          "instant_buy": self.instant_buy,
+          "add_on": self.add_on,
+          "shipping_speed": self.feed_shipping_speed(),
+          "shipping_usa": self.feed_shipping_usa(),
+          "verified": self.verified,
+          "created_at": self.created_at,
+          "updated_at": self.updated_at,
+        }
+
+
+class Option(db.Model):
+  __tablename__ = 'options'
+
+  id = db.Column(db.Integer, primary_key=True)
+  size = db.Column(db.String(30))
+  color = db.Column(db.String(30))
   price_starting = db.Column(db.Numeric(9, 2), nullable=False)
   price_ending = db.Column(db.Numeric(9, 2))
   inventory_starting = db.Column(db.Integer, nullable=False)
   inventory_ending = db.Column(db.Integer)
-  instant_buy = db.Column(db.Boolean, nullable=False)
-  add_on = db.Column(db.Boolean, nullable=False)
   shipping_speed = db.Column(db.Integer, nullable=False)
   shipping_usa = db.Column(db.Boolean, nullable=False)
-  merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
+  product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
 
+  product = db.relationship("Product", back_populates="comments")
+
   def to_dict(self):
     return {
-        "id": self.id,
-        "name": self.name,
-        "description": self.description,
-        "category": self.category,
-        "size": self.size,
-        "color": self.color,
-        "price_starting": self.price_starting,
-        "price_ending": self.price_ending,
-        "inventory_starting": self.inventory_starting,
-        "inventory_ending": self.inventory_ending,
-        "completed": self.completed,
-        "created_at": self.created_at,
-        "updated_at": self.updated_at,
-    }
+          "id": self.id,
+          "size": self.size,
+          "color": self.color,
+          "price_starting": self.price_starting,
+          "price_ending": self.price_ending,
+          "inventory_starting": self.inventory_starting,
+          "inventory_ending": self.inventory_ending,
+          "shipping_speed": self.shipping_speed,
+          "shipping_usa": self.shipping_usa,
+          "created_at": self.created_at,
+          "updated_at": self.updated_at,
+        }
