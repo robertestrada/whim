@@ -60,21 +60,19 @@ class Merchant(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   merchant_name = db.Column(db.String(40), nullable=False)
   pic_url = db.Column(db.String)
-  merchant_rating = db.Column(db.Numeric(2, 1))
-  merchant_rating_amount = db.Column(db.Integer)
-  verified = db.Column(db.Boolean, default=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   products = db.relationship("Product", foreign_keys= "Product.merchant_id", backref="merchant", cascade="all, delete-orphan", lazy="dynamic")
+
+  def main_merchant_rating(self):
+    return {"stars": 4.4, "amount": 4129, "positive": 0.92}
 
   def to_dict(self):
     return {
       "id": self.id,
       "merchant_name": self.merchant_name,
       "pic_url": self.pic_url,
-      "merchant_rating": self.merchant_rating,
-      "merchant_rating_amount": self.merchant_rating_amount,
-      "verified": self.verified,
+      "merchant_rating": self.main_merchant_rating(),
     }
     
 class Order(db.Model):
@@ -90,20 +88,19 @@ class Order(db.Model):
   
   def to_dict(self):
     return {
-        "id": self.id,
-        "user_id": self.user_id,
-        "product_id": self.product_id,
-        "price": self.price,
-        "completed": self.completed,
-        "created_at": self.completed,
-    }
+          "id": self.id,
+          "user_id": self.user_id,
+          "product_id": self.product_id,
+          "price": self.price,
+          "completed": self.completed,
+          "created_at": self.completed,
+          }
 
 
 class Product(db.Model):
   __tablename__ = 'products'
 
   id = db.Column(db.Integer, primary_key=True)
-  parent = db.Column(db.Boolean, nullable=False)
   name = db.Column(db.String(255), nullable=False)
   description = db.Column(db.String(2000), nullable=False)
   product_imgs = db.Column(db.String(255), nullable=False)
@@ -121,13 +118,13 @@ class Product(db.Model):
 
   def merchant_main(self):
     return {
-      "id": self.merchant.id, 
-      "merchant_name": self.merchant.merchant_name, 
-      "pic_url": self.merchant.pic_url, 
-      "merchant_rating": self.merchant.merchant_rating, 
-      "merchant_rating_amount": self.merchant.merchant_rating_amount, 
-      "verified": self.merchant.verified, 
-      }
+          "id": self.merchant.id, 
+          "merchant_name": self.merchant.merchant_name, 
+          "pic_url": self.merchant.pic_url, 
+          "merchant_rating": self.merchant.merchant_rating, 
+          "merchant_rating_amount": self.merchant.merchant_rating_amount, 
+          "verified": self.merchant.verified, 
+          }
     
   def feed_pricing(self):
     pricing = {"change": 0, "starting": 0, "ending": 0}
