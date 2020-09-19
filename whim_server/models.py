@@ -17,7 +17,9 @@ class User(db.Model):
   pic_url = db.Column(db.String)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
-
+  
+  orders = db.relationship("Order", backref='user')
+  
   def to_dict(self):
     return {
       "id": self.id,
@@ -74,6 +76,27 @@ class Merchant(db.Model):
       "merchant_rating_amount": self.merchant_rating_amount,
       "verified": self.verified,
     }
+    
+class Order(db.Model):
+  __tablename__ = 'orders'
+  
+  id = db.Column(db.Integer, primary_key=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+  product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+  price = db.Column(db.Numeric(9,2), nullable=False)
+  completed = db.Column(db.Boolean, default=False)
+  created_at = db.Column(db.DateTime, default=datetime.now)
+  date_paid = db.Column(db.DateTime)
+  
+  def to_dict(self):
+    return {
+        "id": self.id,
+        "user_id": self.user_id,
+        "product_id": self.product_id,
+        "price": self.price,
+        "completed": self.completed,
+        "created_at": self.completed,
+    }
 
 
 class Product(db.Model):
@@ -90,10 +113,11 @@ class Product(db.Model):
   add_on = db.Column(db.Boolean, nullable=False)
   verified = db.Column(db.Boolean, default=False)
   merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
-  created_at = db.Column(db.DateTime, default=datetime.datetime.now)
-  updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
+  created_at = db.Column(db.DateTime, default=datetime.now)
+  updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   
   options = db.relationship("Option", back_populates="product", cascade="all, delete-orphan")
+  orders = db.relationship('Order', backref='product')
 
   def merchant_main(self):
     return {
@@ -135,6 +159,9 @@ class Product(db.Model):
       if option.shipping_usa == True:
         return True
       
+  def feed_past_orders(self):
+    return 10000
+      
   def main_options(self):
     options_list = []
     for option in self.options:
@@ -160,6 +187,7 @@ class Product(db.Model):
           "add_on": self.add_on,
           "verified": self.verified,
           "merchant_main": self.merchant_main,
+          "orders": [order.to_dict() for order in self.orders],
           "created_at": self.created_at,
           "updated_at": self.updated_at,
         }
@@ -177,6 +205,7 @@ class Product(db.Model):
           "shipping_speed": self.feed_shipping_speed(),
           "shipping_usa": self.feed_shipping_usa(),
           "verified": self.verified,
+          "past_orders": self.feed_past_orders(),
           "created_at": self.created_at,
           "updated_at": self.updated_at,
         }
@@ -195,8 +224,8 @@ class Option(db.Model):
   shipping_speed = db.Column(db.Integer, nullable=False)
   shipping_usa = db.Column(db.Boolean, nullable=False)
   product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
-  created_at = db.Column(db.DateTime, default=datetime.datetime.now)
-  updated_at = db.Column(db.DateTime, onupdate=datetime.datetime.now)
+  created_at = db.Column(db.DateTime, default=datetime.now)
+  updated_at = db.Column(db.DateTime, onupdate=datetime.now)
 
   product = db.relationship("Product", back_populates="comments")
 
