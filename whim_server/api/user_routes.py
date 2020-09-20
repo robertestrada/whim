@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for
-from whim_server.models import User
-from ..models import User, db
+from whim_server.models import User, db
+# from ..models import User, db
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_optional, create_access_token, get_jwt_identity, jwt_required, get_raw_jwt
 from flask_wtf.csrf import CSRFProtect, generate_csrf, validate_csrf
@@ -24,16 +24,13 @@ def sign_up():
   hash = generate_password_hash(data['password'])
 
   try:
-    user = User(
-      username= f'{data["firstName"]}-{data["lastName"]}',
-      first_name=data['firstName'],
-      last_name=data['lastName'],
-      email=data['email'],
-      hashed_password=hash,
-      picUrl=data['picture'],
-      balance = 500)
-
-    # user.set_password(data[hash])
+    user = User (
+                first_name=data['firstName'],
+                last_name=data['lastName'],
+                email=data['email'],
+                hashed_password=hash,
+                pic_url=data['picture'],
+                )
 
     db.session.add(user)
     db.session.commit()
@@ -51,17 +48,15 @@ def sign_in():
 
       email = request.json.get('email', None)
       password = request.json.get('password', None)
-
-      if not email:
-        return jsonify({"msg": "Missing email parameter"}), 400
-      if not password:
-        return jsonify({"msg": "Missing password parameter"}), 400
+      if not email or not password:
+        return jsonify({"msg": "Please fill out all fields"}), 400
 
       user= User.query.filter(User.email==email).one()
       if (user.check_password(password)):
         access_token = create_access_token(identity=email)
+        print ({"token": access_token, "user": user.to_dict()})
         return {"token": access_token, "user": user.to_dict()}, 200
       else:
-        return jsonify({"msg": "Bad email or password"}), 400
+        return jsonify({"msg": "Email or Password is incorrect"}), 400
     except:
-      return jsonify({"msg": "Bad email or password"}), 400
+      return jsonify({"msg": "Email or Password is incorrect"}), 400

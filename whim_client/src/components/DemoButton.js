@@ -1,13 +1,14 @@
 import React from 'react';
-import { Button } from '@material-ui/core'
+import '../styles/LogIn.css';
 
 export default function DemoButton ({ email, setEmail, password, setPassword }) {
 
   let i=0, k=0, spd = 25;
-  let txt = 'demo@zenmo.com'
-  let pwd = 'P4ssword'
+  let txt = 'demo@whim.com'
+  let pwd = 'D3m0P4ssw0rd'
 
-  let handleClick = () => {
+  let handleClick = (e) => {
+    e.preventDefault();
     setEmail('')
     setPassword('')
     email = ''
@@ -30,17 +31,13 @@ export default function DemoButton ({ email, setEmail, password, setPassword }) 
       k++;
       setTimeout(typePassword, spd);
     } else {
-      document.querySelector('.signIn').click()
+      document.querySelector('.login__submit.login-button').click()
     }
   }
 
 
 
   return (
-    <Button
-    variant="contained"
-    style={{backgroundColor:"#3D95CE", color:"white"}}
-    onClick={handleClick}
-    >Demo User</Button>
+    <button className="login__submit demo-button" onClick={handleClick}>Demo User</button>
   )
 }

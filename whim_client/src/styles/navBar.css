@@ -1,0 +1,42 @@
+body {
+  margin: 0;
+}
+
+.navbar {
+align-items: center;
+background-color: rgb(255, 255, 255);
+border-bottom-color: rgb(240, 245, 247);
+border-bottom-style: solid;
+border-bottom-width: 1px;
+box-sizing: border-box;
+display: flex;
+height: 52px;
+justify-content: center;
+left: 0px;
+position: fixed;
+top: 0px;
+width: 100%;
+z-index: 5;
+}
+
+.navbar__logo-wrapper {
+  display: flex;
+  margin-left: 16px;
+  flex-grow: 1;
+  align-items: center;
+}
+
+.navbar__logo {
+  height: 21px;
+}
+
+.navbar__options {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-right: 100px;
+}
+
+
+
+

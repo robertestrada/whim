@@ -7,7 +7,7 @@ export const SET_TOKEN = 'SET_TOKEN';
 export const SET_USER = 'SET_USER';
 export const REMOVE_AUTH = 'REMOVE_AUTH';
 export const VAL_ERRORS = 'VAL_ERRORS';
-export const SET_BALANCE = 'SET_BALANCE';
+export const REMOVE_VAL_ERRORS = 'REMOVE_VAL_ERRORS';
 
 
 export const setToken = token => ({
@@ -29,9 +29,8 @@ export const setValErrors = (valErrors) => ({
   valErrors
 })
 
-export const setBalance = (newBalance) => ({
-  type: SET_BALANCE,
-  newBalance
+export const removeValErrors = () => ({
+  type: REMOVE_VAL_ERRORS,
 })
 
 export const loadToken = () => async dispatch => {
