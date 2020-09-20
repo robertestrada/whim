@@ -9,6 +9,7 @@ from flask_jwt_extended import JWTManager, jwt_required, get_raw_jwt
 
 from whim_server.models import db, User
 from whim_server.api.user_routes import user_routes
+from whim_server.api.product_routes import product_routes
 
 from whim_server.config import Config
 
@@ -16,6 +17,7 @@ app = Flask(__name__)
 
 app.config.from_object(Config)
 app.register_blueprint(user_routes)
+app.register_blueprint(product_routes)
 
 db.init_app(app)
 migrate = Migrate(app, db)

@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for
-from whim_server.models import User
-from ..models import User, db
+from whim_server.models import User, db
+# from ..models import User, db
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_optional, create_access_token, get_jwt_identity, jwt_required, get_raw_jwt
 from flask_wtf.csrf import CSRFProtect, generate_csrf, validate_csrf

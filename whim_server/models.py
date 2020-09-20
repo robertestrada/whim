@@ -81,7 +81,7 @@ class Order(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
   product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
-  price = db.Column(db.Numeric(9,2), nullable=False)
+  price = db.Column(db.Float, nullable=False)
   completed = db.Column(db.Boolean, default=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   date_paid = db.Column(db.DateTime)
@@ -103,17 +103,20 @@ class Product(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(255), nullable=False)
   description = db.Column(db.String(2000), nullable=False)
-  product_imgs = db.Column(db.String(255), nullable=False)
   product_imgs_amt = db.Column(db.Integer, nullable=False)
   category = db.Column(db.String(255), nullable=False)
   instant_buy = db.Column(db.Boolean, nullable=False)
   add_on = db.Column(db.Boolean, nullable=False)
+  advert = db.Column(db.Boolean, nullable=False)
   verified = db.Column(db.Boolean, default=False)
+  shipping_speed = db.Column(db.Integer, nullable=False)
+  shipping_usa = db.Column(db.Boolean, nullable=False)
   merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   
-  options = db.relationship("Option", back_populates="product", cascade="all, delete-orphan")
+  # options = db.relationship("Option", back_populates="product", cascade="all, delete-orphan")
+  options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="dynamic")
   orders = db.relationship('Order', backref='product')
 
   def merchant_main(self):
@@ -132,28 +135,18 @@ class Product(db.Model):
       price_delta = (option.price_ending - option.price_starting) / option.price_starting
       if price_delta < pricing["change"]:
         pricing = {
-                  "change": price_delta, 
+                  "change": round(price_delta, 2), 
                   "starting": option.price_starting, 
                   "ending": option.price_ending
                   }
+    if pricing["change"] == 0:
+      return {"change": 0, "starting": self.options[0].price_starting, "ending": self.options[0].price_ending}
     return pricing
   
   def feed_almost_gone(self):
     for option in self.options:
       delta = option.inventory_ending / option.inventory_starting
       if delta < 0.1:
-        return True
-      
-  def feed_shipping_speed(self):
-    max_speed = 0
-    for option in self.options:
-      if option.shipping_speed > max_speed:
-        max_speed = option.shipping_speed
-    return max_speed
-  
-  def feed_shipping_usa(self):
-    for option in self.options:
-      if option.shipping_usa == True:
         return True
       
   def feed_past_orders(self):
@@ -167,8 +160,6 @@ class Product(db.Model):
                           "color": option.color, 
                           "price_ending": option.price_ending, 
                           "inventory_ending": option.inventory_ending, 
-                          "shipping_speed": option.shipping_speed, 
-                          "shipping_usa": option.shipping_usa
                           })
   
   def main_dict(self):
@@ -176,7 +167,6 @@ class Product(db.Model):
           "id": self.id,
           "name": self.name,
           "description": self.description,
-          "product_img": self.product_imgs,
           "product_img_amt": self.product_imgs_amt,
           "category": self.category,
           "options_data": self.main_options(),
@@ -193,16 +183,16 @@ class Product(db.Model):
     return {
           "id": self.id,
           "name": self.name,
-          "feed_img": self.product_imgs,
           "category": self.category,
-          "pricing": self.feed_pricing(),
-          "almost_gone": self.feed_almost_gone(),
+          "feed_pricing": self.feed_pricing(),
+          "feed_almost_gone": self.feed_almost_gone(),
           "instant_buy": self.instant_buy,
           "add_on": self.add_on,
-          "shipping_speed": self.feed_shipping_speed(),
-          "shipping_usa": self.feed_shipping_usa(),
+          "advert": self.advert,
+          "shipping_speed": self.shipping_speed,
+          "shipping_usa": self.shipping_usa,
           "verified": self.verified,
-          "past_orders": self.feed_past_orders(),
+          "feed_past_orders": self.feed_past_orders(),
           "created_at": self.created_at,
           "updated_at": self.updated_at,
         }
@@ -214,17 +204,16 @@ class Option(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   size = db.Column(db.String(30))
   color = db.Column(db.String(30))
-  price_starting = db.Column(db.Numeric(9, 2), nullable=False)
-  price_ending = db.Column(db.Numeric(9, 2))
+  price_starting = db.Column(db.Float, nullable=False)
+  price_ending = db.Column(db.Float)
   inventory_starting = db.Column(db.Integer, nullable=False)
   inventory_ending = db.Column(db.Integer)
-  shipping_speed = db.Column(db.Integer, nullable=False)
-  shipping_usa = db.Column(db.Boolean, nullable=False)
+  weight = db.Column(db.Float, nullable=False)
   product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
 
-  product = db.relationship("Product", back_populates="comments")
+  # product = db.relationship("Product", back_populates="options")
 
   def to_dict(self):
     return {
@@ -235,8 +224,7 @@ class Option(db.Model):
           "price_ending": self.price_ending,
           "inventory_starting": self.inventory_starting,
           "inventory_ending": self.inventory_ending,
-          "shipping_speed": self.shipping_speed,
-          "shipping_usa": self.shipping_usa,
+          "weight": self.weight,
           "created_at": self.created_at,
           "updated_at": self.updated_at,
         }
