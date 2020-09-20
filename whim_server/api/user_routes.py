@@ -54,6 +54,7 @@ def sign_in():
       user= User.query.filter(User.email==email).one()
       if (user.check_password(password)):
         access_token = create_access_token(identity=email)
+        print ({"token": access_token, "user": user.to_dict()})
         return {"token": access_token, "user": user.to_dict()}, 200
       else:
         return jsonify({"msg": "Email or Password is incorrect"}), 400
