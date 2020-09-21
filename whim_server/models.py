@@ -72,7 +72,7 @@ class Merchant(db.Model):
       "id": self.id,
       "merchant_name": self.merchant_name,
       "pic_url": self.pic_url,
-      "merchant_rating": self.main_merchant_rating(),
+      # "merchant_rating": 4.5,
     }
     
 class Order(db.Model):
@@ -124,9 +124,9 @@ class Product(db.Model):
           "id": self.merchant.id, 
           "merchant_name": self.merchant.merchant_name, 
           "pic_url": self.merchant.pic_url, 
-          "merchant_rating": self.merchant.merchant_rating, 
-          "merchant_rating_amount": self.merchant.merchant_rating_amount, 
-          "verified": self.merchant.verified, 
+          # "merchant_rating": self.merchant.merchant_rating, 
+          # "merchant_rating_amount": self.merchant.merchant_rating_amount, 
+          # "verified": self.merchant.verified, 
           }
     
   def feed_pricing(self):
@@ -169,11 +169,12 @@ class Product(db.Model):
           "description": self.description,
           "product_img_amt": self.product_imgs_amt,
           "category": self.category,
+          "feed_pricing": self.feed_pricing(),
           "options_data": self.main_options(),
           "instant_buy": self.instant_buy,
           "add_on": self.add_on,
           "verified": self.verified,
-          "merchant_main": self.merchant_main,
+          "merchant_main": self.merchant_main(),
           "orders": [order.to_dict() for order in self.orders],
           "created_at": self.created_at,
           "updated_at": self.updated_at,
