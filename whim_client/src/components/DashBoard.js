@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import NavBar from './NavBar';
 import Feed from './Feed';
+import Modal from './Modal';
 import '../styles/dashboard.css';
 import { useSelector } from 'react-redux'
 
 
 function DashBoard() {
+    const currentUser = useSelector(state => state.authentication.user)
+    const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
+
+    const handleModalChange = ({ productId, showModal }) => {
+        setModalData({ "productId": productId, "showModal": showModal })
+    }
+
+    if (!currentUser){
+        return null
+    }
 
     return (
         <div className="dashboard">
             <NavBar/>
-            <Feed />
+            <Feed modalChange={handleModalChange} />
+            <Modal modalData={modalData} modalChange={handleModalChange}/>
         </div>
     );
 }

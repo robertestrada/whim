@@ -1,8 +1,8 @@
-"""Create Models
+"""Change shipping
 
-Revision ID: c6fe7483502b
+Revision ID: 7a040785082a
 Revises: 
-Create Date: 2020-09-18 22:36:53.700026
+Create Date: 2020-09-19 16:24:05.925542
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'c6fe7483502b'
+revision = '7a040785082a'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,9 +22,6 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('merchant_name', sa.String(length=40), nullable=False),
     sa.Column('pic_url', sa.String(), nullable=True),
-    sa.Column('merchant_rating', sa.Numeric(precision=2, scale=1), nullable=True),
-    sa.Column('merchant_rating_amount', sa.Integer(), nullable=True),
-    sa.Column('verified', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id')
@@ -43,15 +40,16 @@ def upgrade():
     )
     op.create_table('products',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('parent', sa.Boolean(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
     sa.Column('description', sa.String(length=2000), nullable=False),
-    sa.Column('product_imgs', sa.String(length=255), nullable=False),
     sa.Column('product_imgs_amt', sa.Integer(), nullable=False),
     sa.Column('category', sa.String(length=255), nullable=False),
     sa.Column('instant_buy', sa.Boolean(), nullable=False),
     sa.Column('add_on', sa.Boolean(), nullable=False),
+    sa.Column('advert', sa.Boolean(), nullable=False),
     sa.Column('verified', sa.Boolean(), nullable=True),
+    sa.Column('shipping_speed', sa.Integer(), nullable=False),
+    sa.Column('shipping_usa', sa.Boolean(), nullable=False),
     sa.Column('merchant_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
@@ -62,12 +60,11 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('size', sa.String(length=30), nullable=True),
     sa.Column('color', sa.String(length=30), nullable=True),
-    sa.Column('price_starting', sa.Numeric(precision=9, scale=2), nullable=False),
-    sa.Column('price_ending', sa.Numeric(precision=9, scale=2), nullable=True),
+    sa.Column('price_starting', sa.Float(), nullable=False),
+    sa.Column('price_ending', sa.Float(), nullable=True),
     sa.Column('inventory_starting', sa.Integer(), nullable=False),
     sa.Column('inventory_ending', sa.Integer(), nullable=True),
-    sa.Column('shipping_speed', sa.Integer(), nullable=False),
-    sa.Column('shipping_usa', sa.Boolean(), nullable=False),
+    sa.Column('weight', sa.Float(), nullable=False),
     sa.Column('product_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
@@ -78,7 +75,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('product_id', sa.Integer(), nullable=False),
-    sa.Column('price', sa.Numeric(precision=9, scale=2), nullable=False),
+    sa.Column('price', sa.Float(), nullable=False),
     sa.Column('completed', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('date_paid', sa.DateTime(), nullable=True),

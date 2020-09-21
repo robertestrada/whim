@@ -1,0 +1,48 @@
+.category-panel {
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  width: 250px;
+  height: 100%;
+  overflow-y: scroll;
+  padding-top: 52px;
+  top: 0px;
+  left: 111px;
+  transition-duration: 0.5s;
+  transition-timing-function: ease-in-out;
+  transition-delay: initial;
+  transition-property: initial;
+  transform: translateX(-100%);
+  opacity: 0;
+  z-index: 3;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: rgb(212, 227, 235);
+  background-color: white;
+  padding-bottom: 150px;
+}
+
+.category-panel.pressed {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.category__button {
+  display: flex;
+  padding: 12px;
+  border: none;
+  background-color: transparent;
+}
+
+.category__button:hover {
+  background-color: rgb(233, 241, 245);
+}
+
+.category__button:focus {
+  outline: none;
+}
+
+.category__image {
+  width: 68px;
+}
+

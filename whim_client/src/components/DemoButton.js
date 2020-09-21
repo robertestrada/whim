@@ -1,5 +1,5 @@
 import React from 'react';
-import '../styles/LogIn.css';
+import '../styles/logIn.css';
 
 export default function DemoButton ({ email, setEmail, password, setPassword }) {
 

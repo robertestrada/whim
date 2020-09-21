@@ -3,7 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 // import SearchBar from './SearchBar.js'
 // import SearchBarSem from './SearchBarSem.js'
 import '../styles/navBar.css';
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import * as AuthActions from '../actions/authentication';
 // import RequestNotification from './RequestNotification.js';
 
