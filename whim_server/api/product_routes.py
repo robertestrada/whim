@@ -32,3 +32,9 @@ def get_category_products(category, page):
   data = [product.feed_dict() for product in products]
   return {"data": data, "more_data": more_data}, 200
 
+
+@product_routes.route("/<int:id>")
+def get_product(id):
+  result = Product.query.filter(Product.id==id).one()
+  # data = result.main_dict()
+  return result.main_dict(), 200
