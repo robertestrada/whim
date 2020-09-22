@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, session, jsonify
+from flask import Flask, render_template, request, session, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect, generate_csrf, validate_csrf
 from flask_migrate import Migrate
@@ -13,7 +13,7 @@ from whim_server.api.product_routes import product_routes
 
 from whim_server.config import Config
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 app.config.from_object(Config)
 app.register_blueprint(user_routes)
@@ -48,7 +48,25 @@ def inject_csrf_token(response):
         httponly=True)
     return response
 
+
+# @app.route('/', defaults={'path': ''})
+# @app.route('/<path:path>')
+# def serve(path):
+#     path_dir = os.path.abspath("../build")  # path react build
+#     if path != "" and os.path.exists(os.path.join(path_dir, path)):
+#         return send_from_directory(os.path.join(path_dir), path)
+#     else:
+#         return send_from_directory(os.path.join(path_dir), 'index.html')
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path>')
 def react_root(path):
     return app.send_static_file('index.html')
+
+
+
+# @app.route('/', defaults={'path': '', 'subpath': ''})
+# @app.route('/<path>')
+# @app.route('/<path>/<subpath>')
+# def react_root(path):
+#     return app.send_static_file('index.html')

@@ -25,7 +25,7 @@ function NavBar(props) {
         <Link to="/"><img className="navbar__logo" src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg" alt="" /></Link>
       </div>
       <div className="navbar__options">
-        <button onClick={handleSubmit}>Log Out</button>
+        <button className="login__submit" onClick={handleSubmit}>Log Out</button>
       </div>
     </div>
   );
