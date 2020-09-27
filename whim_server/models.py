@@ -115,7 +115,7 @@ class Product(db.Model):
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   
-  # options = db.relationship("Option", back_populates="product", cascade="all, delete-orphan")
+  options = db.relationship("Option", back_populates="product", cascade="all, delete-orphan")
   options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="dynamic")
   orders = db.relationship('Order', backref='product')
 
@@ -155,12 +155,18 @@ class Product(db.Model):
   def main_options(self):
     options_list = []
     for option in self.options:
+      print(f'OPTION: {option}')
+      option_full = option.to_dict()
+      print(f'OPTION: {option_full}')
       options_list.append({
-                          "size": option.size, 
-                          "color": option.color, 
-                          "price_ending": option.price_ending, 
-                          "inventory_ending": option.inventory_ending, 
+                          "id": option_full["id"],
+                          "size": option_full["size"], 
+                          "color": option_full["color"], 
+                          "price_ending": option_full["price_ending"], 
+                          "inventory_ending": option_full["inventory_ending"], 
+                          "weight": option_full["weight"]
                           })
+    return options_list
   
   def main_dict(self):
     return {
@@ -173,6 +179,8 @@ class Product(db.Model):
           "options_data": self.main_options(),
           "instant_buy": self.instant_buy,
           "add_on": self.add_on,
+          "shipping_speed": self.shipping_speed,
+          "shipping_usa": self.shipping_usa,
           "verified": self.verified,
           "merchant_main": self.merchant_main(),
           "orders": [order.to_dict() for order in self.orders],
