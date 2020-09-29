@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from whim_server.models import db, User, Product, Option, Order, Merchant
 from sqlalchemy import and_, or_, desc
+# from sqlalchemy.orm import joinedload
 import datetime
 
 product_routes = Blueprint("products", __name__, url_prefix="/product")

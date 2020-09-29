@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, backref
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
@@ -62,7 +62,7 @@ class Merchant(db.Model):
   pic_url = db.Column(db.String)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
-  products = db.relationship("Product", foreign_keys= "Product.merchant_id", backref="merchant", cascade="all, delete-orphan", lazy="dynamic")
+  products = db.relationship("Product", backref="merchant", cascade="all, delete-orphan", lazy="joined")
 
   def main_merchant_rating(self):
     return {"stars": 4.4, "amount": 4129, "positive": 0.92}
@@ -115,19 +115,8 @@ class Product(db.Model):
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   
-  # options = db.relationship("Option", back_populates="product", cascade="all, delete-orphan")
-  options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="dynamic")
+  options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="joined")
   orders = db.relationship('Order', backref='product')
-
-  def merchant_main(self):
-    return {
-          "id": self.merchant.id, 
-          "merchant_name": self.merchant.merchant_name, 
-          "pic_url": self.merchant.pic_url, 
-          # "merchant_rating": self.merchant.merchant_rating, 
-          # "merchant_rating_amount": self.merchant.merchant_rating_amount, 
-          # "verified": self.merchant.verified, 
-          }
     
   def feed_pricing(self):
     pricing = {"change": 0, "starting": 0, "ending": 0}
@@ -155,12 +144,18 @@ class Product(db.Model):
   def main_options(self):
     options_list = []
     for option in self.options:
+      print(f'OPTION: {option}')
+      option_full = option.to_dict()
+      print(f'OPTION: {option_full}')
       options_list.append({
-                          "size": option.size, 
-                          "color": option.color, 
-                          "price_ending": option.price_ending, 
-                          "inventory_ending": option.inventory_ending, 
+                          "id": option_full["id"],
+                          "size": option_full["size"], 
+                          "color": option_full["color"], 
+                          "price_ending": option_full["price_ending"], 
+                          "inventory_ending": option_full["inventory_ending"], 
+                          "weight": option_full["weight"]
                           })
+    return options_list
   
   def main_dict(self):
     return {
@@ -173,8 +168,10 @@ class Product(db.Model):
           "options_data": self.main_options(),
           "instant_buy": self.instant_buy,
           "add_on": self.add_on,
+          "shipping_speed": self.shipping_speed,
+          "shipping_usa": self.shipping_usa,
           "verified": self.verified,
-          "merchant_main": self.merchant_main(),
+          "merchant": self.merchant.to_dict(),
           "orders": [order.to_dict() for order in self.orders],
           "created_at": self.created_at,
           "updated_at": self.updated_at,
