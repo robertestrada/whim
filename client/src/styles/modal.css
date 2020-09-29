@@ -1,23 +1,38 @@
 .modal {
-  display: none;
+  display: flex;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 11;
+  max-height: 0px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
 }
 
 .modal.show {
-  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal__scroll {
   position: fixed;
-  background-color: red;
-  left: 0px;
   top: 0px;
-  height: 100%;
+  left: 0px;
   width: 100%;
-  z-index: 11;
+  height: 100%;
   background-color: rgba(25, 42, 50, 0.7);
   overflow-y: scroll;
   opacity: 1;
-  transition-duration: 150ms;
-  transition-timing-function: initial;
-  transition-delay: initial;
-  transition-property: all;
+}
+
+.modal__loader {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__content-loading {
+  height: 80vh;
 }
 
 .modal__content {
@@ -36,6 +51,11 @@
   position: relative;
   margin-left: auto;
   margin-right: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal__content-wrapper {
   display: flex;
   flex-direction: column;
 }
@@ -131,7 +151,6 @@ outline: none;
 
 .modal__product-info {
   display: flex;
-  flex-direction: row;
 }
 
 .modal__left {
@@ -218,6 +237,16 @@ outline: none;
   overflow-y: hidden;
   cursor: pointer;
   margin-bottom: 16px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal__image-button.selected {
+  box-sizing: border-box;
+  border: solid 1px rgb(204, 204, 204);
 }
 
 .smooth-image-main {
@@ -231,6 +260,10 @@ outline: none;
 }
 .image-hidden {
   opacity: 0;
+}
+
+.image-selected {
+  opacity: 0.68;
 }
 
 .smooth-image-small {
@@ -336,6 +369,10 @@ outline: none;
   margin-top: 32px;
 }
 
+.modal__verified {
+  margin-right: 8px;
+}
+
 .modal__verified-badge {
 width: 20px;
 flex-shrink: 0;
@@ -347,6 +384,24 @@ justify-content: center;
 }
 
 .modal__verified-svg {
+  height: 20px;
+  width: 24px;
+  margin-right: 0px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+}
+
+.modal__usa-svg {
+  height: 20px;
+  width: 24px;
+  margin-right: 0px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  flex-basis: auto;
+}
+
+.modal__express-svg {
   height: 20px;
   width: 24px;
   margin-right: 0px;
@@ -409,6 +464,10 @@ justify-content: center;
   margin-bottom: 6px;
 }
 
+.modal__shipping-speed.express-shipping {
+  margin-top: 16px;
+}
+
 .modal__shipping-speed-title {
   display: inline;
   font-weight: bold;
@@ -419,6 +478,12 @@ justify-content: center;
 .modal__shipping-speed-amount {
   display: inline;
   margin-right: 8px;
+  margin-left: 8px;
+}
+
+.modal__shipping-express-icon {
+  height: 20px;
+  width: 20px;
 }
 
 .modal__shipping-dates {

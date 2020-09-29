@@ -111,10 +111,11 @@ body {
 
 .feed__grid {
   display: grid;
-  grid-template-columns: repeat(4, 210px);
-  grid-template-rows: repeat(auto-fill, 268px);
-  grid-row-gap: 20px;
-  grid-column-gap: 20px;
+  grid-gap: 20px;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, minmax(210px, max-content));
+  width: 100%;
+  max-width: 900px;
 }
 
 

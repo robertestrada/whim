@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import NumberFormat from 'react-number-format';
+import moment from 'moment';
 import '../styles/product.css';
 
 const Product = ({ product:  { id, category, feed_pricing, feed_almost_gone, instant_buy, add_on, advert, shipping_speed, shipping_usa, verified, feed_past_orders, created_at }, modalChange }) => {
@@ -12,13 +12,7 @@ const Product = ({ product:  { id, category, feed_pricing, feed_almost_gone, ins
     product_img_url = `https://whim-bucket.s3-us-west-1.amazonaws.com/whim-products/${category}/${id}.jpg`
   }
 
-  // const productMessage = () => {
-  //   const date = new Date();
-  //   date.setDate(date.getDate() - 7);
-  //   if (date < created_at ){
-  //     return "Just in";
-  //   }
-  // }
+  const tzOffset = { "h": moment().utcOffset() / 60, "m": moment().utcOffset() % 60 };
 
   return (
     <div className="product" onClick={() => modalChange({ "productId": id, "showModal": true })} style={{ animation: `fadeIn 0.5s` }}>
@@ -38,7 +32,7 @@ const Product = ({ product:  { id, category, feed_pricing, feed_almost_gone, ins
                 <span className="loader" />
               </div>
             )}
-            <div className="product__percent">{`${feed_pricing.change * 100}%`}</div>
+            {feed_pricing.change && <div className="product__percent">{`${feed_pricing.change * 100}%`}</div>}
             <div className="product__almost-gone">{feed_almost_gone && "Almost Gone!"}</div>
           </div>
         </div>
@@ -107,7 +101,14 @@ const Product = ({ product:  { id, category, feed_pricing, feed_almost_gone, ins
               }
             </div>
           </div>
-          <div className="product__message">{`${feed_past_orders}+ bought this`}</div>
+          <div className="product__message">
+            { advert 
+              ? 'Featured'
+              : moment().diff(moment(created_at).subtract(tzOffset), 'd') < 8
+                ? 'Just in' 
+                : `${feed_past_orders}+ bought this`
+            }
+          </div>
         </div>
       </div>
     </div>

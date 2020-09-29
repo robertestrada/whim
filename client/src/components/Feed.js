@@ -128,7 +128,7 @@ const Feed = ({ modalChange }) => {
           ?
             <div className="feed_scroll-wrapper">
               <div className="feed__loader" ref={ref} >
-                <LoadingIndicator/> 
+                <LoadingIndicator/>
               </div>
             </div>
           : 
