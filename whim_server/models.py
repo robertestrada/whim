@@ -175,6 +175,7 @@ class Product(db.Model):
           "orders": [order.to_dict() for order in self.orders],
           "created_at": self.created_at,
           "updated_at": self.updated_at,
+          "options": [option.to_dict() for option in self.options],
         }
     
   def feed_dict(self):
