@@ -38,6 +38,12 @@
   opacity: 0;
 }
 
+.product__smooth-preloader {
+  width: 210px;
+  height: 210px;
+  background-color: white;
+}
+
 .product__percent {
   position: absolute;
   left: 0px;
