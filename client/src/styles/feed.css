@@ -94,10 +94,15 @@ body {
 }
 
 .feed_scroll-wrapper {
+  /* width: calc(100% - 250px); */
   width: 100%;
   flex: 1;
   position: relative;
   /* height: calc(100vh - 104px); */
+  /* flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  background-color: rgb(248, 250, 251); */
 }
 
 .feed__scroll {
@@ -121,7 +126,7 @@ body {
 
 .feed__loader {
   padding-top: 52px;
-  width: calc(100vw - 115px);
+  width: calc(100vw - 365px);
 }
 
 .feed__results {

@@ -206,7 +206,6 @@ outline: none;
 }
 
 .modal__images-container {
-  /* transform: translateY(0px); */
   transition: translateY 0.5s;
 }
 
@@ -378,9 +377,7 @@ outline: none;
 width: 20px;
 flex-shrink: 0;
 display: flex;
--webkit-box-align: center;
 align-items: center;
--webkit-box-pack: center;
 justify-content: center;
 }
 
@@ -432,7 +429,6 @@ justify-content: center;
   border-top-width: 3px;
   border-top-style: solid;
   border-top-color: rgb(240, 245, 247);
-  -webkit-box-align: center;
   align-items: center;
   flex-direction: column;
   padding-top: 32px;
@@ -460,7 +456,6 @@ justify-content: center;
 
 .modal__shipping-speed {
   display: flex;
-  -webkit-box-align: center;
   align-items: center;
   margin-bottom: 6px;
 }
@@ -552,23 +547,47 @@ margin-bottom: 4px;
 }
 
 .modal__selection-button {
-  display: flex;
-  justify-content: center;
   position: relative;
-  width: 100%;
+  width: 90%;
   text-overflow: ellipsis;
   overflow-x: hidden;
   overflow-y: hidden;
   padding-top: 12px;
   padding-bottom: 12px;
   padding-right: 0px;
+  padding-left: 0px;
   background-color: transparent;
   border: none;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.modal__selection-button.no-choice {
+  justify-content: flex-start;
 }
 
 .modal__selection-button:focus {
   outline: none;
+}
+
+.modal__selection-arrow {
+  margin-left: 12px;
+  margin-right: 12px;
+  position: relative;
+  top: -2px;
+}
+
+.modal__selection-arrow-svg {
+  height: 5px;
+  width: 8px;
+  transform: rotate(0deg); 
+  transform: translateY(1px);
+  transition: all 0.25s ease;
+}
+
+.modal__selection-arrow-svg.arrow-flip {
+  transform: rotate(180deg); 
 }
 
 .modal__selections {
@@ -621,6 +640,7 @@ margin-bottom: 4px;
   align-items: center;
   padding-top: 0px;
   padding-right: 16px;
+  padding-left: 16px;
   justify-content: left;
   flex-shrink: 0;
   z-index: 10;
@@ -632,7 +652,7 @@ margin-bottom: 4px;
 
 .modal__select-text {
   position: relative;
-  width: 100%;
+  width: 90%;
   padding-top: 12px;
   padding-bottom: 12px;
   padding-right: 0px;
@@ -644,6 +664,21 @@ margin-bottom: 4px;
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+.modal__select-icon-wrapper {
+  height: 20px;
+  /* position: absolute; */
+  /* bottom: 0px; */
+  /* right: 0px; */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.modal__select-icon-svg {
+  height: 20px;
+  width: 25px;
 }
 
 .modal__buy {

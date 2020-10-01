@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '../styles/modalSplide.css';
 import '../styles/modal.css';

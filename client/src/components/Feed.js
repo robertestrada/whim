@@ -2,13 +2,11 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
 import Loader from 'react-loader-spinner';
 import { baseUrl } from '../config';
-import { useSelector } from 'react-redux';
 import '../styles/feed.css';
 import Product from './Product';
 import CategoryPanel from './CategoryPanel';
 
 const Feed = ({ modalChange }) => {
-  const currentUser = useSelector(state => state.authentication.user)
   const { promiseInProgress } = usePromiseTracker();
   const initialPageData = { "page": 1, "loadMore": false, "tab": "popular"};
   const [pageData, setPageData] = useState(initialPageData);

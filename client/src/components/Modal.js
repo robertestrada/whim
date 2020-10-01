@@ -81,7 +81,7 @@ const Modal = ({ modalData: { productId, showModal }, modalChange }) => {
                     <ModalShipping productData={productData}/>
                   </div>
                   <div className="modal__right">
-                    <ModalDetails productData={productData} handleModalExit={handleModalExit} />
+                    <ModalDetails productData={productData} productImgUrl={productImgUrls[0]} handleModalExit={handleModalExit} />
                   </div>
                 </div>
               </div>

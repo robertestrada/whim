@@ -4,7 +4,7 @@ import ProductInfo from './ProductInfo';
 import moment from 'moment';
 import '../styles/product.css';
 
-const Product = ({ product:  { id, category, feed_pricing, feed_almost_gone, instant_buy, add_on, advert, shipping_speed, shipping_usa, verified, feed_past_orders, created_at }, modalChange }) => {
+const Product = ({ product:  { id, category, feed_pricing, feed_almost_gone, advert, shipping_speed, shipping_usa, verified, feed_past_orders, created_at }, modalChange }) => {
   let product_img_url = "";
   if (id < 4){
     product_img_url = `https://whim-bucket.s3-us-west-1.amazonaws.com/whim-products/product-${id}/1.jpg`

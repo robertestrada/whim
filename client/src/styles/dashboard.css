@@ -1,8 +1,9 @@
 .dashboard {
   display: flex;
+  
   flex-direction: column;
   padding-left: 115px;
-  /* padding-right: 250px; */
+  padding-right: 250px;
   padding-top: 52px;
   /* position: sticky; */
   /* align-items: flex-start; */
