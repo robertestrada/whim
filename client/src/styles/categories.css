@@ -29,9 +29,13 @@
 
 .category__button {
   display: flex;
-  padding: 12px;
+  align-items: center;
+  padding-left: 12px;
+  padding-top: 12px;
+  padding-bottom: 12px;
   border: none;
   background-color: transparent;
+  cursor: pointer;
 }
 
 .category__button:hover {
@@ -46,3 +50,14 @@
   width: 68px;
 }
 
+.category__name {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  color: rgb(72, 99, 111);
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 2px;
+  padding-left: 8px;
+}

@@ -147,7 +147,7 @@
 }
 
 .side-referral__card-container {
-
+  position: relative;
 }
 
 .side-referral__card-img-wrapper {
@@ -158,6 +158,29 @@
 .side-referral__card-svg {
   width: 168px; 
   height: 159px; 
+}
+
+.side-referral__card-amount {
+  transform: rotate(330deg);
+  font-size: 25px;
+  font-weight: 300;
+  position: absolute;
+  left: 32px;
+  bottom: 75px;
+  color: rgb(255, 255, 255);
+  line-height: 1;
+}
+
+.side-referral__card-subtitle {
+  transform: rotate(330deg);
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 1.667px;
+  position: absolute;
+  left: 48px;
+  bottom: 57px;
+  color: rgb(255, 255, 255);
+  line-height: 1;
 }
 
 .side-referral__title {

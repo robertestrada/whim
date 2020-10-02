@@ -5,7 +5,7 @@ import '../styles/navBar.css';
 import { useDispatch } from 'react-redux'
 import * as AuthActions from '../actions/authentication';
 
-function NavBar(props) {
+function NavBar({ panelType }) {
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -23,19 +23,22 @@ function NavBar(props) {
       <div className="navbar__logo-wrapper">
         <Link to="/"><img className="navbar__logo" src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg" alt="" /></Link>
       </div>
-      <div className="navbar__options">
-        <div className="navbar__profile-wrapper">
-          <button className="navbar__logout" onClick={handleSubmit}>
-            <img
-              src={profilePicUrl}
-              alt={""}
-              className={`smooth-image-profile image-${imageLoaded ? 'visible' : 'hidden'
-                }`}
-              onLoad={() => setImageLoaded(true)}
-            />
-          </button>
+      { panelType === 'feed' ? 
+        <div className="navbar__options">
+          <div className="navbar__profile-wrapper">
+            <button className="navbar__logout" onClick={handleSubmit}>
+              <img
+                src={profilePicUrl}
+                alt={""}
+                className={`smooth-image-profile image-${imageLoaded ? 'visible' : 'hidden'
+                  }`}
+                onLoad={() => setImageLoaded(true)}
+              />
+            </button>
+          </div>
         </div>
-      </div>
+      : null
+      }
     </div>
   );
 }

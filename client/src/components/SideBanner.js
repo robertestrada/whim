@@ -5,7 +5,7 @@ import SideReferral from './SideReferral';
 import '../styles/sideCart.css';
 
 
-const SideBanner = () => {
+const SideBanner = ({ setPanelType }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const cartItems = useSelector(state => Object.values(state.cart.items));
   useEffect(() => { }, [cartItems]);
@@ -14,6 +14,7 @@ const SideBanner = () => {
     <div className="sidecart__wrapper">
       {cartItems.length > 0 
         ? <SideCart 
+            setPanelType={setPanelType}
             cartItems={cartItems} 
             imageLoaded={imageLoaded} 
             setImageLoaded={setImageLoaded}/> 

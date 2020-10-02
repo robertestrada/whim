@@ -6,8 +6,8 @@ const Product = ({ feed_pricing, advert, shipping_speed, shipping_usa, verified 
   return (
     <div className="product__price-info">
       <div className="product__pricing">
-        <div className="product__new-price">{`$${feed_pricing.starting}`}</div>
-        <div className="product__old-price">{`$${feed_pricing.ending}`}</div>
+        <div className="product__new-price">{`$${feed_pricing.ending}`}</div>
+        {feed_pricing.ending !== feed_pricing.starting ? <div className="product__old-price">{`$${feed_pricing.starting}`}</div> : null}
       </div>
       <div className="product__badges">
         {advert &&

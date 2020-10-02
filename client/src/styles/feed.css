@@ -4,12 +4,21 @@ body {
 }
 
 .feed {
-  width: auto;
-  height: auto;
   display: flex;
   flex-direction: column;
   background-color: #fff;
   align-items: center;
+}
+
+.feed__logo-button {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 150px;
+  height: 50px;
+  cursor: pointer;
+  /* content: ' '; */
+  z-index: 5;
 }
 
 .feed__tabs {
@@ -93,25 +102,29 @@ body {
   overflow-wrap: normal;
 }
 
-.feed_scroll-wrapper {
-  /* width: calc(100% - 250px); */
+.feed__scroll-wrapper {
+  display: flex;
   width: 100%;
-  flex: 1;
-  position: relative;
-  /* height: calc(100vh - 104px); */
-  /* flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: auto;
-  background-color: rgb(248, 250, 251); */
+  background-color: rgb(248, 250, 251);
+  transition: background-color 0.5s ease;
+}
+
+.feed__scroll-wrapper.cart-visible {
+  background-color: rgb(255, 255, 255);
 }
 
 .feed__scroll {
   display: flex;
+  width: 100vw;
   flex-direction: column;
   align-items: center;
   overflow-x: hidden; 
-  overflow-y: auto; 
-  height: calc(100vh - 52px);
+  overflow-y: auto;
+}
+
+.feed__grid-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 .feed__grid {
@@ -119,8 +132,9 @@ body {
   grid-gap: 20px;
   justify-content: center;
   grid-template-columns: repeat(auto-fill, minmax(210px, max-content));
-  width: 100%;
+  width: calc(100vw - 400px);
   max-width: 900px;
+  height: calc(100vh - 102px);
 }
 
 
@@ -129,12 +143,13 @@ body {
   width: calc(100vw - 365px);
 }
 
+.feed__loader-spacer {
+  height: 100vh;
+}
+
 .feed__results {
-  width: 100%;
-  text-align: left;
   margin-top: 17px;
   margin-bottom: 17px;
-  padding-left: 36px;
   color: rgb(25, 42, 50);
   font-size: 16px;
   font-weight: 400;

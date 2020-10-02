@@ -2,6 +2,7 @@ const CART_KEY = 'whim/cart';
 export const LOAD_CART = 'LOAD_CART';
 export const ADD_CART_ITEM = 'ADD_CART_ITEM';
 export const REMOVE_CART_ITEM = 'REMOVE_CART_ITEM';
+export const CLEAR_CART = 'CLEAR_CART';
 
 const loadCartAction = cart => ({
   type: LOAD_CART,
@@ -16,6 +17,10 @@ const addCartItemAction = item => ({
 const removeCartItemAction = id => ({
   type: REMOVE_CART_ITEM,
   id,
+});
+
+const clearCartAction = () => ({
+  type: CLEAR_CART,
 });
 
 export const loadCart = () => async dispatch => {
@@ -48,5 +53,11 @@ export const removeCartItem = (id) => async (dispatch) => {
   
   window.localStorage.setItem(CART_KEY, JSON.stringify(cart));
   dispatch(removeCartItemAction(id));
+  dispatch(loadCart());
+}
+
+export const clearCart = () => dispatch => {
+  window.localStorage.removeItem(CART_KEY);
+  dispatch(clearCartAction());
   dispatch(loadCart());
 }

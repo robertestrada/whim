@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux'
 function DashBoard() {
     const currentUser = useSelector(state => state.authentication.user)
     const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
+    const [panelType, setPanelType] = useState('feed');
+    const [checkedOut, setCheckedOut] = useState(false);
 
     const handleModalChange = ({ productId, showModal }) => {
         setModalData({ "productId": productId, "showModal": showModal })
@@ -19,12 +21,13 @@ function DashBoard() {
         return null
     }
 
+
     return (
         <div className="dashboard">
-            <NavBar/>
-            <Feed modalChange={handleModalChange} />
-            <SideBanner />
-            <Modal modalData={modalData} modalChange={handleModalChange}/>
+            <NavBar panelType={panelType}/>
+            <Feed setCheckedOut={setCheckedOut} panelType={panelType} setPanelType={setPanelType} modalChange={handleModalChange} />
+            {panelType === 'feed' ? <SideBanner setPanelType={setPanelType}/> : null }
+            <Modal checkedOut={checkedOut} setCheckedOut={setCheckedOut} modalData={modalData} modalChange={handleModalChange}/>
         </div>
     );
 }

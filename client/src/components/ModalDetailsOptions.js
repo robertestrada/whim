@@ -19,8 +19,6 @@ const ModalDetailsOptions = ({ productData, productImgUrl, productId, options, h
   const [colorShow, setColorShow] = useState(false);
   const [colorError, setColorError] = useState(false);
   const [buyReady, setBuyReady] = useState(null);
-  // const [arrowSize, setArrowSize] = useState(false);
-  // const [arrowColor, setArrowColor] = useState(false);
   const node = useRef();
 
   const handleClick = e => {

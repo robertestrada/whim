@@ -9,7 +9,7 @@ import ModalShipping from './ModalShipping';
 import ModalDetails from './ModalDetails';
 import '../styles/modal.css';
 
-const Modal = ({ modalData: { productId, showModal }, modalChange }) => {
+const Modal = ({ checkedOut, setCheckedOut, modalData: { productId, showModal }, modalChange }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageFocus, setImageFocus] = useState(0);
   const { promiseInProgress } = usePromiseTracker();
@@ -37,6 +37,7 @@ const Modal = ({ modalData: { productId, showModal }, modalChange }) => {
   };
 
   useEffect(() => { setImageFocus(0) }, [showModal, productData]);
+  // useEffect(() => {  }, [checkedOut]);
 
   useEffect(() => {
     if (productId) fetchData();
@@ -47,6 +48,7 @@ const Modal = ({ modalData: { productId, showModal }, modalChange }) => {
       setImageLoaded(false);
       setProductData({ "product": null });
       setProductImgUrls([]);
+      setCheckedOut(false);
       modalChange({ "productId": null, "showModal": false })
   }
 
@@ -61,34 +63,66 @@ const Modal = ({ modalData: { productId, showModal }, modalChange }) => {
 
   return (
     <div className={showModal ? "modal show" : "modal"}>
-      <div>
-        <div className="modal__scroll" onClick={() => handleModalExit()}>
-          <div className="modal__content" onClick={e => e.stopPropagation()}>
-            {promiseInProgress
-            ? <LoadingIndicator/>
-            : <div className="modal__content-wrapper">
-                <ModalHeader handleModalExit={handleModalExit} />
-                <div className="modal__product-info">
-                  <div className="modal__left">
-                    <ModalImages 
-                      productImgUrls={productImgUrls} 
-                      imageLoaded={imageLoaded}
-                      imageFocus={imageFocus}
-                      setImageFocus={setImageFocus}
-                      setImageLoaded={setImageLoaded}
-                    />
-                    <ModalVerified productData={productData} />
-                    <ModalShipping productData={productData}/>
+      { checkedOut === true
+        ? <div>
+            <div className="modal__scroll checkedout-scroll" onClick={() => handleModalExit()}>
+            <div className="modal__content checkedout-content" onClick={e => e.stopPropagation()}>
+                <div className="modal__content-wrapper">
+                  <div className="modal__header">
+                    <div className="modal__tab-bar"></div>
+                    <button className="modal__close" onClick={() => handleModalExit()}>
+                      <svg width="14px" height="14px" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+                        <g stroke="#3C4646" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M1 1l8 8M9 1L1 9"></path>
+                        </g>
+                      </svg>
+                    </button>
                   </div>
-                  <div className="modal__right">
-                    <ModalDetails productData={productData} productImgUrl={productImgUrls[0]} handleModalExit={handleModalExit} />
+                  <div className="modal__checkedout-info">
+                    <img
+                      src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg"
+                      alt={""}
+                      className={`smooth-image-checkout image-${imageLoaded ? 'visible-checkout' : 'hidden-checkout'}`}
+                      onLoad={() => setImageLoaded(true)}
+                    />
+                    <div className="modal__checkedout-text-wrapper">
+                      <div className="modal__checkedout-title">Thanks for Splurging!</div>
+                      <div className="modal__checkedout-text">You unlocked the end of this demo's buying experience!</div>
+                    </div>
                   </div>
                 </div>
               </div>
-            }
+            </div>
           </div>
-        </div>
-      </div>
+        : <div>
+            <div className="modal__scroll" onClick={() => handleModalExit()}>
+              <div className="modal__content" onClick={e => e.stopPropagation()}>
+                {promiseInProgress
+                ? <LoadingIndicator/>
+                : <div className="modal__content-wrapper">
+                    <ModalHeader handleModalExit={handleModalExit} />
+                    <div className="modal__product-info">
+                      <div className="modal__left">
+                        <ModalImages 
+                          productImgUrls={productImgUrls} 
+                          imageLoaded={imageLoaded}
+                          imageFocus={imageFocus}
+                          setImageFocus={setImageFocus}
+                          setImageLoaded={setImageLoaded}
+                        />
+                        <ModalVerified productData={productData} />
+                        <ModalShipping productData={productData}/>
+                      </div>
+                      <div className="modal__right">
+                        <ModalDetails productData={productData} productImgUrl={productImgUrls[0]} handleModalExit={handleModalExit} />
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+      }
     </div>
   );
 }

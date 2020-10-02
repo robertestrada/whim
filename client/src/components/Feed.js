@@ -4,10 +4,11 @@ import Loader from 'react-loader-spinner';
 import { baseUrl } from '../config';
 import '../styles/feed.css';
 import Product from './Product';
+import Cart from './Cart';
 import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
 
-const Feed = ({ modalChange }) => {
+const Feed = ({ setCheckedOut, panelType, setPanelType, modalChange }) => {
   const { promiseInProgress } = usePromiseTracker();
   const initialPageData = { "page": 1, "loadMore": false, "tab": "popular"};
   const [pageData, setPageData] = useState(initialPageData);
@@ -15,7 +16,6 @@ const Feed = ({ modalChange }) => {
   const [loading, setLoading] = useState(false);
   const [productsData, setProductsData] = useState({"products": null, "moreData": false});
   const [catShow, setCatShow] = useState(false);
-  const [panelType, setPanelType] = useState('feed');
   const categories = ["clothing", "outdoor", "technology"]
   const ref = useRef(null);
   
@@ -42,6 +42,7 @@ const Feed = ({ modalChange }) => {
   };
 
   useEffect(() => {
+    setPanelType('feed');
     setAllowScroll(true);
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -52,15 +53,13 @@ const Feed = ({ modalChange }) => {
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageData.page]);  
-  
+  }, [pageData.page]);
   
   useLayoutEffect(() => {
       ref.current.scrollTop = 0;
   }, [pageData.tab]);
 
   const handleScroll = (e) => {
-    // e.stopPropagation();
     const target = e.target
     if (allowScroll && ((target.scrollHeight - target.scrollTop - (target.scrollTop / 2) <= target.clientHeight) && productsData.moreData)) {
       setAllowScroll(false);
@@ -73,6 +72,7 @@ const Feed = ({ modalChange }) => {
   }
 
   const handleTabChange = (newTab) => {
+    setPanelType('feed');
     if (pageData.tab !== newTab){
       setLoading(true);
       setPageData({ "page": 1, "loadMore": false, "tab": newTab });
@@ -81,19 +81,23 @@ const Feed = ({ modalChange }) => {
   
   const LoadingIndicator = () => {
     return (
-      <div style={{ width: "100%", height: "100", display: "flex", justifyContent: "center", alignItems: "center" }}>
+      <div style={{ width: "100%", height: "100", display: "flex", justifyContent: "center", alignItems: "flex-start" }}>
         <Loader type="ThreeDots" color="#00b9e9" height={60} width={60} />
+        <div className="feed__loader-spacer"></div>
       </div>
     )
   }
 
   return (
     <div className="feed">
+      <div className="feed__logo-button" onClick={() => handleTabChange('popular')}/>
       <FeedTabs pageData={pageData} handleTabChange={handleTabChange} setCatShow={setCatShow}/>
       <CategoryPanel catShow={catShow} mouseEnter={() => setCatShow(true)} mouseLeave={() => setCatShow(false)} categoryFetch={handleTabChange}/>
-      <div className="feed__scroll-wrapper">
+      <div className={panelType === 'feed' ? "feed__scroll-wrapper" : "feed__scroll-wrapper cart-visible"}>
         <div className="feed__scroll" ref={ref} onScroll={handleScroll}>
-          { loading || (((promiseInProgress && !productsData.products) && !pageData.loadMore) || (!productsData.products && !pageData.loadMore))
+          { panelType === 'cart'
+            ? <Cart setCheckedOut={setCheckedOut} setPanelType={setPanelType} modalChange={modalChange}/>
+            : loading || (((promiseInProgress && !productsData.products) && !pageData.loadMore) || (!productsData.products && !pageData.loadMore))
             ? <div className="feed__loader" >
                 <LoadingIndicator/>
               </div>
