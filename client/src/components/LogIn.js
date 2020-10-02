@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import * as AuthActions from '../actions/authentication';
 import DemoButton from './DemoButton'
 
+
 function LogIn() {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
