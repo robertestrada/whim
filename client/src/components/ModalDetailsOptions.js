@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { addCartItem } from '../actions/cart';
 import ModalDetailsOption from './ModalDetailsOption';
 import ModalBuyButton from './ModalBuyButton';
 import '../styles/modal.css';
@@ -6,7 +8,8 @@ import '../styles/modal.css';
 
 
 
-const ModalDetailsOptions = ({ options, handleModalExit }) => {
+const ModalDetailsOptions = ({ productData, productImgUrl, productId, options, handleModalExit }) => {
+  const dispatch = useDispatch();
   const [size, setSize] = useState('Select Size');
   const [color, setColor] = useState('Select Color');
   const [sizeExists, setSizeExists] = useState(false);
@@ -45,12 +48,14 @@ const ModalDetailsOptions = ({ options, handleModalExit }) => {
 
   useEffect(() => {
     handleSelectionCheck();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selections]);
 
   useEffect(() => {
     if (selections['color'] !== null && selections['size'] !== null){
       validateSelection();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selections]);
 
   const colorList = () => {
@@ -159,7 +164,7 @@ const ModalDetailsOptions = ({ options, handleModalExit }) => {
   };
 
   const handleBuyCheckout = () => {
-    // localStorage.setItem('cart')
+    dispatch(addCartItem({ 'id': productId, 'productData': productData, 'productImgUrl': productImgUrl, 'size': selections.size, 'color': selections.color }));
     handleModalExit();
   };
 
@@ -171,9 +176,16 @@ const ModalDetailsOptions = ({ options, handleModalExit }) => {
           <div className={buyReady === true || buyReady === null || buyReady === 'color' ? "modal__selection-label" : "modal__selection-label label-error"}>Size:</div>
           <div className={buyReady === true || buyReady === null || buyReady === 'color' ? "modal__selection-button-container" : "modal__selection-button-container container-error"} >
             <div className="modal__selection-button-text">
-              <button className="modal__selection-button" onClick={() => handleSizeButtonClick()}>{size}</button>
+              <button className={size === 'Select Size' ? "modal__selection-button no-choice" : "modal__selection-button"} onClick={() => handleSizeButtonClick()}>{size}</button>
             </div>
-            <div className="modal__selection-arrow">icon</div>
+            <div className="modal__selection-arrow">
+              <svg className={sizeShow ? "modal__selection-arrow-svg arrow-flip" : "modal__selection-arrow-svg"} viewBox="0 0 8 5">
+                <g fill="none" fillRule="evenodd">
+                  <path d="M-4-6h16v16H-4z"></path>
+                  <path d="M1 0a1.003 1.003 0 0 0-.71 1.71l3 3c.18.18.43.29.71.29.28 0 .53-.11.71-.29l3-3A1.003 1.003 0 0 0 7 0H1z" fill="#48636f"></path>
+                </g>
+              </svg>
+            </div>
           </div>
           <div className={sizeShow ? "modal__selections" : "modal__selections hide-selections"}>
             {sizeList().map((option, idx) => <ModalDetailsOption key={idx} option={option} handleSelection={handleSizeSelection}/>)}
@@ -186,9 +198,16 @@ const ModalDetailsOptions = ({ options, handleModalExit }) => {
           <div className={buyReady === true || buyReady === null || buyReady === 'size' ? "modal__selection-label" : "modal__selection-label label-error"}>Color:</div>
           <div className={buyReady === true || buyReady === null || buyReady === 'size' ? "modal__selection-button-container" : "modal__selection-button-container container-error"}>
             <div className="modal__selection-button-text">
-              <button className="modal__selection-button" onClick={() => handleColorButtonClick()}>{color}</button>
+              <button className={color === 'Select Color' ? "modal__selection-button no-choice" : "modal__selection-button"} onClick={() => handleColorButtonClick()}>{color}</button>
             </div>
-            <div className="modal__selection-arrow">icon</div>
+            <div className="modal__selection-arrow">
+              <svg className={colorShow ? "modal__selection-arrow-svg arrow-flip" : "modal__selection-arrow-svg"} viewBox="0 0 8 5">
+                <g fill="none" fillRule="evenodd">
+                  <path d="M-4-6h16v16H-4z"></path>
+                  <path d="M1 0a1.003 1.003 0 0 0-.71 1.71l3 3c.18.18.43.29.71.29.28 0 .53-.11.71-.29l3-3A1.003 1.003 0 0 0 7 0H1z" fill="#48636f"></path>
+                </g>
+              </svg>
+            </div>
           </div>
           <div className={colorShow ? "modal__selections" : "modal__selections hide-selections"}>
             {colorList().map((option, idx) => <ModalDetailsOption key={idx} option={option} handleSelection={handleColorSelection}/>)}
@@ -197,7 +216,6 @@ const ModalDetailsOptions = ({ options, handleModalExit }) => {
         : null
       }
       <ModalBuyButton colorError={colorError} buyReady={buyReady} handleBuyCheck={handleBuyCheck} handleBuyCheckout={handleBuyCheckout}/>
-      {`${selections.size} ${selections.color} ${colorError}`}
     </div>
   );
 }

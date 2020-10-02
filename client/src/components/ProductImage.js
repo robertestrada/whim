@@ -15,11 +15,8 @@ const Product = ({ product_img_url, feed_pricing, feed_almost_gone }) => {
           }`}
           onLoad={() => setImageLoaded(true)}
           />
-        {!imageLoaded && (
-          <div className="product__smooth-preloader"/>
-        )}
         {feed_pricing.change ? <div className="product__percent">{`${feed_pricing.change * 100}%`}</div> : null}
-        <div className="product__almost-gone">{feed_almost_gone && "Almost Gone!"}</div>
+        {feed_almost_gone ? <div className="product__almost-gone">"Almost Gone!"</div> : null}
       </div>
     </div>
   );

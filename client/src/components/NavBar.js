@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
-// import SearchBar from './SearchBar.js'
-// import SearchBarSem from './SearchBarSem.js'
 import '../styles/navBar.css';
 import { useDispatch } from 'react-redux'
 import * as AuthActions from '../actions/authentication';
-// import RequestNotification from './RequestNotification.js';
 
-function NavBar(props) {
+function NavBar({ panelType }) {
 
   const dispatch = useDispatch();
   const history = useHistory();
-  // const fullname = useSelector((state) => state.authentication.user.full_name)
+  const profilePicUrl = useSelector((state) => state.authentication.user.pic_url);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,9 +23,22 @@ function NavBar(props) {
       <div className="navbar__logo-wrapper">
         <Link to="/"><img className="navbar__logo" src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg" alt="" /></Link>
       </div>
-      <div className="navbar__options">
-        <button className="login__submit" onClick={handleSubmit}>Log Out</button>
-      </div>
+      { panelType === 'feed' ? 
+        <div className="navbar__options">
+          <div className="navbar__profile-wrapper">
+            <button className="navbar__logout" onClick={handleSubmit}>
+              <img
+                src={profilePicUrl}
+                alt={""}
+                className={`smooth-image-profile image-${imageLoaded ? 'visible' : 'hidden'
+                  }`}
+                onLoad={() => setImageLoaded(true)}
+              />
+            </button>
+          </div>
+        </div>
+      : null
+      }
     </div>
   );
 }

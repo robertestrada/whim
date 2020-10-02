@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import '../styles/modalSplide.css';
 import '../styles/modal.css';
 
 const ModalImages = ({ productImgUrls, imageLoaded, imageFocus, setImageFocus, setImageLoaded }) => {
   const handleImageSelect = (idx) => { if (imageFocus !== idx) setImageFocus(idx) };
-
 
   return (
     <div className="modal__images">
