@@ -48,25 +48,7 @@ def inject_csrf_token(response):
         httponly=True)
     return response
 
-
-# @app.route('/', defaults={'path': ''})
-# @app.route('/<path:path>')
-# def serve(path):
-#     path_dir = os.path.abspath("../build")  # path react build
-#     if path != "" and os.path.exists(os.path.join(path_dir, path)):
-#         return send_from_directory(os.path.join(path_dir), path)
-#     else:
-#         return send_from_directory(os.path.join(path_dir), 'index.html')
-
 @app.route('/', defaults={'path': ''})
 @app.route('/<path>')
 def react_root(path):
     return app.send_static_file('index.html')
-
-
-
-# @app.route('/', defaults={'path': '', 'subpath': ''})
-# @app.route('/<path>')
-# @app.route('/<path>/<subpath>')
-# def react_root(path):
-#     return app.send_static_file('index.html')
