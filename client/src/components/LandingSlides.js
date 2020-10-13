@@ -34,7 +34,7 @@ const LandingSlides = () => {
 
   const sliderFourBuild = () => {
     const slides = [];
-    for (let i = 19; i <= 25; i++) {
+    for (let i = 19; i <= 24; i++) {
       slides.push(`https://whim-bucket.s3-us-west-1.amazonaws.com/whim-landing-images/${i}.jpg`);
     }
     setSliderFour([...slides, ...slides]);
@@ -50,7 +50,7 @@ const LandingSlides = () => {
 
   return (
     <>
-      <div className="landing__sliders-wraper-rev">
+      <div className="landing__sliders-wrapper-rev one">
         <div className="landing__slider-rev">
           {sliderOne.map((url, idx) => <img 
                                         key={`${url}${idx}`}
@@ -62,7 +62,7 @@ const LandingSlides = () => {
         }
         </div>
       </div>
-      <div className="landing__sliders-wraper">
+      <div className="landing__sliders-wrapper two">
         <div className="landing__slider">
           {sliderTwo.map((url, idx) => <img
             key={`${url}${idx}`}
@@ -74,7 +74,7 @@ const LandingSlides = () => {
           }
         </div>
       </div>
-      <div className="landing__sliders-wraper-rev">
+      <div className="landing__sliders-wrapper-rev three">
         <div className="landing__slider-rev">
           {sliderThree.map((url, idx) => <img
             key={`${url}${idx}`}
@@ -86,7 +86,7 @@ const LandingSlides = () => {
           }
         </div>
       </div>
-      <div className="landing__sliders-wraper">
+      <div className="landing__sliders-wrapper four">
         <div className="landing__slider">
           {sliderFour.map((url, idx) => <img
             key={`${url}${idx}`}
