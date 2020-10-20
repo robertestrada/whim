@@ -4,7 +4,7 @@ import '../styles/logIn.css';
 import { useDispatch, useSelector } from 'react-redux'
 import * as AuthActions from '../actions/authentication';
 import DemoButton from './DemoButton'
-
+import GoogleSignin from './GoogleSignin.js'
 
 function LogIn() {
   const dispatch = useDispatch();
