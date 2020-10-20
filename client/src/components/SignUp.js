@@ -4,6 +4,7 @@ import '../styles/logIn.css';
 import { useDispatch, useSelector } from 'react-redux'
 import { removeAuth, signUp } from '../actions/authentication';
 import {useHistory} from 'react-router-dom'
+import GoogleSignup from './GoogleSignup'
 
 function SignUp() {
 
