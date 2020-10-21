@@ -26,7 +26,7 @@ function GoogleSignin() {
     e.preventDefault();
     await dispatch(AuthActions.removeAuth());
     try {
-      const storeReady = await dispatch(AuthActions.signIn(auth.currentUser.le.nt.Wt, auth.currentUser.le.nt.yT));
+      const storeReady = await dispatch(AuthActions.signIn(auth.currentUser.le.tt.$t, auth.currentUser.le.tt.CT));
       if (storeReady) {
         history.push('/')
       }
