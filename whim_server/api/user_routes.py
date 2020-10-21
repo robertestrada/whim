@@ -1,22 +1,11 @@
 from flask import Blueprint, jsonify, render_template, request, redirect, url_for
 from whim_server.models import User, db
-# from ..models import User, db
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_optional, create_access_token, get_jwt_identity, jwt_required, get_raw_jwt
 from flask_wtf.csrf import CSRFProtect, generate_csrf, validate_csrf
 import random
 
 user_routes = Blueprint("user", __name__, "")
-
-# @user_routes.route('/')
-# def index():
-#   response = User.query.all()
-#   return { "users": [user.to_dict() for user in response]}
-
-# @user_routes.route('/allusers', methods=['POST'])
-# def allusers():
-#   response = User.query.all()
-#   return { "users": [user.to_dict() for user in response]}
 
 @user_routes.route('/signup', methods=['POST'])
 def sign_up():
@@ -51,7 +40,7 @@ def sign_in():
       if not email or not password:
         return jsonify({"msg": "Please fill out all fields"}), 400
 
-      user= User.query.filter(User.email==email).one()
+      user = User.query.filter(User.email==email).one()
       if (user.check_password(password)):
         access_token = create_access_token(identity=email)
         print ({"token": access_token, "user": user.to_dict()})

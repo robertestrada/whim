@@ -47,8 +47,13 @@ function LogIn() {
           <DemoButton email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
           <button className="login__submit login-button" type="submit">Log In</button>
         </div>
+        <div className="login__auth-divider-wrapper">
+          <div className="login__auth-divider-line"/>
+          <div className="login__auth-divider-text">or</div>
+        </div>
+        <GoogleSignin />
         <div className="login__terms">
-          By clicking 'Log In', you agree to the Whim Terms of Use and Privacy Policy. Terms of Service apply.
+          By clicking 'Log In' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. The Google Privacy Policy and Terms of Service apply.
         </div>
       </form>
     );
