@@ -37,5 +37,4 @@ def get_category_products(category, page):
 @product_routes.route("/<int:id>")
 def get_product(id):
   result = Product.query.filter(Product.id==id).one()
-  # data = result.main_dict()
   return result.main_dict(), 200
