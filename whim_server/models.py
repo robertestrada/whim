@@ -81,7 +81,9 @@ class Order(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
   product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
-  price = db.Column(db.Float, nullable=False)
+  option_id = db.Column(db.Integer, db.ForeignKey('options.id'), nullable=False)
+  quantity = db.Column(db.Integer, nullable=False)
+  merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
   completed = db.Column(db.Boolean, default=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   date_paid = db.Column(db.DateTime)
@@ -91,9 +93,12 @@ class Order(db.Model):
           "id": self.id,
           "user_id": self.user_id,
           "product_id": self.product_id,
-          "price": self.price,
+          "option_id": self.option_id,
+          "quantity": self.quantity,
+          "merchant_id": self.merchant_id,
           "completed": self.completed,
           "created_at": self.completed,
+          "date_paid": self.date_paid,
           }
 
 
@@ -211,8 +216,8 @@ class Option(db.Model):
   product_id = db.Column(db.Integer, db.ForeignKey("products.id"), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
-
-  # product = db.relationship("Product", back_populates="options")
+  
+  orders = db.relationship('Order', backref='option')
 
   def to_dict(self):
     return {
