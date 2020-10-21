@@ -68,8 +68,13 @@ function SignUp() {
           : null
         }
         <button className="login__submit" type="submit" >Sign Up</button>
+        <div className="login__auth-divider-wrapper">
+          <div className="login__auth-divider-line" />
+          <div className="login__auth-divider-text">or</div>
+        </div>
+        <GoogleSignup />
         <div className="login__terms">
-          By clicking 'Sign Up', you agree to the Whim Terms of Use and Privacy Policy. Terms of Service apply.
+          By clicking 'Sign Up' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. The Google Privacy Policy and Terms of Service apply.
         </div>
       </form>
     );

@@ -113,3 +113,74 @@
   color: rgb(126, 154, 166);
   width: 100%;
 }
+
+.login__auth-divider-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  width: 100%;
+  margin: 16px 0px;
+}
+
+.login__auth-divider-line {
+  width: 100%;
+  background-color: rgb(212, 227, 235);
+  border: none;
+  height: 1px;
+}
+
+.login__auth-divider-text {
+  position: absolute;
+  padding: 0px 18px;
+  background-color: rgb(255, 255, 255);
+  color: rgb(175, 199, 209);
+  font-size: 14px;
+  font-weight: 400;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.login__google.google-signin {
+  background-color: rgb(255, 255, 255);
+  box-shadow: rgba(0, 0, 0, 0.13) 0px 0px 2px 0px, rgba(0, 0, 0, 0.12) 0px 0px 4px 0px;
+  padding: 0px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease 0s;
+  color: rgb(255, 255, 255);
+  font-size: 16px;
+  font-weight: 700;
+  height: 48px;
+  border: transparent;
+  position: relative;
+}
+
+.login__google.google-signin:focus {
+  outline: none;
+}
+
+.login__google-svg {
+  width: 48px;
+  height: 48px;
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.login__google-text {
+  flex-grow: 1;
+  font-size: 16px;
+  font-weight: 700;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.54);
+}
