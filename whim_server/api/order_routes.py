@@ -8,9 +8,9 @@ order_routes = Blueprint("orders", __name__, url_prefix="/order")
 
 @order_routes.route("/all/<int:user_id>")
 def get_all_orders(user_id):
-  orders = Order.query.filter(Order.user_id==user_id).order_by(desc(Order.updated_at)).all()
+  orders = Order.query.filter(Order.user_id==user_id).order_by(desc(Order.created_at)).all()
   data = [order.to_dict() for order in orders]
-  return data, 200
+  return {'data': data}, 200
 
 
 @order_routes.route('/add', methods=['POST'])

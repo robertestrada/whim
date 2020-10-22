@@ -8,8 +8,9 @@ import '../styles/modal.css';
 
 
 
-const ModalDetailsOptions = ({ merchantId, productId, options, handleModalExit }) => {
+const ModalDetailsOptions = ({ merchant, productId, options, handleModalExit }) => {
   const dispatch = useDispatch();
+  const merchantId = merchant.id;
   const userId = useSelector((state) => state.authentication.user.id);
   const [size, setSize] = useState('Select Size');
   const [color, setColor] = useState('Select Color');
@@ -165,10 +166,8 @@ const ModalDetailsOptions = ({ merchantId, productId, options, handleModalExit }
   };
 
   const handleBuyCheckout = () => {
-    const optionId = () => {
-      return options.filter(option => option.size === selections['size'] && option.color === selections['color']);
-    }
-    console.log("optionId:", optionId);
+    const optionId = options.filter(option => option.size === selections['size'] && option.color === selections['color'])[0].id;
+    console.log("merchantId:", merchantId);
     dispatch(addCartItem(userId, productId, optionId, merchantId));
     handleModalExit();
   };

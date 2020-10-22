@@ -22,7 +22,7 @@ function DashBoard() {
             console.log("userId:", currentUser.id)
             dispatch(loadCart(currentUser.id));
         }
-    }, [dispatch]);
+    }, [currentUser, dispatch]);
 
     const handleModalChange = ({ productId, showModal }) => {
         setModalData({ "productId": productId, "showModal": showModal })
