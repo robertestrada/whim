@@ -114,7 +114,7 @@ const Modal = ({ checkedOut, setCheckedOut, modalData: { productId, showModal },
                         <ModalShipping productData={productData}/>
                       </div>
                       <div className="modal__right">
-                        <ModalDetails productData={productData} productImgUrl={productImgUrls[0]} handleModalExit={handleModalExit} />
+                        <ModalDetails productData={productData} handleModalExit={handleModalExit} />
                       </div>
                     </div>
                   </div>

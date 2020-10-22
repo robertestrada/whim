@@ -1,17 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { loadCart } from '../actions/cart';
 import NavBar from './NavBar';
 import Feed from './Feed';
 import SideBanner from './SideBanner';
 import Modal from './Modal';
 import '../styles/dashboard.css';
-import { useSelector } from 'react-redux'
 
 
 function DashBoard() {
-    const currentUser = useSelector(state => state.authentication.user)
+    const dispatch = useDispatch();
+    const currentUser = useSelector(state => state.authentication.user);
     const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
     const [panelType, setPanelType] = useState('feed');
     const [checkedOut, setCheckedOut] = useState(false);
+    // currentUser && console.log("userId:", currentUser);
+    // currentUser && console.log("userId:", currentUser.id);
+
+    useEffect(() => {
+        if (currentUser){
+            console.log("userId:", currentUser.id)
+            dispatch(loadCart(currentUser.id));
+        }
+    }, [dispatch]);
 
     const handleModalChange = ({ productId, showModal }) => {
         setModalData({ "productId": productId, "showModal": showModal })

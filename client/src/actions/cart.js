@@ -1,8 +1,10 @@
-const CART_KEY = 'whim/cart';
+import { baseUrl } from '../config';
 export const LOAD_CART = 'LOAD_CART';
 export const ADD_CART_ITEM = 'ADD_CART_ITEM';
 export const REMOVE_CART_ITEM = 'REMOVE_CART_ITEM';
+export const UPDATE_CART_QUANTITY = 'UPDATE_CART_QUANTITY';
 export const CLEAR_CART = 'CLEAR_CART';
+
 
 const loadCartAction = cart => ({
   type: LOAD_CART,
@@ -19,45 +21,57 @@ const removeCartItemAction = id => ({
   id,
 });
 
+const updateCartQuantityAction = item => ({
+  type: UPDATE_CART_QUANTITY,
+  item,
+});
+
 const clearCartAction = () => ({
   type: CLEAR_CART,
 });
 
-export const loadCart = () => async dispatch => {
-  let cart = window.localStorage.getItem(CART_KEY);
-  if (cart) {
-    cart = JSON.parse(cart);
-  } else {
-    cart = {};
+export const loadCart = (userId) => async dispatch => {
+  console.log("LOAD CART");
+  const result = await fetch(`${baseUrl}/all/${userId}`);
+  if (result.ok) {
+    const resultJSON = await result.json();
+    console.log("LOAD resultJSON:", resultJSON);
+    dispatch(loadCartAction(resultJSON));
   }
-  dispatch(loadCartAction(cart));
 };
 
-export const addCartItem = (item) => async (dispatch) => {
-  let cart;
-  if (window.localStorage.getItem(CART_KEY)){
-    cart = JSON.parse(window.localStorage.getItem(CART_KEY))
-  } else {
-    cart = {};
+export const addCartItem = (userId, productId, optionId, merchantId) => async dispatch => {
+  const result = await fetch(`${baseUrl}/add`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId, productId, optionId, merchantId }),
+  });
+  if (result.ok) {
+    const resultJSON = await result.json();
+    console.log("ADD resultJSON:", resultJSON);
+    dispatch(addCartItemAction(resultJSON));
+    dispatch(loadCart());
   }
-
-  cart[item.id] = item;
-  window.localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  dispatch(addCartItemAction(item));
-  dispatch(loadCart());
 }
 
-export const removeCartItem = (id) => async (dispatch) => {
-  const cart = JSON.parse(window.localStorage.getItem(CART_KEY));
-  delete cart[id];
-  
-  window.localStorage.setItem(CART_KEY, JSON.stringify(cart));
-  dispatch(removeCartItemAction(id));
-  dispatch(loadCart());
+export const removeCartItem = (orderId) => async dispatch => {
+  const result = await fetch(`${baseUrl}/remove/${orderId}`);
+  if (result.ok) {
+    dispatch(removeCartItemAction(orderId));
+    dispatch(loadCart());
+  }
+}
+
+export const updateCartQuantity = (orderId, quantity) => async dispatch => {
+  const result = await fetch(`${baseUrl}/update/${orderId}/${quantity}`);
+  if (result.ok) {
+    const resultJSON = await result.json();
+    dispatch(updateCartQuantityAction(resultJSON));
+    dispatch(loadCart());
+  }
 }
 
 export const clearCart = () => dispatch => {
-  window.localStorage.removeItem(CART_KEY);
   dispatch(clearCartAction());
   dispatch(loadCart());
 }

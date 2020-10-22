@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addCartItem } from '../actions/cart';
 import ModalDetailsOption from './ModalDetailsOption';
 import ModalBuyButton from './ModalBuyButton';
@@ -8,8 +8,9 @@ import '../styles/modal.css';
 
 
 
-const ModalDetailsOptions = ({ productData, productImgUrl, productId, options, handleModalExit }) => {
+const ModalDetailsOptions = ({ merchantId, productId, options, handleModalExit }) => {
   const dispatch = useDispatch();
+  const userId = useSelector((state) => state.authentication.user.id);
   const [size, setSize] = useState('Select Size');
   const [color, setColor] = useState('Select Color');
   const [sizeExists, setSizeExists] = useState(false);
@@ -164,7 +165,11 @@ const ModalDetailsOptions = ({ productData, productImgUrl, productId, options, h
   };
 
   const handleBuyCheckout = () => {
-    dispatch(addCartItem({ 'id': productId, 'productData': productData, 'productImgUrl': productImgUrl, 'size': selections.size, 'color': selections.color }));
+    const optionId = () => {
+      return options.filter(option => option.size === selections['size'] && option.color === selections['color']);
+    }
+    console.log("optionId:", optionId);
+    dispatch(addCartItem(userId, productId, optionId, merchantId));
     handleModalExit();
   };
 
