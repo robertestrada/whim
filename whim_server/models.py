@@ -82,7 +82,7 @@ class Order(db.Model):
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
   product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
   option_id = db.Column(db.Integer, db.ForeignKey('options.id'), nullable=False)
-  quantity = db.Column(db.Integer, nullable=False)
+  quantity = db.Column(db.Integer, default=1)
   merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
   completed = db.Column(db.Boolean, default=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
@@ -93,7 +93,9 @@ class Order(db.Model):
           "id": self.id,
           "user_id": self.user_id,
           "product_id": self.product_id,
+          "product_data": self.product,
           "option_id": self.option_id,
+          "option_data": self.option_data(),
           "quantity": self.quantity,
           "merchant_id": self.merchant_id,
           "completed": self.completed,

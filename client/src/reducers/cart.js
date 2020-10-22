@@ -2,6 +2,7 @@ import {
   LOAD_CART,
   ADD_CART_ITEM,
   REMOVE_CART_ITEM,
+  UPDATE_CART_QUANTITY,
   CLEAR_CART,
 } from '../actions/cart'
 
@@ -22,14 +23,20 @@ const cartReducer = (state = { items: {} }, action) => {
     }
 
     case REMOVE_CART_ITEM: {
-      const nextState = { ...state }
-      delete nextState.items[action.id]
-      return nextState;
+      const newState = { ...state }
+      delete newState.items[action.id]
+      return newState;
+    }
+
+    case UPDATE_CART_QUANTITY: {
+      return {
+        ...state,
+        [action.item.id]: action.item,
+      }
     }
 
     case CLEAR_CART: {
-      const nextState = {};
-      return nextState;
+      return {};
     }
 
     default: return state;

@@ -3,15 +3,14 @@ import ModalDetailsPricing from './ModalDetailsPricing';
 import ModalDetailsOptions from './ModalDetailsOptions';
 import '../styles/modal.css';
 
-const ModalDetails = ({ productData, productImgUrl, handleModalExit }) => {
-
-
+const ModalDetails = ({ productData, handleModalExit }) => {
+  // console.log("productData", productData.merchant_id);
   return (
     <div className="modal__right-wrapper">
       <div className="modal__product-details">
         <h1 className="modal__product-title">{productData.name}</h1>
         {productData.options && <ModalDetailsPricing productData={productData}/>}
-        {productData.options && <ModalDetailsOptions productData={productData} productImgUrl={productImgUrl} productId={productData.id} options={productData.options} handleModalExit={handleModalExit}/>}
+        {productData.options && <ModalDetailsOptions merchant={productData.merchant} productId={productData.id} options={productData.options} handleModalExit={handleModalExit}/>}
       </div>
     </div>
   );
