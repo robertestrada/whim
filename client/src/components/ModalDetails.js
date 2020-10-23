@@ -4,7 +4,7 @@ import ModalDetailsOptions from './ModalDetailsOptions';
 import '../styles/modal.css';
 
 const ModalDetails = ({ productData, productImgUrl, handleModalExit }) => {
-  // console.log("productData", productData.merchant_id);
+  
   return (
     <div className="modal__right-wrapper">
       <div className="modal__product-details">
