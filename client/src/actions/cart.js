@@ -32,46 +32,48 @@ const clearCartAction = () => ({
 
 export const loadCart = () => async dispatch => {
   const userId = JSON.parse(window.localStorage.getItem('CURRENT_USER')).id;
-  const result = await fetch(`${baseUrl}/order/all/${userId}`);
+  const result = await fetch(`${baseUrl}/order/load/${userId}`);
   if (result.ok) {
     const resultJSON = await result.json();
-    console.log("LOAD resultJSON:", resultJSON.data);
     dispatch(loadCartAction(resultJSON.data));
   }
 };
 
-export const addCartItem = (userId, productId, optionId, merchantId) => async dispatch => {
+export const addCartItem = (userId, productId, optionId, productImgUrl) => async dispatch => {
   const result = await fetch(`${baseUrl}/order/add`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId, productId, optionId, merchantId }),
+    body: JSON.stringify({ userId, productId, optionId, productImgUrl }),
   });
   if (result.ok) {
     const resultJSON = await result.json();
-    console.log("ADD resultJSON:", resultJSON);
-    dispatch(addCartItemAction(resultJSON));
-    dispatch(loadCart());
+    dispatch(addCartItemAction(resultJSON.data));
   }
+  dispatch(loadCart());
 }
 
-export const removeCartItem = (orderId) => async dispatch => {
+export const removeCartItem = orderId => async dispatch => {
   const result = await fetch(`${baseUrl}/order/remove/${orderId}`);
   if (result.ok) {
     dispatch(removeCartItemAction(orderId));
-    dispatch(loadCart());
   }
+  dispatch(loadCart());
 }
 
 export const updateCartQuantity = (orderId, quantity) => async dispatch => {
   const result = await fetch(`${baseUrl}/order/update/${orderId}/${quantity}`);
   if (result.ok) {
     const resultJSON = await result.json();
-    dispatch(updateCartQuantityAction(resultJSON));
-    dispatch(loadCart());
+    dispatch(updateCartQuantityAction(resultJSON.data));
   }
+  dispatch(loadCart());
 }
 
-export const clearCart = () => dispatch => {
-  dispatch(clearCartAction());
+export const clearCart = () => async dispatch => {
+  const userId = JSON.parse(window.localStorage.getItem('CURRENT_USER')).id;
+  const result = await fetch(`${baseUrl}/order/complete/${userId}`);
+  if (result.ok) {
+    dispatch(clearCartAction());
+  }
   dispatch(loadCart());
 }

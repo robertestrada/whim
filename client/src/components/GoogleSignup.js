@@ -17,16 +17,25 @@ function GoogleSignUp() {
         apiKey: 'AIzaSyAvOjlm1n826DLkUo3rkK6EQqknve3LZ3s',
       }).then(() => {
         let authorized = window.gapi.auth2.getAuthInstance();
+        console.log("authorized:", authorized);
         setAuth(authorized);
       })
     });
   }, [])
 
+  // Ad: "Robert Estrada"
+  // JJ: "https://lh3.googleusercontent.com/a-/AOh14Ggs69iQC39Fp3TQAC-1rnDt8h74Bmvb5pSc7TCZ7T8=s96-c"
+  // Wt: "bobberay@gmail.com"
+  // dV: "Robert"
+  // fT: "Estrada"
+  // yT: "104244455592405593743"
+
   const handleSubmit = (e) => {
     e.preventDefault();
     try {
       auth.signIn().then(() => {
-        const storeReady = dispatch(signUp(auth.currentUser.le.tt.gV, auth.currentUser.le.tt.jT, auth.currentUser.le.tt.$t, auth.currentUser.le.tt.CT, auth.currentUser.le.tt.OJ));
+        console.log("auth submit");
+        const storeReady = dispatch(signUp(auth.currentUser.le.nt.dV, auth.currentUser.le.nt.fT, auth.currentUser.le.nt.Wt, auth.currentUser.le.nt.yT, auth.currentUser.le.nt.JJ));
         storeReady.then((result) => {
           if (result === true) {
             history.push('/');

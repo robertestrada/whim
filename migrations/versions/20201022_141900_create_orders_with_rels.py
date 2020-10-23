@@ -1,8 +1,8 @@
-"""create orders
+"""create orders with rels
 
-Revision ID: 0518c566b6e0
+Revision ID: 272707d74c64
 Revises: 
-Create Date: 2020-10-21 19:30:25.770130
+Create Date: 2020-10-22 14:19:00.525004
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0518c566b6e0'
+revision = '272707d74c64'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -76,12 +76,11 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('product_id', sa.Integer(), nullable=False),
     sa.Column('option_id', sa.Integer(), nullable=False),
+    sa.Column('image', sa.String(length=2000), nullable=False),
     sa.Column('quantity', sa.Integer(), nullable=True),
-    sa.Column('merchant_id', sa.Integer(), nullable=False),
     sa.Column('completed', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('date_paid', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['merchant_id'], ['merchants.id'], ),
     sa.ForeignKeyConstraint(['option_id'], ['options.id'], ),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),

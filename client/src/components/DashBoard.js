@@ -14,15 +14,12 @@ function DashBoard() {
     const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
     const [panelType, setPanelType] = useState('feed');
     const [checkedOut, setCheckedOut] = useState(false);
-    // currentUser && console.log("userId:", currentUser);
-    // currentUser && console.log("userId:", currentUser.id);
 
     useEffect(() => {
         if (currentUser){
-            console.log("userId:", currentUser.id)
             dispatch(loadCart(currentUser.id));
         }
-    }, [currentUser, dispatch]);
+    }, [dispatch, currentUser]);
 
     const handleModalChange = ({ productId, showModal }) => {
         setModalData({ "productId": productId, "showModal": showModal })

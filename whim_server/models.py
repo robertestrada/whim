@@ -82,8 +82,8 @@ class Order(db.Model):
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
   product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
   option_id = db.Column(db.Integer, db.ForeignKey('options.id'), nullable=False)
+  image = db.Column(db.String(2000), nullable=False)
   quantity = db.Column(db.Integer, default=1)
-  merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
   completed = db.Column(db.Boolean, default=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   date_paid = db.Column(db.DateTime)
@@ -93,13 +93,13 @@ class Order(db.Model):
           "id": self.id,
           "user_id": self.user_id,
           "product_id": self.product_id,
-          "product_data": self.product,
+          "product_data": self.product.cart_dict(),
           "option_id": self.option_id,
-          "option_data": self.option_data(),
+          "option_data": self.option.to_dict(),
           "quantity": self.quantity,
-          "merchant_id": self.merchant_id,
+          "image": self.image,
           "completed": self.completed,
-          "created_at": self.completed,
+          "created_at": self.created_at,
           "date_paid": self.date_paid,
           }
 
@@ -123,7 +123,7 @@ class Product(db.Model):
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   
   options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="joined")
-  orders = db.relationship('Order', backref='product')
+  orders = db.relationship("Order", backref="product", cascade="all, delete-orphan", lazy="joined")
     
   def feed_pricing(self):
     pricing = {"change": 0, "starting": 0, "ending": 0}
@@ -151,9 +151,7 @@ class Product(db.Model):
   def main_options(self):
     options_list = []
     for option in self.options:
-      print(f'OPTION: {option}')
       option_full = option.to_dict()
-      print(f'OPTION: {option_full}')
       options_list.append({
                           "id": option_full["id"],
                           "size": option_full["size"], 
@@ -179,11 +177,26 @@ class Product(db.Model):
           "shipping_usa": self.shipping_usa,
           "verified": self.verified,
           "merchant": self.merchant.to_dict(),
-          "orders": [order.to_dict() for order in self.orders],
           "created_at": self.created_at,
           "updated_at": self.updated_at,
           "options": [option.to_dict() for option in self.options],
         }
+    
+  def cart_dict(self):
+    return {
+        "id": self.id,
+        "name": self.name,
+        "description": self.description,
+        "category": self.category,
+        "instant_buy": self.instant_buy,
+        "add_on": self.add_on,
+        "shipping_speed": self.shipping_speed,
+        "shipping_usa": self.shipping_usa,
+        "verified": self.verified,
+        "merchant": self.merchant.to_dict(),
+        "created_at": self.created_at,
+        "updated_at": self.updated_at,
+    }
     
   def feed_dict(self):
     return {
@@ -219,7 +232,7 @@ class Option(db.Model):
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   
-  orders = db.relationship('Order', backref='option')
+  orders = db.relationship('Order', backref='option', lazy="joined")
 
   def to_dict(self):
     return {
