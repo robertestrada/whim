@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from whim_server.models import db, User, Product, Option, Order, Merchant
 from sqlalchemy import and_, or_, desc, update
-import datetime
+from datetime import datetime
 
 order_routes = Blueprint("orders", __name__, url_prefix="/order")
 
@@ -47,7 +47,8 @@ def update_order_quantity(order_id, quantity):
 
 @order_routes.route("/complete/<int:user_id>")
 def complete_order(user_id):
-  Order.query.filter(and_(Order.user_id==user_id, Order.completed==False)).update({'completed': True})
+  new_date_paid = datetime.now()
+  Order.query.filter(and_(Order.user_id==user_id, Order.completed==False)).update({'completed': True, 'date_paid': new_date_paid})
   db.session.commit()
   return 'Success', 200
 

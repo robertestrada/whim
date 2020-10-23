@@ -6,8 +6,6 @@ import ModalBuyButton from './ModalBuyButton';
 import '../styles/modal.css';
 
 
-
-
 const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExit }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector(state => Object.values(state.cart.items));

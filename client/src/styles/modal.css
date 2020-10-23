@@ -726,9 +726,6 @@ margin-bottom: 4px;
 
 .modal__select-icon-wrapper {
   height: 20px;
-  /* position: absolute; */
-  /* bottom: 0px; */
-  /* right: 0px; */
   display: flex;
   flex-direction: row;
   align-items: center;
