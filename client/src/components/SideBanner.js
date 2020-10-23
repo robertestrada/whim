@@ -9,7 +9,6 @@ const SideBanner = ({ setPanelType }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const cartItems = useSelector(state => Object.values(state.cart.items));
   useEffect(() => { }, [cartItems]);
-  console.log("cartItems:", cartItems);
 
   return (
     <div className="sidecart__wrapper">

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCartItem } from '../actions/cart';
+import { addCartItem, updateCartQuantity } from '../actions/cart';
 import ModalDetailsOption from './ModalDetailsOption';
 import ModalBuyButton from './ModalBuyButton';
 import '../styles/modal.css';
@@ -8,9 +8,9 @@ import '../styles/modal.css';
 
 
 
-const ModalDetailsOptions = ({ merchant, productId, options, handleModalExit }) => {
+const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExit }) => {
   const dispatch = useDispatch();
-  const merchantId = merchant.id;
+  const cartItems = useSelector(state => Object.values(state.cart.items));
   const userId = useSelector((state) => state.authentication.user.id);
   const [size, setSize] = useState('Select Size');
   const [color, setColor] = useState('Select Color');
@@ -166,9 +166,22 @@ const ModalDetailsOptions = ({ merchant, productId, options, handleModalExit }) 
   };
 
   const handleBuyCheckout = () => {
-    const optionId = options.filter(option => option.size === selections['size'] && option.color === selections['color'])[0].id;
-    console.log("merchantId:", merchantId);
-    dispatch(addCartItem(userId, productId, optionId, merchantId));
+    let optionId;
+    if (selections['size'] && selections['color'] !== null){
+      optionId = options.filter(option => option.size === selections['size'] && option.color === selections['color'])[0].id;
+    } else if (selections['size'] !== null) {
+      optionId = options.filter(option => option.size === selections['size'])[0].id;
+    } else if (selections['color'] !== null) {
+      optionId = options.filter(option => option.color === selections['color'])[0].id;
+    }
+
+    const cartOrder = cartItems.filter(order => order.option_id === optionId);
+    if(cartOrder.length === 0){
+      dispatch(addCartItem(userId, productId, optionId, productImgUrl));
+    } else {
+      const quantity = cartOrder[0].quantity + 1;
+      dispatch(updateCartQuantity(cartOrder[0].id, quantity));
+    }
     handleModalExit();
   };
 

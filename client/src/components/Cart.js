@@ -10,7 +10,7 @@ const Cart = ({ setCheckedOut, modalChange, setPanelType }) => {
   const dispatch = useDispatch();
   const [imageLoaded, setImageLoaded] = useState(false);
   const cartItems = useSelector(state => Object.values(state.cart.items));
-
+  
   useEffect(() => { 
     if (cartItems.length === 0) {
       setPanelType('feed');
@@ -19,11 +19,11 @@ const Cart = ({ setCheckedOut, modalChange, setPanelType }) => {
   }, [cartItems]);
 
   const itemTotal = cartItems.reduce((acc, item) => {
-    return acc + item.productData.feed_pricing.ending;
+    return acc + item.option_data.price_ending;
   }, 0)
 
   const shippingTotal = cartItems.reduce((acc, item) => {
-    return acc + 2 + item.productData.options_data[0].weight;
+    return acc + 2 + item.option_data.weight;
   }, 0)
 
   const handleRemoveItem = (id) => {
@@ -49,23 +49,23 @@ const Cart = ({ setCheckedOut, modalChange, setPanelType }) => {
                   <div className="cart__item-inner-wrapper">
                       <div className="cart__product-image-wrapper">
                         <img
-                          src={item.productImgUrl}
+                          src={item.image}
                           alt={""}
                           className={`smooth-image-cart image-${imageLoaded ? 'visible' : 'hidden'}`}
                           onLoad={() => setImageLoaded(true)}
                         />
                       </div>
                       <div className="cart__product-info">
-                        <div className="cart__product-name">{item.productData.name}</div>
+                        <div className="cart__product-name">{item.product_data.name}</div>
                           {item.color && item.size
-                            ? <div className="cart__product-detail">{`${item.color}, Size ${item.size}`}</div>
+                            ? <div className="cart__product-detail">{`${item.option_data.color}, Size ${item.option_data.size}`}</div>
                             : item.color
-                              ? <div className="cart__product-detail">{item.color}</div>
+                              ? <div className="cart__product-detail">{item.option_data.color}</div>
                               : item.size
-                                ? <div className="cart__product-detail">{`Size ${item.size}`}</div>
+                                ? <div className="cart__product-detail">{`Size ${item.option_data.size}`}</div>
                                 : null
                           }
-                        <div className="cart__product-detail">{`Shipping: $${(2 + item.productData.options_data[0].weight)}`}</div>
+                        <div className="cart__product-detail">{`Shipping: $${(2 + item.option_data.weight)}`}</div>
                         <div className="cart__product-detail">
                           {`(${moment().add(4, 'd').format('MMM D')} - ${moment().add(20, 'd').format('MMM D')})`}
                           <svg className="cart__product-shipping-svg" viewBox="0 0 18 12">
@@ -80,8 +80,8 @@ const Cart = ({ setCheckedOut, modalChange, setPanelType }) => {
                         </div>
                       </div>
                       <div className="cart__price-info">
-                        <div className="cart__price-original">{`$${item.productData.feed_pricing.starting}`}</div>
-                        <div className="cart__price-ending">{`$${item.productData.feed_pricing.ending}`}</div>
+                        <div className="cart__price-original">{`$${item.option_data.price_starting}`}</div>
+                        <div className="cart__price-ending">{`$${item.option_data.price_ending}`}</div>
                       </div>
                     </div>
                   </div>)

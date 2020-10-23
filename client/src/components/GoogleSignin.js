@@ -17,7 +17,7 @@ function GoogleSignin() {
         apiKey: 'AIzaSyAvOjlm1n826DLkUo3rkK6EQqknve3LZ3s',
       }).then(() => {
         let authorized = window.gapi.auth2.getAuthInstance();
-        setAuth(authorized)
+        setAuth(authorized);
       })
     });
   }, [])
@@ -26,7 +26,7 @@ function GoogleSignin() {
     e.preventDefault();
     await dispatch(AuthActions.removeAuth());
     try {
-      const storeReady = await dispatch(AuthActions.signIn(auth.currentUser.le.tt.$t, auth.currentUser.le.tt.CT));
+      const storeReady = await dispatch(AuthActions.signIn(auth.currentUser.le.nt.Wt, auth.currentUser.le.nt.yT));
       if (storeReady) {
         history.push('/')
       }

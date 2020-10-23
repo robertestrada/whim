@@ -8,7 +8,7 @@ product_routes = Blueprint("products", __name__, url_prefix="/product")
 
 @product_routes.route("/popular/<int:page>")
 def get_popular_products(page):
-  results = Product.query.order_by(desc(Product.updated_at)).paginate(page, 24, False)
+  results = Product.query.order_by(Product.created_at).paginate(page, 24, False)
   more_data = results.has_next
   products = results.items
   data = [product.feed_dict() for product in products]
@@ -17,7 +17,7 @@ def get_popular_products(page):
 
 @product_routes.route("/express/<int:page>")
 def get_express_products(page):
-  results = Product.query.filter(Product.shipping_speed > 0).order_by(desc(Product.updated_at)).paginate(page, 24, False)
+  results = Product.query.filter(Product.shipping_speed > 0).order_by(Product.created_at).paginate(page, 24, False)
   more_data = results.has_next
   products = results.items
   data = [product.feed_dict() for product in products]
@@ -26,7 +26,7 @@ def get_express_products(page):
 
 @product_routes.route("/category/<category>/<int:page>")
 def get_category_products(category, page):
-  results = Product.query.filter(Product.category==category).order_by(desc(Product.updated_at)).paginate(page, 24, False)
+  results = Product.query.filter(Product.category==category).order_by(Product.created_at).paginate(page, 24, False)
   more_data = results.has_next
   products = results.items
   data = [product.feed_dict() for product in products]

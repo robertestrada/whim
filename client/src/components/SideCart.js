@@ -12,13 +12,13 @@ const SideCart = ({ setPanelType, cartItems, imageLoaded, setImageLoaded }) => {
           {cartItems.map((item, idx) => <div className="sidecart__cart-item" key={idx}>
               <div className="sidecart__product-image-wrapper">
                 <img
-                  src={item.productImgUrl}
+                  src={item.image}
                   alt={""}
                   className={`smooth-image-sidecart image-${imageLoaded ? 'visible' : 'hidden'}`}
                   onLoad={() => setImageLoaded(true)}
                 />
               </div>
-              <div className="sidecart__product-name">{item.productData.name}</div>
+              <div className="sidecart__product-name">{item.product_data.name}</div>
             </div>)
           }
         </div>
