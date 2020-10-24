@@ -4,6 +4,7 @@ import { loadCart } from '../actions/cart';
 import NavBar from './NavBar';
 import Feed from './Feed';
 import SideBanner from './SideBanner';
+import Banner from './Banner';
 import Modal from './Modal';
 import '../styles/dashboard.css';
 
@@ -32,9 +33,10 @@ function DashBoard() {
 
     return (
         <div className="dashboard">
-            <NavBar panelType={panelType}/>
+            <NavBar panelType={panelType} setPanelType={setPanelType}/>
             <Feed setCheckedOut={setCheckedOut} panelType={panelType} setPanelType={setPanelType} modalChange={handleModalChange} />
             {panelType === 'feed' ? <SideBanner setPanelType={setPanelType}/> : null }
+            <Banner />
             <Modal checkedOut={checkedOut} setCheckedOut={setCheckedOut} modalData={modalData} modalChange={handleModalChange}/>
         </div>
     );
