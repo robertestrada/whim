@@ -36,7 +36,7 @@ function DashBoard() {
             <NavBar panelType={panelType} setPanelType={setPanelType}/>
             <Feed setCheckedOut={setCheckedOut} panelType={panelType} setPanelType={setPanelType} modalChange={handleModalChange} />
             {panelType === 'feed' ? <SideBanner setPanelType={setPanelType}/> : null }
-            <Banner />
+            <Banner setPanelType={setPanelType}/>
             <Modal checkedOut={checkedOut} setCheckedOut={setCheckedOut} modalData={modalData} modalChange={handleModalChange}/>
         </div>
     );
