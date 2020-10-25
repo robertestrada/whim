@@ -1,8 +1,10 @@
 import { baseUrl } from '../config';
 export const LOAD_CART = 'LOAD_CART';
 export const ADD_CART_ITEM = 'ADD_CART_ITEM';
-export const REMOVE_CART_ITEM = 'REMOVE_CART_ITEM';
+export const UPDATE_CART_NOTIFIED = 'UPDATE_CART_NOTIFIED';
+export const MORE_CART_QUANTITY = 'UPDATE_CART_QUANTITY';
 export const UPDATE_CART_QUANTITY = 'UPDATE_CART_QUANTITY';
+export const REMOVE_CART_ITEM = 'REMOVE_CART_ITEM';
 export const CLEAR_CART = 'CLEAR_CART';
 
 
@@ -16,14 +18,24 @@ const addCartItemAction = item => ({
   item,
 });
 
-const removeCartItemAction = id => ({
-  type: REMOVE_CART_ITEM,
-  id,
+const updateCartNotifiedAction = item => ({
+  type: UPDATE_CART_NOTIFIED,
+  item,
+});
+
+const moreCartQuantityAction = item => ({
+  type: MORE_CART_QUANTITY,
+  item,
 });
 
 const updateCartQuantityAction = item => ({
   type: UPDATE_CART_QUANTITY,
   item,
+});
+
+const removeCartItemAction = id => ({
+  type: REMOVE_CART_ITEM,
+  id,
 });
 
 const clearCartAction = () => ({
@@ -52,10 +64,20 @@ export const addCartItem = (userId, productId, optionId, productImgUrl) => async
   dispatch(loadCart());
 }
 
-export const removeCartItem = orderId => async dispatch => {
-  const result = await fetch(`${baseUrl}/order/remove/${orderId}`);
+export const updateCartNotified = orderId => async dispatch => {
+  const result = await fetch(`${baseUrl}/order/notified/${orderId}`);
   if (result.ok) {
-    dispatch(removeCartItemAction(orderId));
+    const resultJSON = await result.json();
+    dispatch(updateCartNotifiedAction(resultJSON.data));
+  }
+  dispatch(loadCart());
+}
+
+export const moreCartQuantity = (orderId, quantity) => async dispatch => {
+  const result = await fetch(`${baseUrl}/order/more/${orderId}/${quantity}`);
+  if (result.ok) {
+    const resultJSON = await result.json();
+    dispatch(moreCartQuantityAction(resultJSON.data));
   }
   dispatch(loadCart());
 }
@@ -65,6 +87,14 @@ export const updateCartQuantity = (orderId, quantity) => async dispatch => {
   if (result.ok) {
     const resultJSON = await result.json();
     dispatch(updateCartQuantityAction(resultJSON.data));
+  }
+  dispatch(loadCart());
+}
+
+export const removeCartItem = orderId => async dispatch => {
+  const result = await fetch(`${baseUrl}/order/remove/${orderId}`);
+  if (result.ok) {
+    dispatch(removeCartItemAction(orderId));
   }
   dispatch(loadCart());
 }

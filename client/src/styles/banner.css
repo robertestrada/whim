@@ -1,0 +1,96 @@
+.banner__item-wrapper {
+  position: fixed;
+  right: 250px;
+  top: 52px;
+  width: 466px;
+}
+
+.banner__item-container {
+  background-color: white;
+  border-radius: 2px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 14px 0px;
+  transition: all 1s ease 0s;
+  transform: translateX(calc(100% + 16px));
+  opacity: 0;
+  margin-bottom: 8px;
+  cursor: pointer;
+  display: flex;
+  height: 192px;
+  pointer-events: none;
+}
+
+.banner__item-container.banner-reveal {
+  transform: translateX(0%);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.banner__left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 164px;
+  height: 164px;
+}
+
+.banner__image {
+  width: 100px;
+}
+
+.banner__right {
+  width: 302px;
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 32px 24px 12px 0px;
+}
+
+.banner__item-added {
+  font-size: 24px;
+  font-weight: 400;
+  margin-bottom: 16px;
+  color: rgb(25, 42, 50);
+}
+
+.banner__item-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: rgb(25, 42, 50);
+  display: block;
+}
+
+.banner__item-option {
+  font-size: 16px;
+  font-weight: 400;
+  margin-bottom: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: rgb(126, 154, 166);
+  display: block;
+  text-transform: capitalize;
+}
+
+.banner__view-cart {
+  border-radius: 4px;
+  padding: 0px 16px;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 16px;
+  height: 40px;
+  min-width: 104px;
+  background-color: rgb(47, 183, 236);
+  color: white;
+  transition: background-color 0.2s ease 0s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.banner__view-cart:hover {
+  background-color: rgb(0, 152, 211);
+}

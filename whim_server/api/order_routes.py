@@ -29,20 +29,38 @@ def add_order():
   return { 'data': orderData }, 200
 
 
+@order_routes.route("/notified/<int:order_id>")
+def update_order_notified(order_id):
+  Order.query.filter(Order.id == order_id).update({'notified': True})
+  db.session.commit()
+  updatedOrder = Order.query.filter(Order.id == order_id).one()
+  orderData = updatedOrder.to_dict()
+  return {'data': orderData}, 200
+
+
+@order_routes.route("/more/<int:order_id>/<int:quantity>")
+def more_order_quantity(order_id, quantity):
+  Order.query.filter(Order.id == order_id).update({'quantity': quantity, 'notified': False})
+  db.session.commit()
+  updatedOrder = Order.query.filter(Order.id == order_id).one()
+  orderData = updatedOrder.to_dict()
+  return {'data': orderData}, 200
+
+
+@order_routes.route("/update/<int:order_id>/<int:quantity>")
+def update_order_quantity(order_id, quantity):
+  Order.query.filter(Order.id == order_id).update({'quantity': quantity})
+  db.session.commit()
+  updatedOrder = Order.query.filter(Order.id == order_id).one()
+  orderData = updatedOrder.to_dict()
+  return {'data': orderData}, 200
+
+
 @order_routes.route("/remove/<int:order_id>")
 def remove_order(order_id):
   Order.query.filter(Order.id==order_id).delete()
   db.session.commit()
   return 'Success', 200
-
-
-@order_routes.route("/update/<int:order_id>/<int:quantity>")
-def update_order_quantity(order_id, quantity):
-  Order.query.filter(Order.id==order_id).update({ 'quantity': quantity })
-  db.session.commit()
-  updatedOrder = Order.query.filter(Order.id==order_id).one()
-  orderData = updatedOrder.to_dict()
-  return { 'data': orderData }, 200
 
 
 @order_routes.route("/complete/<int:user_id>")

@@ -1,8 +1,8 @@
-"""create orders with rels
+"""create orders with notified fields
 
-Revision ID: 272707d74c64
+Revision ID: cadd6a31c6b1
 Revises: 
-Create Date: 2020-10-22 14:19:00.525004
+Create Date: 2020-10-24 14:45:56.241882
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '272707d74c64'
+revision = 'cadd6a31c6b1'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -78,8 +78,10 @@ def upgrade():
     sa.Column('option_id', sa.Integer(), nullable=False),
     sa.Column('image', sa.String(length=2000), nullable=False),
     sa.Column('quantity', sa.Integer(), nullable=True),
+    sa.Column('notified', sa.Boolean(), nullable=True),
     sa.Column('completed', sa.Boolean(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
+    sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.Column('date_paid', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['option_id'], ['options.id'], ),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),
