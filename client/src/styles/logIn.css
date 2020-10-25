@@ -164,6 +164,10 @@
   position: relative;
 }
 
+.login__google.google-signin:hover {
+  background-color: rgb(250, 250, 250);
+}
+
 .login__google.google-signin:focus {
   outline: none;
 }
@@ -171,7 +175,6 @@
 .login__google-svg {
   width: 48px;
   height: 48px;
-  background-color: rgb(255, 255, 255);
   position: absolute;
   top: 0px;
   left: 0px;

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux'
+import * as AuthActions from '../actions/authentication';
 import '../styles/landingPage.css';
 import LogIn from './LogIn.js'
 import SignUp from './SignUp.js'
 import LandingSlides from './LandingSlides'
-import { useDispatch } from 'react-redux'
-import * as AuthActions from '../actions/authentication';
 
-function LandingPage() {
+const LandingPage = () => {
   const dispatch = useDispatch();
   const [button, setButton] = useState("login")
 

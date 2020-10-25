@@ -25,7 +25,7 @@ const Banner = ({ setPanelType }) => {
       }, 3000);
       return () => clearTimeout(notifyTimer)
     };
-  }, [recentCartItem]);
+  }, [recentCartItem, dispatch]);
   
   return (
     <div className="banner__item-wrapper">
