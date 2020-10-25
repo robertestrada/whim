@@ -4,7 +4,7 @@ import ProductInfo from './ProductInfo';
 import moment from 'moment';
 import '../styles/product.css';
 
-const Product = ({ product:  { id, category, feed_pricing, feed_almost_gone, advert, shipping_speed, shipping_usa, verified, feed_past_orders, created_at }, modalChange }) => {
+const Product = ({ product:  { id, category, feed_pricing, feed_almost_gone, advert, shipping_speed, shipping_usa, verified, feed_past_orders, created_at }, modalChange, setModalType }) => {
   let product_img_url = "";
   if (id < 4){
     product_img_url = `https://whim-bucket.s3-us-west-1.amazonaws.com/whim-products/product-${id}/1.jpg`
@@ -15,8 +15,13 @@ const Product = ({ product:  { id, category, feed_pricing, feed_almost_gone, adv
 
   const tzOffset = { "h": moment().utcOffset() / 60, "m": moment().utcOffset() % 60 };
 
+  const handleProductClick = () => {
+    modalChange({ "productId": id, "showModal": true });
+    setModalType('product');
+  }
+
   return (
-    <div className="product" onClick={() => modalChange({ "productId": id, "showModal": true })} style={{ animation: `fadeIn 0.5s` }}>
+    <div className="product" onClick={handleProductClick} style={{ animation: `fadeIn 0.5s` }}>
       <div className="product__container">
         <ProductImage 
           product_img_url={product_img_url}

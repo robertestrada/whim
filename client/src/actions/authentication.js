@@ -37,6 +37,9 @@ export const loadToken = () => async dispatch => {
   const token = window.localStorage.getItem(TOKEN_KEY);
   if (token) {
     dispatch(setToken(token));
+    return true;
+  } else {
+    return false;
   }
 };
 

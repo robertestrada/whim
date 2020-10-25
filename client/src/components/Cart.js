@@ -6,7 +6,7 @@ import CartItem from './CartItem';
 import '../styles/cart.css';
 
 
-const Cart = ({ setCheckedOut, modalChange, setPanelType }) => {
+const Cart = ({ setModalType, modalChange, setPanelType }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector(state => Object.values(state.cart.items));
 
@@ -18,11 +18,12 @@ const Cart = ({ setCheckedOut, modalChange, setPanelType }) => {
     return acc + (2 + item.option_data.weight) * item.quantity;
   }, 0);
 
+  
+
   const handleCheckout = () => {
     dispatch(clearCart());
-    setPanelType('feed');
     modalChange({ "productId": null, "showModal": true });
-    setCheckedOut(true);
+    setModalType('checkedOut');
   };
 
   return (

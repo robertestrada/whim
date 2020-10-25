@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import * as AuthActions from '../actions/authentication';
 import '../styles/logIn.css';
 
 function GoogleSignin() {
-  const [auth, setAuth] = useState('');
   const dispatch = useDispatch();
   const history = useHistory();
 
-  useEffect(() => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await dispatch(AuthActions.removeAuth());
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({
         clientId: '200012556157-sfdghuss7qmpecojpucib1qggovlajht.apps.googleusercontent.com',
@@ -17,25 +18,19 @@ function GoogleSignin() {
         apiKey: 'AIzaSyAvOjlm1n826DLkUo3rkK6EQqknve3LZ3s',
       }).then(() => {
         let authorized = window.gapi.auth2.getAuthInstance();
-        setAuth(authorized);
+        try {
+          const storeReady = dispatch(AuthActions.signIn(authorized.currentUser.le.nt.Wt, authorized.currentUser.le.nt.yT));
+          if (storeReady) {
+            history.push('/')
+          }
+        } catch {
+          const storeReady = dispatch(AuthActions.signIn('causeError', 'C4useError'));
+          if (storeReady) {
+            history.push('/')
+          }
+        }
       })
     });
-  }, [])
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await dispatch(AuthActions.removeAuth());
-    try {
-      const storeReady = await dispatch(AuthActions.signIn(auth.currentUser.le.nt.Wt, auth.currentUser.le.nt.yT));
-      if (storeReady) {
-        history.push('/')
-      }
-    } catch {
-      const storeReady = await dispatch(AuthActions.signIn('causeError', 'C4useError'));
-      if (storeReady) {
-        history.push('/')
-      }
-    }
   }
 
   return (
