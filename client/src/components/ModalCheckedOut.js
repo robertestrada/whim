@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import '../styles/modal.css';
 
-const ModalCheckedOut = ({ setCheckedOut, modalChange }) => {
+const ModalCheckedOut = ({ setModalType, modalChange }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const handleModalExit = () => {
     setImageLoaded(false);
-    setCheckedOut(false);
+    setModalType(false);
     modalChange({ "productId": null, "showModal": false })
   }
 

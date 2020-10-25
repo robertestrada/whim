@@ -9,7 +9,7 @@ import ModalShipping from './ModalShipping';
 import ModalDetails from './ModalDetails';
 import '../styles/modal.css';
 
-const ModalProduct = ({ setCheckedOut, productId, modalChange }) => {
+const ModalProduct = ({ setModalType, productId, modalChange }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageFocus, setImageFocus] = useState(0);
   const { promiseInProgress } = usePromiseTracker();
@@ -48,7 +48,7 @@ const ModalProduct = ({ setCheckedOut, productId, modalChange }) => {
     setImageLoaded(false);
     setProductData({ "product": null });
     setProductImgUrls([]);
-    setCheckedOut(false);
+    setModalType(false);
     modalChange({ "productId": null, "showModal": false })
   }
 

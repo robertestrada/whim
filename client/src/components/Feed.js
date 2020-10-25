@@ -8,7 +8,7 @@ import Cart from './Cart';
 import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
 
-const Feed = ({ setCheckedOut, panelType, setPanelType, modalChange }) => {
+const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch }) => {
   const { promiseInProgress } = usePromiseTracker();
   const initialPageData = { "page": 1, "loadMore": false, "tab": "popular"};
   const [pageData, setPageData] = useState(initialPageData);
@@ -42,6 +42,18 @@ const Feed = ({ setCheckedOut, panelType, setPanelType, modalChange }) => {
   };
 
   useEffect(() => {
+    if (viewSwitch !== null){
+        setPanelType('feed');
+        if (pageData.tab !== viewSwitch) {
+          setLoading(true);
+          setPageData({ "page": 1, "loadMore": false, "tab": viewSwitch });
+        }
+        setViewSwitch(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewSwitch]);
+
+  useEffect(() => {
     setPanelType('feed');
     setAllowScroll(true);
     fetchData();
@@ -70,14 +82,6 @@ const Feed = ({ setCheckedOut, panelType, setPanelType, modalChange }) => {
       setPageData({ ...pageData, "loadMore": false });
     }
   }
-
-  const handleTabChange = (newTab) => {
-    setPanelType('feed');
-    if (pageData.tab !== newTab){
-      setLoading(true);
-      setPageData({ "page": 1, "loadMore": false, "tab": newTab });
-    }
-  }
   
   const LoadingIndicator = () => {
     return (
@@ -96,21 +100,20 @@ const Feed = ({ setCheckedOut, panelType, setPanelType, modalChange }) => {
       <div className={panelType === 'feed' ? "feed__scroll-wrapper" : "feed__scroll-wrapper cart-visible"}>
         <div className="feed__scroll" ref={ref} onScroll={handleScroll}>
           { panelType === 'cart'
-            ? <Cart setCheckedOut={setCheckedOut} setPanelType={setPanelType} modalChange={modalChange}/>
+            ? <Cart setModalType={setModalType} setPanelType={setPanelType} modalChange={modalChange}/>
             : loading || (((promiseInProgress && !productsData.products) && !pageData.loadMore) || (!productsData.products && !pageData.loadMore))
-            ? <div className="feed__loader" >
-                <LoadingIndicator/>
-              </div>
-            : 
-              <div className="feed__grid-wrapper">
-                {categories.includes(pageData.tab.toLowerCase())
-                  ? <div className="feed__results">Results for "<span className="feed__results-search">{pageData.tab}</span>"</div>
-                  : <div className="feed__no-results">&nbsp;</div>
-                }
-                <div className="feed__grid">
-                  {productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange}/>)}
+              ? <div className="feed__loader" >
+                  <LoadingIndicator/>
                 </div>
-              </div>
+              : <div className="feed__grid-wrapper">
+                  {categories.includes(pageData.tab.toLowerCase())
+                    ? <div className="feed__results">Results for "<span className="feed__results-search">{pageData.tab}</span>"</div>
+                    : <div className="feed__no-results">&nbsp;</div>
+                  }
+                  <div className="feed__grid">
+                    {productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange} setModalType={setModalType}/>)}
+                  </div>
+                </div>
           }
         </div>
       </div>
