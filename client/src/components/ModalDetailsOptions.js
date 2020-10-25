@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addCartItem, updateCartQuantity } from '../actions/cart';
+import { addCartItem, moreCartQuantity } from '../actions/cart';
 import ModalDetailsOption from './ModalDetailsOption';
 import ModalBuyButton from './ModalBuyButton';
 import '../styles/modal.css';
@@ -178,7 +178,7 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
       dispatch(addCartItem(userId, productId, optionId, productImgUrl));
     } else {
       const quantity = cartOrder[0].quantity + 1;
-      dispatch(updateCartQuantity(cartOrder[0].id, quantity));
+      dispatch(moreCartQuantity(cartOrder[0].id, quantity));
     }
     handleModalExit();
   };

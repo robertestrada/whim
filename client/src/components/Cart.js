@@ -12,11 +12,11 @@ const Cart = ({ setCheckedOut, modalChange, setPanelType }) => {
 
   const itemTotal = cartItems.reduce((acc, item) => {
     return acc + (item.option_data.price_ending * item.quantity);
-  }, 0)
+  }, 0);
 
   const shippingTotal = cartItems.reduce((acc, item) => {
     return acc + (2 + item.option_data.weight) * item.quantity;
-  }, 0)
+  }, 0);
 
   const handleCheckout = () => {
     dispatch(clearCart());

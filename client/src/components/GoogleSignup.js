@@ -17,7 +17,6 @@ function GoogleSignUp() {
         apiKey: 'AIzaSyAvOjlm1n826DLkUo3rkK6EQqknve3LZ3s',
       }).then(() => {
         let authorized = window.gapi.auth2.getAuthInstance();
-        console.log("authorized:", authorized);
         setAuth(authorized);
       })
     });
@@ -34,7 +33,6 @@ function GoogleSignUp() {
     e.preventDefault();
     try {
       auth.signIn().then(() => {
-        console.log("auth submit");
         const storeReady = dispatch(signUp(auth.currentUser.le.nt.dV, auth.currentUser.le.nt.fT, auth.currentUser.le.nt.Wt, auth.currentUser.le.nt.yT, auth.currentUser.le.nt.JJ));
         storeReady.then((result) => {
           if (result === true) {

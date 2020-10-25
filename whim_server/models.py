@@ -84,8 +84,10 @@ class Order(db.Model):
   option_id = db.Column(db.Integer, db.ForeignKey('options.id'), nullable=False)
   image = db.Column(db.String(2000), nullable=False)
   quantity = db.Column(db.Integer, default=1)
+  notified = db.Column(db.Boolean, default=False)
   completed = db.Column(db.Boolean, default=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
+  updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
   date_paid = db.Column(db.DateTime)
   
   def to_dict(self):
@@ -98,8 +100,10 @@ class Order(db.Model):
           "option_data": self.option.to_dict(),
           "quantity": self.quantity,
           "image": self.image,
+          "notified": self.notified,
           "completed": self.completed,
           "created_at": self.created_at,
+          "updated_at": self.updated_at,
           "date_paid": self.date_paid,
           }
 

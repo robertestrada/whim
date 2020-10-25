@@ -10,12 +10,19 @@
   border-radius: 2px;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 14px 0px;
   transition: all 1s ease 0s;
-  /* transform: translateX(calc(100% + 16px)); */
-  opacity: 1;
+  transform: translateX(calc(100% + 16px));
+  opacity: 0;
   margin-bottom: 8px;
   cursor: pointer;
   display: flex;
   height: 192px;
+  pointer-events: none;
+}
+
+.banner__item-container.banner-reveal {
+  transform: translateX(0%);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .banner__left {
@@ -64,6 +71,7 @@
   text-overflow: ellipsis;
   color: rgb(126, 154, 166);
   display: block;
+  text-transform: capitalize;
 }
 
 .banner__view-cart {
