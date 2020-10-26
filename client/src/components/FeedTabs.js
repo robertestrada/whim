@@ -2,7 +2,7 @@ import React from 'react';
 import '../styles/feed.css';
 
 
-const FeedTabs = ({ pageData, handleTabChange, setCatShow }) => {
+const FeedTabs = ({ pageData, handleTabChange, setCatShow, handleCategoryClick }) => {
 
   return (
       <div className="feed__tabs">
@@ -21,7 +21,7 @@ const FeedTabs = ({ pageData, handleTabChange, setCatShow }) => {
           </svg>
           <div className="feed__sidebar-label">Express</div>
         </button>
-        <button onMouseEnter={() => setCatShow(true)} onMouseLeave={() => setCatShow(false)}>
+      <button onMouseEnter={() => setCatShow(true)} onMouseLeave={() => setCatShow(false)} onClick={() => handleCategoryClick()}>
           <svg className="feed__sidebar-icon" viewBox="0 0 24 24">
             <g id="Icons/Main/ic_grid_24" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
               <g id="Group-14-Copy">

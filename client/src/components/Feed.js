@@ -66,6 +66,11 @@ const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabCha
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageData.page]);
+
+  useEffect(() => {
+
+    
+  }, [catShow]);
   
   useLayoutEffect(() => {
       ref.current.scrollTop = 0;
@@ -82,6 +87,14 @@ const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabCha
       setPageData({ ...pageData, "loadMore": false });
     }
   }
+
+  const handleCategoryClick = () => {
+    if(catShow){
+      setCatShow(false);
+    } else {
+      setCatShow(true);
+    }
+  }
   
   const LoadingIndicator = () => {
     return (
@@ -95,8 +108,8 @@ const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabCha
   return (
     <div className="feed">
       <div className="feed__logo-button" onClick={() => handleTabChange('popular')}/>
-      <FeedTabs pageData={pageData} handleTabChange={handleTabChange} setCatShow={setCatShow}/>
-      <CategoryPanel catShow={catShow} mouseEnter={() => setCatShow(true)} mouseLeave={() => setCatShow(false)} categoryFetch={handleTabChange}/>
+      <FeedTabs pageData={pageData} handleTabChange={handleTabChange} setCatShow={setCatShow} handleCategoryClick={handleCategoryClick}/>
+      <CategoryPanel catShow={catShow} mouseEnter={() => setCatShow(true)} mouseLeave={() => setCatShow(false)} categoryFetch={handleTabChange} />
       <div className={panelType === 'feed' ? "feed__scroll-wrapper" : "feed__scroll-wrapper cart-visible"}>
         <div className="feed__scroll" ref={ref} onScroll={handleScroll}>
           { panelType === 'cart'

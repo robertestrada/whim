@@ -21,8 +21,8 @@ RUN ["cp", "-r", "client/build/", "whim_server/static"]
 ENV FLASK_APP=whim_server
 ENV FLASK_ENV=production
 ENV SQLALCHEMY_ECHO=True
-ENV SECRET_KEY=lkasjdf09ajsdkfljalsiorj12n3490re9485309irefvn,u90818734902139489230
-ENV JWT_SECRET_KEY=fced9ed7-3621-4ceb-a3e5-062244811c2a
+ENV SECRET_KEY=notsecret
+ENV JWT_SECRET_KEY=notsecret
 
 EXPOSE 8000
 
