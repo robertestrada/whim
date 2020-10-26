@@ -8,7 +8,7 @@ import Cart from './Cart';
 import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
 
-const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch }) => {
+const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
   const initialPageData = { "page": 1, "loadMore": false, "tab": "popular"};
   const [pageData, setPageData] = useState(initialPageData);
@@ -100,7 +100,7 @@ const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabCha
       <div className={panelType === 'feed' ? "feed__scroll-wrapper" : "feed__scroll-wrapper cart-visible"}>
         <div className="feed__scroll" ref={ref} onScroll={handleScroll}>
           { panelType === 'cart'
-            ? <Cart setModalType={setModalType} setPanelType={setPanelType} modalChange={modalChange}/>
+            ? <Cart setModalType={setModalType} setPanelType={setPanelType} modalChange={modalChange} handleRemoveItem={handleRemoveItem} itemHold={itemHold} setItemHold={setItemHold}/>
             : loading || (((promiseInProgress && !productsData.products) && !pageData.loadMore) || (!productsData.products && !pageData.loadMore))
               ? <div className="feed__loader" >
                   <LoadingIndicator/>

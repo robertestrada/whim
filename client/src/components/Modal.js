@@ -5,7 +5,7 @@ import ModalLeaveCart from './ModalLeaveCart';
 import ModalRemoveItem from './ModalRemoveItem';
 import '../styles/modal.css';
 
-const Modal = ({ modalType, setModalType, modalData: { productId, showModal }, modalChange, handleTabChangeNo, handleTabChangeYes }) => {
+const Modal = ({ modalType, setModalType, modalData: { productId, showModal }, modalChange, handleTabChangeNo, handleTabChangeYes, handleRemoveItemNo, handleRemoveItemYes }) => {
   useEffect(() => {  }, [showModal, modalType]);
 
   return (
@@ -15,7 +15,7 @@ const Modal = ({ modalType, setModalType, modalData: { productId, showModal }, m
         : modalType === 'product'
           ? <ModalProduct setModalType={setModalType} productId={productId} modalChange={modalChange}/>
           : modalType === 'removeItem'
-            ? <ModalRemoveItem setModalType={setModalType} productId={productId} modalChange={modalChange} />
+            ? <ModalRemoveItem setModalType={setModalType} productId={productId} modalChange={modalChange} handleRemoveItemNo={handleRemoveItemNo} handleRemoveItemYes={handleRemoveItemYes}/>
             : modalType === 'leaveCart'
               ? <ModalLeaveCart 
                   setModalType={setModalType} 
