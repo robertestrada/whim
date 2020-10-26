@@ -5,7 +5,7 @@ import { baseUrl } from '../config';
 import { signIn, removeAuth } from '../actions/authentication';
 import '../styles/logIn.css';
 
-function GoogleSignin() {
+const GoogleSignin = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
