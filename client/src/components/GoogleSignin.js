@@ -1,9 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { googleClientId } from '../config';
-import { googleAPIKey } from '../config';
-import * as AuthActions from '../actions/authentication';
+import { baseUrl } from '../config';
+import { signIn, removeAuth } from '../actions/authentication';
 import '../styles/logIn.css';
 
 function GoogleSignin() {
@@ -12,21 +11,25 @@ function GoogleSignin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(AuthActions.removeAuth());
+    await dispatch(removeAuth());
+
+    const googleCreds = await fetch(`${baseUrl}/google-credentials`);
+    const googleCredsJSON = await googleCreds.json();
+
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({
-        clientId: `${googleClientId}`,
+        clientId: `${googleCredsJSON.client_id}`,
         scope: 'email',
-        apiKey: `${googleAPIKey}`,
+        apiKey: `${googleCredsJSON.api_key}`,
       }).then(() => {
-        let authorized = window.gapi.auth2.getAuthInstance();
+        const authorized = window.gapi.auth2.getAuthInstance();
         try {
-          const storeReady = dispatch(AuthActions.signIn(authorized.currentUser.le.nt.Wt, authorized.currentUser.le.nt.yT));
+          const storeReady = dispatch(signIn(authorized.currentUser.le.nt.Wt, authorized.currentUser.le.nt.yT));
           if (storeReady) {
             history.push('/')
           }
         } catch {
-          const storeReady = dispatch(AuthActions.signIn('causeError', 'C4useError'));
+          const storeReady = dispatch(signIn('causeError', 'C4useError'));
           if (storeReady) {
             history.push('/')
           }

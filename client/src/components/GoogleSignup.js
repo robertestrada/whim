@@ -1,53 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import { baseUrl } from '../config';
 import { signUp } from '../actions/authentication'
 import '../styles/logIn.css';
 
-function GoogleSignUp() {
-  const [auth, setAuth] = useState('');
+const GoogleSignUp = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  useEffect(() => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const googleCreds = await fetch(`${baseUrl}/google-credentials`);
+    const googleCredsJSON = await googleCreds.json();
+
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({
-        clientId: '200012556157-sfdghuss7qmpecojpucib1qggovlajht.apps.googleusercontent.com',
+        clientId: `${googleCredsJSON.client_id}`,
         scope: 'email',
-        apiKey: 'AIzaSyAvOjlm1n826DLkUo3rkK6EQqknve3LZ3s',
+        apiKey: `${googleCredsJSON.api_key}`,
       }).then(() => {
-        let authorized = window.gapi.auth2.getAuthInstance();
-        setAuth(authorized);
-      })
-    });
-  }, [])
-
-  // Ad: "Robert Estrada"
-  // JJ: "https://lh3.googleusercontent.com/a-/AOh14Ggs69iQC39Fp3TQAC-1rnDt8h74Bmvb5pSc7TCZ7T8=s96-c"
-  // Wt: "bobberay@gmail.com"
-  // dV: "Robert"
-  // fT: "Estrada"
-  // yT: "104244455592405593743"
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    try {
-      auth.signIn().then(() => {
-        const storeReady = dispatch(signUp(auth.currentUser.le.nt.dV, auth.currentUser.le.nt.fT, auth.currentUser.le.nt.Wt, auth.currentUser.le.nt.yT, auth.currentUser.le.nt.JJ));
-        storeReady.then((result) => {
-          if (result === true) {
+        const authorized = window.gapi.auth2.getAuthInstance();
+        try {
+          authorized.signIn().then(() => {
+            const storeReady = dispatch(signUp(authorized.currentUser.le.nt.dV, authorized.currentUser.le.nt.fT, authorized.currentUser.le.nt.Wt, authorized.currentUser.le.nt.yT, authorized.currentUser.le.nt.JJ));
+            storeReady.then((result) => {
+              if (result === true) {
+                history.push('/');
+              }
+            })
+          })
+        }
+        catch {
+          const storeReady = dispatch(signUp('CauseError', 'CauseError', 'CauseError', 'CauseError', 'CauseError'))
+          if (storeReady) {
             history.push('/');
           }
-        })
-      })
-    }
-    catch {
-      const storeReady = dispatch(signUp('CauseError', 'CauseError', 'CauseError', 'CauseError', 'CauseError'))
-      if (storeReady) {
-        history.push('/');
-      }
-    }
-  }
+        }
+      });
+    });
+  };
 
   return (
     <button className="login__google google-signin" onClick={handleSubmit}>

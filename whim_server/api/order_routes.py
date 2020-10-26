@@ -10,7 +10,6 @@ order_routes = Blueprint("orders", __name__, url_prefix="/order")
 def get_all_orders(user_id):
   orders = Order.query.filter(and_(Order.user_id==user_id, Order.completed==False)).order_by(desc(Order.created_at)).all()
   data = [order.to_dict() for order in orders]
-  print(f"data {data}")
   return {'data': data}, 200
 
 

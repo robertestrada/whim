@@ -8,3 +8,5 @@ class Config:
   JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
   JWT_BLACKLIST_TOKEN_CHECKS = ['access', 'refresh']
   JWT_BLACKLIST_ENABLED = True
+  REACT_APP_GOOGLE_CLIENT_ID = os.environ.get('REACT_APP_GOOGLE_CLIENT_ID')
+  REACT_APP_GOOGLE_API_KEY = os.environ.get('REACT_APP_GOOGLE_API_KEY')
