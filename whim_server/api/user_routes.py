@@ -10,9 +10,8 @@ user_routes = Blueprint("user", __name__, "")
 
 @user_routes.route("/google-credentials")
 def get_google_credentials():
-  client_id = current_app.config['REACT_APP_GOOGLE_CLIENT_ID']
-  api_key = current_app.config['REACT_APP_GOOGLE_API_KEY']
-  print(f'BACKEND: {client_id}, {api_key}')
+  client_id = current_app.config['GOOGLE_CLIENT_ID']
+  api_key = current_app.config['GOOGLE_API_KEY']
   return {'client_id': client_id, 'api_key': api_key}, 200
 
 
