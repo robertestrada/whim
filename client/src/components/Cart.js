@@ -6,7 +6,7 @@ import CartItem from './CartItem';
 import '../styles/cart.css';
 
 
-const Cart = ({ setModalType, modalChange, setPanelType }) => {
+const Cart = ({ setModalType, modalChange, setPanelType, handleRemoveItem, itemHold, setItemHold }) => {
   const dispatch = useDispatch();
   const cartItems = useSelector(state => Object.values(state.cart.items));
 
@@ -36,7 +36,7 @@ const Cart = ({ setModalType, modalChange, setPanelType }) => {
                 <h2 className="cart__list-title">Items In Cart</h2>
                 { cartItems.length === 0 
                   ? <CartEmpty setPanelType={setPanelType}/>
-                  : cartItems.map((item, idx) => <CartItem key={idx} item={item} itemQuantity={item.quantity}/>)}
+                  : cartItems.map((item, idx) => <CartItem key={idx} item={item} itemQuantity={item.quantity} handleRemoveItem={handleRemoveItem} itemHold={itemHold} setItemHold={setItemHold}/>)}
               </div>
             </div>
             <div className="cart__right-wrapper">

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
-import { removeCartItem } from '../actions/cart';
 import { updateCartQuantity } from '../actions/cart';
 import moment from 'moment';
 import '../styles/cart.css';
 
 
-const CartItem = ({ item, itemQuantity }) => {
+const CartItem = ({ item, itemQuantity, handleRemoveItem }) => {
   const dispatch = useDispatch();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [quantityShow, setQuantityShow] = useState(false);
@@ -42,17 +41,13 @@ const CartItem = ({ item, itemQuantity }) => {
   }
 
   const handleChangeQuantity = (id, quantity) => {
-    if (quantity === 0){
-      dispatch(removeCartItem(id));
+    if (quantity === 0) {
+      handleRemoveItem(id);
     } else {
       setSelectedQuantity(quantity);
       dispatch(updateCartQuantity(id, quantity));
     }
-  };
-
-  const handleRemoveItem = (id) => {
-    dispatch(removeCartItem(id));
-  };
+  }
 
   return (
     <div className="cart__item-wrapper">

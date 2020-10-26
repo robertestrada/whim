@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { loadCart } from '../actions/cart';
+import { loadCart, removeCartItem } from '../actions/cart';
 import NavBar from './NavBar';
 import Feed from './Feed';
 import SideBanner from './SideBanner';
@@ -17,6 +17,7 @@ const DashBoard = () => {
     const [modalType, setModalType] = useState('hidden');
     const [viewSwitchHold, setViewSwitchHold] = useState(null);
     const [viewSwitch, setViewSwitch] = useState(null);
+    const [itemIdHold, setItemIdHold] = useState(null);
 
     useEffect(() => {
         if (currentUser){
@@ -26,6 +27,27 @@ const DashBoard = () => {
 
     const handleModalChange = ({ productId, showModal }) => {
         setModalData({ "productId": productId, "showModal": showModal })
+    }
+
+    const handleRemoveItem = (itemId) => {
+        setItemIdHold(itemId);
+        setModalData({ "productId": null, "showModal": true });
+        setModalType('removeItem');
+    };
+
+    const handleRemoveItemNo = () => {
+        setItemIdHold(null);
+        setModalData({ "productId": null, "showModal": false });
+        setModalType('hidden');
+    }
+
+    const handleRemoveItemYes = () => {
+        if(itemIdHold !== null){
+            dispatch(removeCartItem(itemIdHold));
+            setItemIdHold(null);
+            setModalData({ "productId": null, "showModal": false });
+            setModalType('hidden');
+        }
     }
 
     const handleTabChange = (newTab) => {
@@ -74,7 +96,10 @@ const DashBoard = () => {
                 modalChange={handleModalChange} 
                 handleTabChange={handleTabChange} 
                 viewSwitch={viewSwitch} 
-                setViewSwitch={setViewSwitch} 
+                setViewSwitch={setViewSwitch}
+                handleRemoveItem={handleRemoveItem} 
+                itemHold={itemIdHold}
+                setItemHold={setItemIdHold}
             />
             {panelType === 'feed' ? <SideBanner setPanelType={setPanelType}/> : null }
             <Banner setPanelType={setPanelType}/>
@@ -85,6 +110,8 @@ const DashBoard = () => {
                 modalChange={handleModalChange}
                 handleTabChangeNo={handleTabChangeNo}
                 handleTabChangeYes={handleTabChangeYes}
+                handleRemoveItemNo={handleRemoveItemNo}
+                handleRemoveItemYes={handleRemoveItemYes}
             />
         </div>
     );
