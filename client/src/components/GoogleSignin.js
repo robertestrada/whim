@@ -1,6 +1,8 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
+import { googleClientId } from '../config';
+import { googleAPIKey } from '../config';
 import * as AuthActions from '../actions/authentication';
 import '../styles/logIn.css';
 
@@ -13,9 +15,9 @@ function GoogleSignin() {
     await dispatch(AuthActions.removeAuth());
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({
-        clientId: '200012556157-sfdghuss7qmpecojpucib1qggovlajht.apps.googleusercontent.com',
+        clientId: `${googleClientId}`,
         scope: 'email',
-        apiKey: 'AIzaSyAvOjlm1n826DLkUo3rkK6EQqknve3LZ3s',
+        apiKey: `${googleAPIKey}`,
       }).then(() => {
         let authorized = window.gapi.auth2.getAuthInstance();
         try {

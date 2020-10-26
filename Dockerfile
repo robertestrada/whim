@@ -10,6 +10,8 @@ RUN ["pip", "install", "-r", "requirements.txt"]
 # Build our React App
 RUN ["npm", "install", "--prefix", "client"]
 ENV REACT_APP_BASE_URL=https://whim-app.herokuapp.com
+ENV REACT_APP_GOOGLE_CLIENT_ID=notsecret
+ENV REACT_APP_GOOGLE_API_KEY=notsecret
 RUN ["npm", "run", "build", "--prefix", "client"]
 
 # Move our react build for Flask to serve
@@ -21,8 +23,8 @@ RUN ["cp", "-r", "client/build/", "whim_server/static"]
 ENV FLASK_APP=whim_server
 ENV FLASK_ENV=production
 ENV SQLALCHEMY_ECHO=True
-ENV SECRET_KEY=lkasjdf09ajsdkfljalsiorj12n3490re9485309irefvn,u90818734902139489230
-ENV JWT_SECRET_KEY=fced9ed7-3621-4ceb-a3e5-062244811c2a
+ENV SECRET_KEY=notsecret
+ENV JWT_SECRET_KEY=notsecret
 
 EXPOSE 8000
 
