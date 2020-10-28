@@ -6,7 +6,7 @@ import { removeAuth, signUp } from '../actions/authentication';
 import {useHistory} from 'react-router-dom'
 import GoogleSignup from './GoogleSignup'
 
-function SignUp() {
+const SignUp = () => {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,7 +24,7 @@ function SignUp() {
       history.push('/')
     }
   }
-
+  
     return (
       <form className="login" style={{ animation: `fadeIn 0.5s` }} onSubmit={handleSubmit}>
         {valErrors &&
@@ -72,7 +72,7 @@ function SignUp() {
           <div className="login__auth-divider-line" />
           <div className="login__auth-divider-text">or</div>
         </div>
-        <GoogleSignup />
+        <GoogleSignup/> 
         <div className="login__terms">
           By clicking 'Sign Up' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. The Google Privacy Policy and Terms of Service apply.
         </div>

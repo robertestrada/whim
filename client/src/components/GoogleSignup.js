@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { baseUrl } from '../config';
-import { signUp } from '../actions/authentication'
+import { signUpGoogle } from '../actions/authentication'
 import '../styles/logIn.css';
 
 const GoogleSignUp = () => {
@@ -11,19 +11,20 @@ const GoogleSignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const googleCreds = await fetch(`${baseUrl}/google-credentials`);
-    const googleCredsJSON = await googleCreds.json();
+    const googleCredsFetch = await fetch(`${baseUrl}/google-credentials`);
+    const googleCreds = await googleCredsFetch.json();
 
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({
-        clientId: `${googleCredsJSON.client_id}`,
+        clientId: `${googleCreds.client_id}`,
         scope: 'email',
-        apiKey: `${googleCredsJSON.api_key}`,
+        apiKey: `${googleCreds.api_key}`,
       }).then(() => {
         const authorized = window.gapi.auth2.getAuthInstance();
         try {
           authorized.signIn().then(() => {
-            const storeReady = dispatch(signUp(authorized.currentUser.le.nt.dV, authorized.currentUser.le.nt.fT, authorized.currentUser.le.nt.Wt, authorized.currentUser.le.nt.yT, authorized.currentUser.le.nt.JJ));
+            const profile = authorized.currentUser.get().getBasicProfile();
+            const storeReady = dispatch(signUpGoogle(profile.getGivenName(), profile.getFamilyName(), profile.getEmail(), profile.getImageUrl()));
             storeReady.then((result) => {
               if (result === true) {
                 history.push('/');
@@ -32,7 +33,7 @@ const GoogleSignUp = () => {
           })
         }
         catch {
-          const storeReady = dispatch(signUp('CauseError', 'CauseError', 'CauseError', 'CauseError', 'CauseError'))
+          const storeReady = dispatch(signUpGoogle('CauseError', 'CauseError', 'CauseError', 'CauseError', 'CauseError'))
           if (storeReady) {
             history.push('/');
           }
