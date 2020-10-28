@@ -10,9 +10,8 @@ user_routes = Blueprint("user", __name__, "")
 
 @user_routes.route("/google-credentials")
 def get_google_credentials():
-  client_id = current_app.config['REACT_APP_GOOGLE_CLIENT_ID']
-  api_key = current_app.config['REACT_APP_GOOGLE_API_KEY']
-  print(f'BACKEND: {client_id}, {api_key}')
+  client_id = current_app.config['GOOGLE_CLIENT_ID']
+  api_key = current_app.config['GOOGLE_API_KEY']
   return {'client_id': client_id, 'api_key': api_key}, 200
 
 
@@ -57,3 +56,43 @@ def sign_in():
         return jsonify({"msg": "Email or Password is incorrect"}), 400
     except:
       return jsonify({"msg": "Email or Password is incorrect"}), 400
+    
+    
+@user_routes.route('/signup-google', methods=['POST'])
+def sign_up_google():
+  data = request.get_json()
+  hash = generate_password_hash(data['email'])
+
+  try:
+    user = User(
+        first_name=data['firstName'],
+        last_name=data['lastName'],
+        email=data['email'],
+        hashed_password=hash,
+        pic_url=data['picture'],
+    )
+
+    db.session.add(user)
+    db.session.commit()
+    email = user.email
+    access_token = create_access_token(identity=email)
+    return {"token": access_token, "user": user.to_dict()}, 200
+  except AssertionError as exception_message:
+    return jsonify(msg='Error: {}. '.format(exception_message)), 400
+
+
+@user_routes.route('/signin-google', methods=['POST'])
+def sign_in_google():
+    try:
+      if not request.is_json:
+        return jsonify({"msg": "Missing JSON in request"}), 400
+
+      email = request.json.get('email', None)
+      if not email:
+        return jsonify({"msg": "Please fill out all fields"}), 400
+
+      user = User.query.filter(User.email == email).one()
+      access_token = create_access_token(identity=email)
+      return {"token": access_token, "user": user.to_dict()}, 200
+    except:
+      return jsonify({"msg": "Google account not found.  Please sign up."}), 400

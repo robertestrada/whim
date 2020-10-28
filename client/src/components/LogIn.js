@@ -51,7 +51,7 @@ const LogIn = () => {
         <div className="login__auth-divider-line"/>
         <div className="login__auth-divider-text">or</div>
       </div>
-      <GoogleSignin />
+      <GoogleSignin/> 
       <div className="login__terms">
         By clicking 'Log In' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. The Google Privacy Policy and Terms of Service apply.
       </div>

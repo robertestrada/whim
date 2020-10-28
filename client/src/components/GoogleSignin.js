@@ -2,10 +2,10 @@ import React from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { baseUrl } from '../config';
-import { signIn, removeAuth } from '../actions/authentication';
+import { signInGoogle, removeAuth } from '../actions/authentication';
 import '../styles/logIn.css';
 
-function GoogleSignin() {
+const GoogleSignin = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -13,23 +13,24 @@ function GoogleSignin() {
     e.preventDefault();
     await dispatch(removeAuth());
 
-    const googleCreds = await fetch(`${baseUrl}/google-credentials`);
-    const googleCredsJSON = await googleCreds.json();
+    const googleCredsFetch = await fetch(`${baseUrl}/google-credentials`);
+    const googleCreds = await googleCredsFetch.json();
 
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({
-        clientId: `${googleCredsJSON.client_id}`,
+        clientId: `${googleCreds.client_id}`,
         scope: 'email',
-        apiKey: `${googleCredsJSON.api_key}`,
+        apiKey: `${googleCreds.api_key}`,
       }).then(() => {
         const authorized = window.gapi.auth2.getAuthInstance();
         try {
-          const storeReady = dispatch(signIn(authorized.currentUser.le.nt.Wt, authorized.currentUser.le.nt.yT));
+          const profile = authorized.currentUser.get().getBasicProfile();
+          const storeReady = dispatch(signInGoogle(profile.getEmail()));
           if (storeReady) {
             history.push('/')
           }
         } catch {
-          const storeReady = dispatch(signIn('causeError', 'C4useError'));
+          const storeReady = dispatch(signInGoogle('causeError', 'C4useError'));
           if (storeReady) {
             history.push('/')
           }

@@ -14,7 +14,7 @@ function NavBar({ panelType, setPanelType }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(AuthActions.logout());
+    await dispatch(AuthActions.logout());
     history.push('/')
   }
 
