@@ -37,6 +37,7 @@ def sign_up():
   except AssertionError as exception_message:
     return jsonify(msg='Error: {}. '.format(exception_message)), 400
 
+
 @user_routes.route('/signin', methods=['POST'])
 def sign_in():
     try:

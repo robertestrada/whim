@@ -37,3 +37,16 @@ def get_category_products(category, page):
 def get_product(id):
   result = Product.query.filter(Product.id==id).one()
   return result.main_dict(), 200
+
+
+# @product_routes.route("/search/<term>/<int:page>", methods=['POST'])
+@product_routes.route("/search/<term>/<int:page>")
+def search_products(term, page):
+  # requested = request.get_json()
+  # requestedF = "%{}%".format(requested)
+  requestedF = "%{}%".format(term)
+  results = Product.query.filter(or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))).order_by(Product.created_at).paginate(page, 24, False)
+  more_data = results.has_next
+  products = results.items
+  data = [product.feed_dict() for product in products]
+  return {"data": data, "more_data": more_data}, 200
