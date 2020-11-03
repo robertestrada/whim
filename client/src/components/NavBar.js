@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import '../styles/navBar.css';
-import { useDispatch } from 'react-redux'
+import Search from './Search';
 import * as AuthActions from '../actions/authentication';
 
-function NavBar({ panelType, setPanelType }) {
+const NavBar = ({ panelType, setPanelType }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const profilePicUrl = useSelector((state) => state.authentication.user.pic_url);
@@ -25,6 +25,7 @@ function NavBar({ panelType, setPanelType }) {
       </div>
       { panelType === 'feed' ? 
         <div className="navbar__options">
+          <Search panelType={panelType} setPanelType={setPanelType}/>
           <div className="navbar__profile-wrapper">
             <button className="navbar__logout" onClick={handleSubmit}>
               <img
