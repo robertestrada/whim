@@ -1,8 +1,8 @@
-"""create orders with notified fields
+"""Change description to text
 
-Revision ID: cadd6a31c6b1
+Revision ID: 2332bbce5fd7
 Revises: 
-Create Date: 2020-10-24 14:45:56.241882
+Create Date: 2020-11-04 17:22:41.657147
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'cadd6a31c6b1'
+revision = '2332bbce5fd7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -41,7 +41,7 @@ def upgrade():
     op.create_table('products',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('description', sa.String(length=2000), nullable=False),
+    sa.Column('description', sa.Text(), nullable=False),
     sa.Column('product_imgs_amt', sa.Integer(), nullable=False),
     sa.Column('category', sa.String(length=255), nullable=False),
     sa.Column('instant_buy', sa.Boolean(), nullable=False),
