@@ -1,5 +1,4 @@
 import React from 'react';
-import moment from 'moment';
 import '../styles/modal.css';
 
 const ModalDescription = ({ productData }) => {
@@ -7,7 +6,10 @@ const ModalDescription = ({ productData }) => {
   return (
     <div className="modal__description-wrapper">
       <div className="modal__description-header">
-        <div className="modal__description-title">Standard Shipping</div>
+        <div className="modal__description-title">Description</div>
+        <div className="modal__description-less">Show Less</div>
+      </div>
+      <div className="modal__description-container">
         <div className="modal__description-text">
           {productData.description}
         </div>

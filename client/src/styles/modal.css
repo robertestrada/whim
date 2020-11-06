@@ -852,10 +852,57 @@ margin-bottom: 4px;
   margin-left: 32px;
 }
 
-.modal__description-title {
+.modal__description-header {
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
 
+.modal__description-title {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0%;
+  margin-left: 16px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: rgb(25, 42, 50);
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  margin: 0;
+}
+
+.modal__description-less {
+  margin-right: 16px;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  color: rgb(47, 183, 236);
+}
+
+.modal__description-container {
+  display: block;
+  height: 504px;
+  transition-duration: 300ms;
+  transition-timing-function: initial;
+  transition-delay: initial;
+  transition-property: height;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  margin-top: 16px;
 }
 
 .modal__description-text {
-
+  box-sizing: border-box;
+  padding-top: 0px;
+  padding-right: 16px;
+  width: 100%;
+  line-height: 1.15;
+  white-space: pre-wrap;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  color: rgb(25, 42, 50);
 }
