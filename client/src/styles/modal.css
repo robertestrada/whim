@@ -834,3 +834,28 @@ margin-bottom: 4px;
   -webkit-box-pack: center;
   justify-content: center;
 }
+
+.modal__description-wrapper {
+  border-top-width: 3px;
+  border-top-style: solid;
+  border-top-color: rgb(240, 245, 247);
+  align-items: center;
+  flex-direction: column;
+  padding-top: 32px;
+  padding-right: 16px;
+  padding-bottom: 32px;
+  padding-left: 16px;
+  width: 100%;
+  color: rgb(25, 42, 50);
+  letter-spacing: 0.4px;
+  font-size: 14px;
+  margin-left: 32px;
+}
+
+.modal__description-title {
+
+}
+
+.modal__description-text {
+
+}

@@ -6,6 +6,7 @@ import ModalImages from './ModalImages';
 import ModalHeader from './ModalHeader';
 import ModalVerified from './ModalVerified';
 import ModalShipping from './ModalShipping';
+import ModalDescription from './ModalDescription';
 import ModalDetails from './ModalDetails';
 import '../styles/modal.css';
 
@@ -72,6 +73,7 @@ const ModalProduct = ({ setModalType, productId, modalChange }) => {
                 />
                 <ModalVerified productData={productData} />
                 <ModalShipping productData={productData} />
+                <ModalDescription productData={productData} />
                 {/* <div className="banner__details">
                     {cartItems[0] ? description.split(/[\r\n]+/).map(newLine => <div className="banner__details-line">{newLine}</div>) : null}
                   </div> */}
