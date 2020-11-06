@@ -16,16 +16,21 @@ const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabCha
   const [loading, setLoading] = useState(false);
   const [productsData, setProductsData] = useState({"products": null, "moreData": false});
   const [catShow, setCatShow] = useState(false);
-  const categories = ["clothing", "outdoor", "technology"]
+  const categories = ["fashion", "gadgets", "home-decor", "household-supplies", "kitchen", "shoes", "tools", "watches"]
   const ref = useRef(null);
   
   const fetchData = async () => {
     const fetchPoint = { 
                       "popular": `popular/${pageData.page}`, 
                       "express": `express/${pageData.page}`, 
-                      "Outdoor": `category/outdoor/${pageData.page}`,
-                      "Technology": `category/technology/${pageData.page}`,
-                      "Clothing": `category/clothing/${pageData.page}`,
+                      "fashion": `category/fashion/${pageData.page}`,
+                      "gadgets": `category/gadgets/${pageData.page}`,
+                      "home-decor": `category/home-decor/${pageData.page}`,
+                      "household-supplies": `category/household-supplies/${pageData.page}`,
+                      "kitchen": `category/kitchen/${pageData.page}`,
+                      "shoes": `category/shoes/${pageData.page}`,
+                      "tools": `category/tools/${pageData.page}`,
+                      "watches": `category/watches/${pageData.page}`,
                       };
     const result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`));
     if (result.ok) {
