@@ -4,7 +4,7 @@ import '../styles/categories.css';
 
 const CategoryPanel = ({catShow, categoryFetch, mouseEnter, mouseLeave}) => {
 
-  const categories = ["Clothing", "Outdoor", "Technology"]
+  const categories = ["fashion", "gadgets", "home-decor", "household-supplies", "kitchen", "shoes", "tools", "watches"]
 
   return (
     <div onMouseEnter={mouseEnter} onMouseLeave={mouseLeave} className={catShow ? "category-panel pressed" : "category-panel"}>

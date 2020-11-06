@@ -2,7 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import '../styles/modal.css';
 
-const Modal = ({ productData }) => {
+const ModalShipping = ({ productData }) => {
 
   return (
     <div className="modal__shipping-wrapper">
@@ -43,4 +43,4 @@ const Modal = ({ productData }) => {
   );
 }
 
-export default Modal;
+export default ModalShipping;
