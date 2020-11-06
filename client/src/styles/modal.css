@@ -885,7 +885,7 @@ margin-bottom: 4px;
 
 .modal__description-container {
   display: block;
-  height: 504px;
+  height: 100%;
   transition-duration: 300ms;
   transition-timing-function: initial;
   transition-delay: initial;
@@ -893,6 +893,10 @@ margin-bottom: 4px;
   overflow-x: hidden;
   overflow-y: hidden;
   margin-top: 16px;
+}
+
+.modal__description-container.description-show-less {
+  height: 0%;
 }
 
 .modal__description-text {
