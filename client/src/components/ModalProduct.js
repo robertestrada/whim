@@ -7,7 +7,9 @@ import ModalHeader from './ModalHeader';
 import ModalVerified from './ModalVerified';
 import ModalShipping from './ModalShipping';
 import ModalDescription from './ModalDescription';
+import ModalRefPrice from './ModalRefPrice';
 import ModalDetails from './ModalDetails';
+import ModalMerchant from './ModalMerchant';
 import '../styles/modal.css';
 
 const ModalProduct = ({ setModalType, productId, modalChange }) => {
@@ -16,7 +18,6 @@ const ModalProduct = ({ setModalType, productId, modalChange }) => {
   const { promiseInProgress } = usePromiseTracker();
   const [productData, setProductData] = useState({ "product": null });
   const [productImgUrls, setProductImgUrls] = useState([]);
-  // const description = cartItems[0] ? cartItems[0].product_data.description.replace(/<br\s*\\?>/g, "\r\n") : '';
 
   const fetchData = async () => {
     const result = await trackPromise(fetch(`${baseUrl}/product/${productId}`));
@@ -74,9 +75,8 @@ const ModalProduct = ({ setModalType, productId, modalChange }) => {
                 <ModalVerified productData={productData} />
                 <ModalShipping productData={productData} />
                 <ModalDescription productData={productData} />
-                {/* <div className="banner__details">
-                    {cartItems[0] ? description.split(/[\r\n]+/).map(newLine => <div className="banner__details-line">{newLine}</div>) : null}
-                  </div> */}
+                <ModalRefPrice productData={productData} />
+                <ModalMerchant productData={productData} />
               </div>
               <div className="modal__right">
                 <ModalDetails productData={productData} productImgUrl={productImgUrls[0]} handleModalExit={handleModalExit} />

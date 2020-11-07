@@ -829,30 +829,24 @@ margin-bottom: 4px;
   font-size: 16px;
   color: rgb(47, 183, 236);
   display: inline-flex;
-  -webkit-box-align: center;
   align-items: center;
-  -webkit-box-pack: center;
   justify-content: center;
 }
 
 .modal__description-wrapper {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 32px 0px;
   border-top-width: 3px;
   border-top-style: solid;
   border-top-color: rgb(240, 245, 247);
-  align-items: center;
-  flex-direction: column;
-  padding-top: 32px;
-  padding-right: 16px;
-  padding-bottom: 32px;
-  padding-left: 16px;
-  width: 100%;
   color: rgb(25, 42, 50);
-  letter-spacing: 0.4px;
-  font-size: 14px;
-  margin-left: 32px;
 }
 
 .modal__description-header {
+  box-sizing: border-box;
   display: flex;
   width: 100%;
   align-items: center;
@@ -862,7 +856,7 @@ margin-bottom: 4px;
   flex-grow: 1;
   flex-shrink: 1;
   flex-basis: 0%;
-  margin-left: 16px;
+  padding-left: 16px;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.4px;
@@ -884,25 +878,68 @@ margin-bottom: 4px;
 }
 
 .modal__description-container {
-  display: block;
-  height: 504px;
+  box-sizing: border-box;
+  height: auto;
+  max-height: 600px;
   transition-duration: 300ms;
   transition-timing-function: initial;
   transition-delay: initial;
-  transition-property: height;
+  transition-property: max-height;
   overflow-x: hidden;
   overflow-y: hidden;
-  margin-top: 16px;
+}
+
+.modal__description-container.description-show-less {
+  max-height: 0;
 }
 
 .modal__description-text {
+  margin-top: 16px;
   box-sizing: border-box;
-  padding-top: 0px;
-  padding-right: 16px;
+  padding: 0px 16px;
   width: 100%;
   line-height: 1.15;
   white-space: pre-wrap;
   overflow-x: hidden;
   overflow-y: hidden;
   color: rgb(25, 42, 50);
+}
+
+.modal__merchant-section {
+  display: flex;
+  width: 100%;
+  font-size: 14px;
+  color: rgb(25, 42, 50);
+  box-sizing: border-box;
+}
+
+.modal__merchant-info {
+  box-sizing: border-box;
+  padding: 0px 16px;
+  display: flex;
+  margin-top: 16px;
+  width: 50%;
+}
+
+.modal__merchant-img {
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+}
+
+.modal__merchant-description {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin-left: 16px;
+}
+
+.modal__merchant-name {
+  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 700;
+  margin-top: 3px;
+  color: rgb(25, 42, 50);
+  cursor: pointer;
+  text-decoration: none;
 }

@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
-from random import randrange, random, randint, shuffle
+from random import randrange, random, randint, shuffle, choice
 import string
 load_dotenv()
 
@@ -245,38 +245,86 @@ with app.app_context():
   o_list = []
   
   for i in range(1, 193):
-    options_type = randrange(0, 3)
-    base_count = randrange(3, 9)
     price = randrange(5, 101)
     price_delta = randrange(0, round(price / 2))
     base_weight = randrange(1, 21)
-    
-    for j in range(1, base_count):
-      price_starting = price + (j * j)
-      price_ending = price_starting - price_delta
-      weight = base_weight + j
-      
-      if(options_type == 0):
-        size = f'size {j}'
-        color = ''
-        inventory_starting = randrange(100, 10001)
-        inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-        o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
-        
-      elif(options_type == 1):
-        size = ''
-        color = f'color {j}'
-        inventory_starting = randrange(100, 10001)
-        inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-        o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
-        
-      elif(options_type == 2):
-        for k in range(1, base_count):
-          size = f'size {j}'
-          color = f'color {k}'
+    if(i < 25):
+      sizes = [['small', 'medium', 'large'], ['extra small', 'small', 'medium', 'large', 'extra large'], ['xxs', 'extra small', 'small', 'medium', 'large', 'extra large', 'xxl']]
+      colors = [['popular', 'ugly', 'unique', 'bold'], ['light', 'neutral', 'dark'], ['very light', 'light', 'neutral', 'dark', 'very dark'], ['white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black'], ['hurts to look at', 'white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black', 'event horizon']]
+      sizes_type = randrange(1, 4)
+      sizes_select = sizes[sizes_type - 1]
+      colors_type = randrange(1, 6)
+      colors_select = colors[colors_type - 1]
+      for j in range(1, len(sizes_select)):
+        price_starting = price + (j * j)
+        price_ending = price_starting - price_delta
+        weight = base_weight + j
+        for k in range(1, len(colors_select)):
+          size = sizes_select[j]
+          color = colors_select[k]
           inventory_starting = randrange(100, 10001)
           inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
           o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+    elif(i < 49):
+      sizes = [['EU 39(US 6.5)', 'EU 40(US 7)', 'EU 41(US 8)', 'EU 42(US 8.5)', 'EU 43(US 9.5)', 'EU 44(US 10)'], ['EU 40(US 7)', 'EU 41(US 8)', 'EU 42(US 8.5)', 'EU 43(US 9.5)', 'EU 44(US 10)', 'EU 45(US 10.5)', 'EU 46(US 11)', 'EU 47(US 11.5)', 'EU 48(US 12)'], ['EU 39(US 6.5)', 'EU 40(US 7)', 'EU 41(US 8)', 'EU 42(US 8.5)', 'EU 43(US 9.5)', 'EU 44(US 10)', 'EU 45(US 10.5)', 'EU 46(US 11)', 'EU 47(US 11.5)', 'EU 48(US 12)', 'EU 49(US 12.5)', 'EU 50(US 13)']]
+      colors = [['trendy', 'unpopular', 'original', 'makes a statement'], ['light', 'neutral', 'dark'], ['very light', 'light', 'neutral', 'dark', 'very dark'], ['white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black'], ['extreme', 'white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black', 'multi-color']]
+      sizes_type = randrange(1, 4)
+      sizes_select = sizes[sizes_type - 1]
+      colors_type = randrange(1, 6)
+      colors_select = colors[colors_type - 1]
+      for j in range(1, len(sizes_select)):
+        price_starting = price + (j * j)
+        price_ending = price_starting - price_delta
+        weight = base_weight + j
+        for k in range(1, len(colors_select)):
+          size = sizes_select[j]
+          color = colors_select[k]
+          inventory_starting = randrange(100, 10001)
+          inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
+          o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+      else:
+        sizes = [['1 pack', '2 pack', '5 pack'], ['1 pack', '3 pack', '10 pack'], ['small', 'regular', 'oversized'], ['10 iu', '40 iu', '100 iu', '180 iu'], ['refurbished', 'updated', 'original', 'standard', 'prototype']]
+        colors = [['trendy', 'unpopular', 'original', 'makes a statement'], ['light', 'neutral', 'dark'], ['very light', 'light', 'neutral', 'dark', 'very dark'], ['white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black'], ['extreme', 'white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black', 'multi-color']]
+        options_type = randrange(0, 3)
+        if(options_type == 0):
+          sizes_type = randrange(1, 6)
+          sizes_select = sizes[sizes_type - 1]
+          for j in range(1, len(sizes_select)):
+            price_starting = price + (j * j)
+            price_ending = price_starting - price_delta
+            weight = base_weight + j
+            size = sizes_select[j]
+            color = ''
+            inventory_starting = randrange(100, 10001)
+            inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
+            o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+        elif(options_type == 1):
+          colors_type = randrange(1, 6)
+          colors_select = colors[colors_type - 1]
+          for j in range(1, len(colors_select)):
+            price_starting = price + (j * j)
+            price_ending = price_starting - price_delta
+            weight = base_weight + j
+            size = ''
+            color = colors_select[j]
+            inventory_starting = randrange(100, 10001)
+            inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
+            o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+        elif(options_type == 2):
+          sizes_type = randrange(1, 6)
+          sizes_select = sizes[sizes_type - 1]
+          colors_type = randrange(1, 6)
+          colors_select = colors[colors_type - 1]
+          for j in range(1, len(sizes_select)):
+            price_starting = price + (j * j)
+            price_ending = price_starting - price_delta
+            weight = base_weight + j
+            for k in range(1, len(colors_select)):
+              size = sizes_select[j]
+              color = colors_select[k]
+              inventory_starting = randrange(100, 10001)
+              inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
+              o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
     
   for o in o_list:
     db.session.add(o)
