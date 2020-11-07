@@ -246,7 +246,7 @@ with app.app_context():
   
   for i in range(1, 193):
     options_type = randrange(0, 3)
-    base_count = randrange(3, 9)
+    base_count = randrange(2, 9)
     price = randrange(5, 101)
     price_delta = randrange(0, round(price / 2))
     base_weight = randrange(1, 21)
@@ -271,7 +271,8 @@ with app.app_context():
         o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
         
       elif(options_type == 2):
-        for k in range(1, base_count):
+        color_count = randrange(2, 9)
+        for k in range(1, color_count):
           size = f'size {j}'
           color = f'color {k}'
           inventory_starting = randrange(100, 10001)
