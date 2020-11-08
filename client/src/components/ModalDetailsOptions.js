@@ -80,7 +80,7 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
     for (let i = 0; i < options.length; i++) {
       if (!seen[options[i].size_order] && options[i].size !== '') {
         seen[options[i].size_order] = true;
-        list.push({ size_order: options[i].size, size: options[i].size });
+        list.push({ size_order: options[i].size_order, size: options[i].size });
       }
     }
     console.log(seen);
@@ -199,11 +199,11 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
   return (
     <div className="modal__selections-wrapper" ref={node}>
       {sizeExists ?
-        <div className="modal__selection size-list">
+        <div className="modal__selection size-list" onClick={() => handleSizeButtonClick()}>
           <div className={buyReady === true || buyReady === null || buyReady === 'color' ? "modal__selection-label" : "modal__selection-label label-error"}>Size:</div>
           <div className={buyReady === true || buyReady === null || buyReady === 'color' ? "modal__selection-button-container" : "modal__selection-button-container container-error"} >
             <div className="modal__selection-button-text">
-              <button className={size === 'Select Size' ? "modal__selection-button no-choice" : "modal__selection-button"} onClick={() => handleSizeButtonClick()}>{size}</button>
+              <button className={size === 'Select Size' ? "modal__selection-button no-choice" : "modal__selection-button"}>{size}</button>
             </div>
             <div className="modal__selection-arrow">
               <svg className={sizeShow ? "modal__selection-arrow-svg arrow-flip" : "modal__selection-arrow-svg"} viewBox="0 0 8 5">
@@ -221,11 +221,11 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
         : null
       }
       {colorExists ? 
-        <div className="modal__selection">
+        <div className="modal__selection" onClick={() => handleColorButtonClick()}>
           <div className={buyReady === true || buyReady === null || buyReady === 'size' ? "modal__selection-label" : "modal__selection-label label-error"}>Color:</div>
           <div className={buyReady === true || buyReady === null || buyReady === 'size' ? "modal__selection-button-container" : "modal__selection-button-container container-error"}>
             <div className="modal__selection-button-text">
-              <button className={color === 'Select Color' ? "modal__selection-button no-choice" : "modal__selection-button"} onClick={() => handleColorButtonClick()}>{color}</button>
+              <button className={color === 'Select Color' ? "modal__selection-button no-choice" : "modal__selection-button"}>{color}</button>
             </div>
             <div className="modal__selection-arrow">
               <svg className={colorShow ? "modal__selection-arrow-svg arrow-flip" : "modal__selection-arrow-svg"} viewBox="0 0 8 5">
