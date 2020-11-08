@@ -225,7 +225,9 @@ class Option(db.Model):
   __tablename__ = 'options'
 
   id = db.Column(db.Integer, primary_key=True)
+  size_order = db.Column(db.Integer)
   size = db.Column(db.String(30))
+  color_order = db.Column(db.Integer)
   color = db.Column(db.String(30))
   price_starting = db.Column(db.Float, nullable=False)
   price_ending = db.Column(db.Float)

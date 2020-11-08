@@ -264,7 +264,7 @@ with app.app_context():
           color = colors_select[k]
           inventory_starting = randrange(100, 10001)
           inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-          o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+          o_list.append(Option(size_order=j, size=size, color_order=k, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
     elif(i < 49):
       sizes = [['EU 39(US 6.5)', 'EU 40(US 7)', 'EU 41(US 8)', 'EU 42(US 8.5)', 'EU 43(US 9.5)', 'EU 44(US 10)'], ['EU 40(US 7)', 'EU 41(US 8)', 'EU 42(US 8.5)', 'EU 43(US 9.5)', 'EU 44(US 10)', 'EU 45(US 10.5)', 'EU 46(US 11)', 'EU 47(US 11.5)', 'EU 48(US 12)'], ['EU 39(US 6.5)', 'EU 40(US 7)', 'EU 41(US 8)', 'EU 42(US 8.5)', 'EU 43(US 9.5)', 'EU 44(US 10)', 'EU 45(US 10.5)', 'EU 46(US 11)', 'EU 47(US 11.5)', 'EU 48(US 12)', 'EU 49(US 12.5)', 'EU 50(US 13)']]
       colors = [['trendy', 'unpopular', 'original', 'makes a statement'], ['light', 'neutral', 'dark'], ['very light', 'light', 'neutral', 'dark', 'very dark'], ['white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black'], ['extreme', 'white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black', 'multi-color']]
@@ -281,7 +281,7 @@ with app.app_context():
           color = colors_select[k]
           inventory_starting = randrange(100, 10001)
           inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-          o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+          o_list.append(Option(size_order=j, size=size, color_order=k, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
       else:
         sizes = [['1 pack', '2 pack', '5 pack'], ['1 pack', '3 pack', '10 pack'], ['small', 'regular', 'oversized'], ['10 iu', '40 iu', '100 iu', '180 iu'], ['refurbished', 'updated', 'original', 'standard', 'prototype']]
         colors = [['trendy', 'unpopular', 'original', 'makes a statement'], ['light', 'neutral', 'dark'], ['very light', 'light', 'neutral', 'dark', 'very dark'], ['white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black'], ['extreme', 'white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black', 'multi-color']]
@@ -297,7 +297,7 @@ with app.app_context():
             color = ''
             inventory_starting = randrange(100, 10001)
             inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-            o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+            o_list.append(Option(size_order=j, size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
         elif(options_type == 1):
           colors_type = randrange(1, 6)
           colors_select = colors[colors_type - 1]
@@ -309,7 +309,7 @@ with app.app_context():
             color = colors_select[j]
             inventory_starting = randrange(100, 10001)
             inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-            o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+            o_list.append(Option(size_order=j, size=size, color_order=j, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
         elif(options_type == 2):
           sizes_type = randrange(1, 6)
           sizes_select = sizes[sizes_type - 1]
@@ -324,7 +324,7 @@ with app.app_context():
               color = colors_select[k]
               inventory_starting = randrange(100, 10001)
               inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-              o_list.append(Option(size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+              o_list.append(Option(size_order=j, size=size, color_order=k, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
     
   for o in o_list:
     db.session.add(o)
