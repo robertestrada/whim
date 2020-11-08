@@ -235,20 +235,22 @@ with app.app_context():
     Product(name="Noodles Cutter Kitchen Tool Multi Function Roller Dockers Dough Cutter Plastic Noodle Knife Pasta Instant Noodles Maker", description="Type : Pasta Tools Pasta Tools Type : Roller Dockers Material : Plastic Plastic Type : PP Feature : Eco-Friendly Feature 1 : noodle maker Feature 2 : noodle knife Feature 3 : pasta machine Feature 4 : noodle cutter Feature 5 : pasta maker Feature 6 : instant noodles", product_imgs_amt=8, category="kitchen", instant_buy=True, add_on=True, advert=True, shipping_speed=1, shipping_usa=False, verified=False, merchant_id=7),
     Product(name="Manual Vegetable Cutter With Steel Blade Kitchen Slicer Potato Peeler Carrot Cheese Grater Vegetable Slicer Kitchen Accessories", description="Kitchen Helper: This hand-held slicer made from Food-Grade stainless steel & BPA-Free ABS plastic offers.It offers all the functionality of multiple appliances with changeable stainless blades. Storage in the Side: It has its own container for the blades to put, never lose them or spend time looking for them Save Time and Money: With this kitchen cutting kit, you can save 70% time , say bye to watery eyes when slicing onions; And helps you prepare food more elegantly. 1. Thick Julienne - 3mm~3.5mm all kinds of shredded silk Cut the potato, stir fry, let you taste, eat if you want to eat 2. Thin Julienne - cut 2mm~2.2mm all kinds of shredded silk Usually long and small stir fry, carrots, all kinds of vegetables are easy to get around. 3. Grater - Flower Slice Blade Potato chips, do it yourself, can also be blown out beautifully outside! # TIPS:How to cut out beautiful patterns # Cut the flower in the handle every 90 times and cut it again. Repeat the operation to cut out the flower piece. 4. Thick Slicer - 1.5mm variety of dishes Cut the bamboo shoots, all kinds of ingredients, it's easy to get it, making it easier for you to cook 5. Thin Slicer - 1.0mm variety of dishes Cut cucumber slices, all kinds of ingredients, easy to get, let you cook easily 6. Grind- Fine Grinding Pieces It can grind delicate ginger, garlic, mashed potatoes, radish puree etc. Notice: When cutting short dishes,be sure to wear hand guard to avoid scrathing.", product_imgs_amt=11, category="kitchen", instant_buy=False, add_on=True, advert=False, shipping_speed=1, shipping_usa=True, verified=False, merchant_id=1),
   ]
-
-  # shuffle(p_list);
+  # for product in p_list:
+    
+    
+  shuffle(p_list)
   for p in p_list:
     db.session.add(p)
   db.session.commit()
   
   #options
   o_list = []
-  
-  for i in range(1, 193):
+  products_list = Product.query.all()
+  for product in products_list:
     price = randrange(5, 101)
     price_delta = randrange(0, round(price / 2))
     base_weight = randrange(1, 21)
-    if(i < 25):
+    if(product.category == 'fashion'):
       sizes = [['small', 'medium', 'large'], ['extra small', 'small', 'medium', 'large', 'extra large'], ['xxs', 'extra small', 'small', 'medium', 'large', 'extra large', 'xxl']]
       colors = [['popular', 'ugly', 'unique', 'bold'], ['light', 'neutral', 'dark'], ['very light', 'light', 'neutral', 'dark', 'very dark'], ['white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black'], ['hurts to look at', 'white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black', 'event horizon']]
       sizes_type = randrange(1, 4)
@@ -264,8 +266,8 @@ with app.app_context():
           color = colors_select[k]
           inventory_starting = randrange(100, 10001)
           inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-          o_list.append(Option(size_order=j, size=size, color_order=k, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
-    elif(i < 49):
+          o_list.append(Option(size_order=j, size=size, color_order=k, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=product.id))
+    elif(product.category == 'shoes'):
       sizes = [['EU 39(US 6.5)', 'EU 40(US 7)', 'EU 41(US 8)', 'EU 42(US 8.5)', 'EU 43(US 9.5)', 'EU 44(US 10)'], ['EU 40(US 7)', 'EU 41(US 8)', 'EU 42(US 8.5)', 'EU 43(US 9.5)', 'EU 44(US 10)', 'EU 45(US 10.5)', 'EU 46(US 11)', 'EU 47(US 11.5)', 'EU 48(US 12)'], ['EU 39(US 6.5)', 'EU 40(US 7)', 'EU 41(US 8)', 'EU 42(US 8.5)', 'EU 43(US 9.5)', 'EU 44(US 10)', 'EU 45(US 10.5)', 'EU 46(US 11)', 'EU 47(US 11.5)', 'EU 48(US 12)', 'EU 49(US 12.5)', 'EU 50(US 13)']]
       colors = [['trendy', 'unpopular', 'original', 'makes a statement'], ['light', 'neutral', 'dark'], ['very light', 'light', 'neutral', 'dark', 'very dark'], ['white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black'], ['extreme', 'white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black', 'multi-color']]
       sizes_type = randrange(1, 4)
@@ -281,50 +283,50 @@ with app.app_context():
           color = colors_select[k]
           inventory_starting = randrange(100, 10001)
           inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-          o_list.append(Option(size_order=j, size=size, color_order=k, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
-      else:
-        sizes = [['1 pack', '2 pack', '5 pack'], ['1 pack', '3 pack', '10 pack'], ['small', 'regular', 'oversized'], ['10 iu', '40 iu', '100 iu', '180 iu'], ['refurbished', 'updated', 'original', 'standard', 'prototype']]
-        colors = [['trendy', 'unpopular', 'original', 'makes a statement'], ['light', 'neutral', 'dark'], ['very light', 'light', 'neutral', 'dark', 'very dark'], ['white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black'], ['extreme', 'white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black', 'multi-color']]
-        options_type = randrange(0, 3)
-        if(options_type == 0):
-          sizes_type = randrange(1, 6)
-          sizes_select = sizes[sizes_type - 1]
-          for j in range(0, len(sizes_select)):
-            price_starting = price + (j * j)
-            price_ending = price_starting - price_delta
-            weight = base_weight + j
+          o_list.append(Option(size_order=j, size=size, color_order=k, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=product.id))
+    else:
+      sizes = [['1 pack', '2 pack', '5 pack'], ['1 pack', '3 pack', '10 pack'], ['small', 'regular', 'oversized'], ['10 iu', '40 iu', '100 iu', '180 iu'], ['refurbished', 'updated', 'original', 'standard', 'prototype']]
+      colors = [['trendy', 'unpopular', 'original', 'makes a statement'], ['light', 'neutral', 'dark'], ['very light', 'light', 'neutral', 'dark', 'very dark'], ['white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black'], ['extreme', 'white', 'very light', 'light', 'neutral', 'dark', 'very dark', 'black', 'multi-color']]
+      options_type = randrange(0, 3)
+      if(options_type == 0):
+        sizes_type = randrange(1, 6)
+        sizes_select = sizes[sizes_type - 1]
+        for j in range(0, len(sizes_select)):
+          price_starting = price + (j * j)
+          price_ending = price_starting - price_delta
+          weight = base_weight + j
+          size = sizes_select[j]
+          color = ''
+          inventory_starting = randrange(100, 10001)
+          inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
+          o_list.append(Option(size_order=j, size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=product.id))
+      elif(options_type == 1):
+        colors_type = randrange(1, 6)
+        colors_select = colors[colors_type - 1]
+        for j in range(0, len(colors_select)):
+          price_starting = price + (j * j)
+          price_ending = price_starting - price_delta
+          weight = base_weight + j
+          size = ''
+          color = colors_select[j]
+          inventory_starting = randrange(100, 10001)
+          inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
+          o_list.append(Option(size_order=j, size=size, color_order=j, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=product.id))
+      elif(options_type == 2):
+        sizes_type = randrange(1, 6)
+        sizes_select = sizes[sizes_type - 1]
+        colors_type = randrange(1, 6)
+        colors_select = colors[colors_type - 1]
+        for j in range(0, len(sizes_select)):
+          price_starting = price + (j * j)
+          price_ending = price_starting - price_delta
+          weight = base_weight + j
+          for k in range(0, len(colors_select)):
             size = sizes_select[j]
-            color = ''
+            color = colors_select[k]
             inventory_starting = randrange(100, 10001)
             inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-            o_list.append(Option(size_order=j, size=size, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
-        elif(options_type == 1):
-          colors_type = randrange(1, 6)
-          colors_select = colors[colors_type - 1]
-          for j in range(0, len(colors_select)):
-            price_starting = price + (j * j)
-            price_ending = price_starting - price_delta
-            weight = base_weight + j
-            size = ''
-            color = colors_select[j]
-            inventory_starting = randrange(100, 10001)
-            inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-            o_list.append(Option(size_order=j, size=size, color_order=j, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
-        elif(options_type == 2):
-          sizes_type = randrange(1, 6)
-          sizes_select = sizes[sizes_type - 1]
-          colors_type = randrange(1, 6)
-          colors_select = colors[colors_type - 1]
-          for j in range(0, len(sizes_select)):
-            price_starting = price + (j * j)
-            price_ending = price_starting - price_delta
-            weight = base_weight + j
-            for k in range(0, len(colors_select)):
-              size = sizes_select[j]
-              color = colors_select[k]
-              inventory_starting = randrange(100, 10001)
-              inventory_ending = inventory_starting - randrange(0, round(inventory_starting * 0.9))
-              o_list.append(Option(size_order=j, size=size, color_order=k, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=i))
+            o_list.append(Option(size_order=j, size=size, color_order=k, color=color, price_starting=price_starting, price_ending=price_ending, inventory_starting=inventory_starting, inventory_ending=inventory_ending, weight=weight, product_id=product.id))
     
   for o in o_list:
     db.session.add(o)

@@ -114,6 +114,7 @@ class Product(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(255), nullable=False)
   description = db.Column(db.Text, nullable=False)
+  imgs_folder = db.Column(db.String(255), nullable=False)
   product_imgs_amt = db.Column(db.Integer, nullable=False)
   category = db.Column(db.String(255), nullable=False)
   instant_buy = db.Column(db.Boolean, nullable=False)
@@ -173,6 +174,7 @@ class Product(db.Model):
           "id": self.id,
           "name": self.name,
           "description": self.description,
+          "imgs_folder": self.imgs_folder,
           "product_img_amt": self.product_imgs_amt,
           "category": self.category,
           "feed_pricing": self.feed_pricing(),
@@ -192,6 +194,7 @@ class Product(db.Model):
     return {
         "id": self.id,
         "name": self.name,
+        "imgs_folder": self.imgs_folder,
         "description": self.description,
         "category": self.category,
         "instant_buy": self.instant_buy,
@@ -209,6 +212,7 @@ class Product(db.Model):
           "id": self.id,
           "name": self.name,
           "category": self.category,
+          "imgs_folder": self.imgs_folder,
           "feed_pricing": self.feed_pricing(),
           "feed_almost_gone": self.feed_almost_gone(),
           "instant_buy": self.instant_buy,
