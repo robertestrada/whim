@@ -114,6 +114,7 @@ class Product(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   name = db.Column(db.String(255), nullable=False)
   description = db.Column(db.Text, nullable=False)
+  imgs_folder = db.Column(db.String(255), nullable=False)
   product_imgs_amt = db.Column(db.Integer, nullable=False)
   category = db.Column(db.String(255), nullable=False)
   instant_buy = db.Column(db.Boolean, nullable=False)
@@ -158,7 +159,9 @@ class Product(db.Model):
       option_full = option.to_dict()
       options_list.append({
                           "id": option_full["id"],
+                          "size_order": option_full["size_order"],
                           "size": option_full["size"], 
+                          "color_order": option_full["color_order"],
                           "color": option_full["color"], 
                           "price_ending": option_full["price_ending"], 
                           "inventory_ending": option_full["inventory_ending"], 
@@ -171,6 +174,7 @@ class Product(db.Model):
           "id": self.id,
           "name": self.name,
           "description": self.description,
+          "imgs_folder": self.imgs_folder,
           "product_img_amt": self.product_imgs_amt,
           "category": self.category,
           "feed_pricing": self.feed_pricing(),
@@ -190,6 +194,7 @@ class Product(db.Model):
     return {
         "id": self.id,
         "name": self.name,
+        "imgs_folder": self.imgs_folder,
         "description": self.description,
         "category": self.category,
         "instant_buy": self.instant_buy,
@@ -207,6 +212,7 @@ class Product(db.Model):
           "id": self.id,
           "name": self.name,
           "category": self.category,
+          "imgs_folder": self.imgs_folder,
           "feed_pricing": self.feed_pricing(),
           "feed_almost_gone": self.feed_almost_gone(),
           "instant_buy": self.instant_buy,
@@ -225,7 +231,9 @@ class Option(db.Model):
   __tablename__ = 'options'
 
   id = db.Column(db.Integer, primary_key=True)
+  size_order = db.Column(db.Integer)
   size = db.Column(db.String(30))
+  color_order = db.Column(db.Integer)
   color = db.Column(db.String(30))
   price_starting = db.Column(db.Float, nullable=False)
   price_ending = db.Column(db.Float)
@@ -241,7 +249,9 @@ class Option(db.Model):
   def to_dict(self):
     return {
           "id": self.id,
+          "size_order": self.size_order,
           "size": self.size,
+          "color_order": self.color_order,
           "color": self.color,
           "price_starting": self.price_starting,
           "price_ending": self.price_ending,
