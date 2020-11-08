@@ -255,11 +255,11 @@ with app.app_context():
       sizes_select = sizes[sizes_type - 1]
       colors_type = randrange(1, 6)
       colors_select = colors[colors_type - 1]
-      for j in range(1, len(sizes_select)):
+      for j in range(0, len(sizes_select)):
         price_starting = price + (j * j)
         price_ending = price_starting - price_delta
         weight = base_weight + j
-        for k in range(1, len(colors_select)):
+        for k in range(0, len(colors_select)):
           size = sizes_select[j]
           color = colors_select[k]
           inventory_starting = randrange(100, 10001)
@@ -272,11 +272,11 @@ with app.app_context():
       sizes_select = sizes[sizes_type - 1]
       colors_type = randrange(1, 6)
       colors_select = colors[colors_type - 1]
-      for j in range(1, len(sizes_select)):
+      for j in range(0, len(sizes_select)):
         price_starting = price + (j * j)
         price_ending = price_starting - price_delta
         weight = base_weight + j
-        for k in range(1, len(colors_select)):
+        for k in range(0, len(colors_select)):
           size = sizes_select[j]
           color = colors_select[k]
           inventory_starting = randrange(100, 10001)
@@ -289,7 +289,7 @@ with app.app_context():
         if(options_type == 0):
           sizes_type = randrange(1, 6)
           sizes_select = sizes[sizes_type - 1]
-          for j in range(1, len(sizes_select)):
+          for j in range(0, len(sizes_select)):
             price_starting = price + (j * j)
             price_ending = price_starting - price_delta
             weight = base_weight + j
@@ -301,7 +301,7 @@ with app.app_context():
         elif(options_type == 1):
           colors_type = randrange(1, 6)
           colors_select = colors[colors_type - 1]
-          for j in range(1, len(colors_select)):
+          for j in range(0, len(colors_select)):
             price_starting = price + (j * j)
             price_ending = price_starting - price_delta
             weight = base_weight + j
@@ -315,11 +315,11 @@ with app.app_context():
           sizes_select = sizes[sizes_type - 1]
           colors_type = randrange(1, 6)
           colors_select = colors[colors_type - 1]
-          for j in range(1, len(sizes_select)):
+          for j in range(0, len(sizes_select)):
             price_starting = price + (j * j)
             price_ending = price_starting - price_delta
             weight = base_weight + j
-            for k in range(1, len(colors_select)):
+            for k in range(0, len(colors_select)):
               size = sizes_select[j]
               color = colors_select[k]
               inventory_starting = randrange(100, 10001)

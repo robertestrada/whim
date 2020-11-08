@@ -65,6 +65,7 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
         list.push(options[i].color);
       }
     }
+    console.log(options);
     console.log(list);
     // list.sort();
     return list;
@@ -77,6 +78,7 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
         list.push(options[i].size);
       }
     }
+    console.log(options);
     console.log(list);
     // list.sort();
     return list;
