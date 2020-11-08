@@ -158,7 +158,9 @@ class Product(db.Model):
       option_full = option.to_dict()
       options_list.append({
                           "id": option_full["id"],
+                          "size_order": option_full["size_order"],
                           "size": option_full["size"], 
+                          "color_order": option_full["color_order"],
                           "color": option_full["color"], 
                           "price_ending": option_full["price_ending"], 
                           "inventory_ending": option_full["inventory_ending"], 
@@ -243,7 +245,9 @@ class Option(db.Model):
   def to_dict(self):
     return {
           "id": self.id,
+          "size_order": self.size_order,
           "size": self.size,
+          "color_order": self.color_order,
           "color": self.color,
           "price_starting": self.price_starting,
           "price_ending": self.price_ending,

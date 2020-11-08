@@ -60,27 +60,33 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
 
   const colorList = () => {
     const list = [];
+    const seen = {};
     for(let i = 0; i < options.length; i++){
-      if (!list.includes(options[i].color) && options[i].color !== ''){
-        list.push(options[i].color);
+      if (!seen[options[i].color_order] && options[i].color !== ''){
+        seen[options[i].color_order] = true;
+        list.push({ color_order: options[i].color_order, color: options[i].color });
       }
     }
-    console.log(options);
+    console.log(seen);
     console.log(list);
-    // list.sort();
+    list.sort((a, b) => (a.color_order > b.color_order) ? 1 : -1);
+    console.log(list);
     return list;
   };
 
   const sizeList = () => {
     const list = [];
+    const seen = {};
     for (let i = 0; i < options.length; i++) {
-      if (!list.includes(options[i].size)) {
-        list.push(options[i].size);
+      if (!seen[options[i].size_order] && options[i].size !== '') {
+        seen[options[i].size_order] = true;
+        list.push({ size_order: options[i].size, size: options[i].size });
       }
     }
-    console.log(options);
+    console.log(seen);
     console.log(list);
-    // list.sort();
+    list.sort((a, b) => (a.size_order > b.size_order) ? 1 : -1);
+    console.log(list);
     return list;
   };
 
@@ -209,7 +215,7 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
             </div>
           </div>
           <div className={sizeShow ? "modal__selections" : "modal__selections hide-selections"}>
-            {sizeList().map((option, idx) => <ModalDetailsOption key={idx} option={option} handleSelection={handleSizeSelection}/>)}
+            {sizeList().map((option, idx) => <ModalDetailsOption key={idx} option={option.size} handleSelection={handleSizeSelection}/>)}
           </div>
         </div>
         : null
@@ -231,7 +237,7 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
             </div>
           </div>
           <div className={colorShow ? "modal__selections" : "modal__selections hide-selections"}>
-            {colorList().map((option, idx) => <ModalDetailsOption key={idx} option={option} handleSelection={handleColorSelection}/>)}
+            {colorList().map((option, idx) => <ModalDetailsOption key={idx} option={option.color} handleSelection={handleColorSelection}/>)}
           </div>
         </div>
         : null
