@@ -67,10 +67,7 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
         list.push({ color_order: options[i].color_order, color: options[i].color });
       }
     }
-    console.log(seen);
-    console.log(list);
     list.sort((a, b) => (a.color_order > b.color_order) ? 1 : -1);
-    console.log(list);
     return list;
   };
 
@@ -83,10 +80,7 @@ const ModalDetailsOptions = ({ productImgUrl, productId, options, handleModalExi
         list.push({ size_order: options[i].size_order, size: options[i].size });
       }
     }
-    console.log(seen);
-    console.log(list);
     list.sort((a, b) => (a.size_order > b.size_order) ? 1 : -1);
-    console.log(list);
     return list;
   };
 

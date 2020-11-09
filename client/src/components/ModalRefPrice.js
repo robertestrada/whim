@@ -3,7 +3,6 @@ import '../styles/modal.css';
 
 const ModalRefPrice = ({productData}) => {
   const [showLess, setShowLess] = useState(true);
-  console.log("REF", showLess);
 
   const handleShowLessClick = () => {
     if (showLess){
