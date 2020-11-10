@@ -1,0 +1,127 @@
+.search__wrapper {
+  display: flex;
+  flex-direction: row;
+  border-radius: 4px;
+  position: relative;
+  margin: 0px 32px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 10px 0px;
+  box-sizing: border-box;
+}
+
+.search__bar {
+  border-radius: 4px;
+  width: 270px;
+  background-color: rgb(255, 255, 255);
+  -webkit-box-align: center;
+  align-items: center;
+  transition: all 0.5s ease 0s;
+  position: relative;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.search__input-wrapper {
+  flex-grow: 1;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(212, 227, 235);
+  border-radius: 4px 0px 0px 4px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.search__icon-wrapper {
+  height: 30px;
+  width: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.search__svg-wrapper {
+  width: 14px;
+  height: 14px;
+  box-sizing: border-box;
+}
+
+.search__form {
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+.search__input {
+  border: 0px;
+  margin: 0px;
+  padding: 0px 8px 0px 0px;
+  color: rgb(25, 42, 50);
+  flex-grow: 1;
+  width: 100%;
+  font-size: 16px;
+  font-weight: 400;
+  background-color: transparent;
+  caret-color: rgb(0, 0, 0);
+}
+
+.search__input:focus {
+  outline: none;
+}
+
+.search__input::placeholder {
+  color: rgb(153, 177, 185);
+  font-weight: 200;
+}
+
+.search__suggestions {
+  z-index: 5;
+  background-color: rgb(255, 255, 255);
+  width: 100%;
+  position: absolute;
+  left: 0px;
+  top: 40px;
+  overflow: hidden;
+  box-shadow: rgba(212, 227, 235, 0.2) 0px 1px 4px 1px;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.search__suggestions.hide-suggestions {
+  visibility: hidden;
+}
+
+.search__suggestion {
+  font-size: 14px;
+  font-weight: 400;
+  color: rgb(25, 42, 50);
+  padding: 12px;
+  cursor: pointer;
+  background-color: rgb(255, 255, 255);
+  box-sizing: border-box;
+}
+
+.search__suggestion:hover {
+  background: rgb(240, 245, 247);
+}
+
+.search__button {
+  box-sizing: border-box;
+  border-radius: 0px 4px 4px 0px;
+  padding: 0px 16px;
+  cursor: pointer;
+  font-size: 16px;
+  height: 40px;
+  min-width: 40px;
+  background-color: rgb(47, 183, 236);
+  color: rgb(255, 255, 255);
+  transition: background-color 0.2s ease 0s;
+  font-weight: bold;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
