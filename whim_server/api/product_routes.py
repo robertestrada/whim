@@ -45,16 +45,30 @@ def search_options():
   requested = request.get_json()
   requestedF = "%{}%".format(requested['searchInput'])
   products = Product.query.filter(or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))).all()
-  productsDict = [product.feed_dict() for product in products]
+  productsAll = [product.feed_dict() for product in products]
   options = {}
-  for product in productsDict:
+  for product in productsAll:
     for key in product:
-      if(key == 'name' or key == 'category' or key == 'description'):
-        re.split()
-        if (options[key]):
-          options[key] += 1
-        else:
-          options[key] = 1
+      for i in range(1, 4):
+        if (i == 1):
+          if(key == 'name' or key == 'category' or key == 'description'):
+            words = re.split('[^a-zA-Z]', product[key])
+            for word in words:
+              if substring in word:
+                if (options[word]):
+                  options[word] += 1
+                else:
+                  options[word] = 1
+        elif(i == 2):
+          if(key == 'name' or key == 'category' or key == 'description'):
+            words = re.split('[^a-zA-Z]', product[key])
+            for word in words:
+              if substring in word:
+                if (options[word]):
+                  options[word] += 1
+                else:
+                  options[word] = 1
+        elif(i == 3):
   
   return {"data": options}, 200
 
