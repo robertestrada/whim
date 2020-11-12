@@ -50,26 +50,21 @@ def search_options():
   products = Product.query.filter(or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))).all()
   productsAll = [product.feed_dict() for product in products]
   options = {}
+  stopwords = {'shipping', 'shipped', 'express', 'delivery', 'ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
   for product in productsAll:
     for key in product:
       for i in range(0, 3):
         if (i == 0):
-          # if(key == 'name' or key == 'category' or key == 'description'):
-          if(key == 'category'):
+          if(key == 'name' or key == 'category' or key == 'description'):
             words = re.split('[^a-zA-Z]', product[key])
-            print(f'product[key]: {product[key]}')
             for word in words:
               word_lower = word.lower()
-              print(f'word_lower: {word_lower}')
-              print(f'substring: {substring}')
-              print(word_lower.startswith(substring))
-              if (word_lower.startswith(substring)):
+              if (word_lower.startswith(substring) and word_lower not in stopwords and len(word_lower) > 2):
                 if word in options:
                   options[word_lower] += 1
                 else:
                   options[word_lower] = 1
         # else:
-        #   stopwords = {'ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
         #   if(key == 'name' or key == 'category' or key == 'description'):
         #     words = re.split('[^a-zA-Z]', product[key])
         #     for j, word in enumerate(words):
@@ -92,7 +87,8 @@ def search_options():
         #           options[joined_word_phrase] += 1
         #         else:
         #           options[joined_word_phrase] = 1
-  return {"data": options}, 200
+  options_list = sorted(((value, key) for (key, value) in options.items()), reverse=True)[:10]
+  return {"data": options_list}, 200
 
 
 @product_routes.route("/search", methods=['POST'])

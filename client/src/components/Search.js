@@ -1,34 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { baseUrl } from '../config';
 import '../styles/search.css';
 
 const Search = ({ panelType, setPanelType }) => {
-  const [delay, setDelay] = useState(true);
+  const [delay, setDelay] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+  const [autoInput, setAutoInput] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const node = useRef();
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => setDelay(false), 2000);
-  //   return () => clearTimeout(timeout);
-  // }, []);
+  const handleClickOff = e => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setShowSearchResults(false);
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOff);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOff)
+    }
+  }, []);
+
+  useEffect(() => {
+    if(!delay){
+      if (searchInput !== '') {
+        getOptions(searchInput);
+        setSearchInput(searchInput);
+        setDelay(true);
+      } else {
+        setSearchInput('');
+        setSearchResults(null);
+        setAutoInput(null);
+      }
+    } else {
+      const timeout = setTimeout(() => {
+        if(searchInput !== ''){
+          getOptions(searchInput);
+          setSearchInput(searchInput);
+        } else {
+          setSearchInput('');
+          setSearchResults(null);
+          setAutoInput(null);
+        }
+        setDelay(false);
+      }, 200);
+      return () => clearTimeout(timeout);
+    }
+  }, [searchInput]);
 
   const getOptions = async (searchInput) => {
     console.log("searchInput:", searchInput);
-    const response = await fetch(`${baseUrl}/product/search/options`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ searchInput }),
-    });
-    if (response.ok) {
-      const responseJSON = await response.json();
-      console.log(responseJSON.data);
-      setSearchResults(responseJSON.data);
-    }
+      const response = await fetch(`${baseUrl}/product/search/options`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ searchInput }),
+      });
+      if (response.ok) {
+        const responseJSON = await response.json();
+        setSearchResults(responseJSON.data);
+        setAutoInput(responseJSON.data[0][1]);
+        setShowSearchResults(true);
+      }
   };
 
-  const getResults = async page => {
+  const getResults = async (searchInput, page) => {
     const response = await fetch(`${baseUrl}/product/search`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -36,27 +76,31 @@ const Search = ({ panelType, setPanelType }) => {
     });
     if (response.ok) {
       const responseJSON = await response.json();
-      console.log(responseJSON.data);
       setSearchResults(responseJSON.data);
+      setAutoInput(responseJSON.data[0][1]);
     }
-  };
-
-  const handleSearchInput = (e) => {
-    e.preventDefault();
-    console.log(delay);
-    // if(!delay){
-    setSearchInput(e.target.value);
-    getOptions(e.target.value);
-    // }
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    getResults(1);
+    getResults(searchInput, 1);
+    setSearchInput('');
+    setSearchResults(null);
+    setAutoInput(null);
+    setShowSearchResults(false);
   };
 
+  const handleMouseLeave = () => {
+    if (searchResults){
+      setAutoInput(searchResults[0][1]);
+    } else {
+      setAutoInput(null);
+    }
+  };
+
+
   return (
-    <div className="search__wrapper">
+    <div className="search__wrapper" ref={node}>
       <div className="search__bar">
         <div className="search__input-wrapper">
           <div className="search__icon-wrapper">
@@ -70,12 +114,16 @@ const Search = ({ panelType, setPanelType }) => {
             </div>
           </div>
           <form className="search__form" onSubmit={handleSearchSubmit}>
-            <input value={searchInput} onChange={handleSearchInput} maxLength="100" type="text" placeholder="What do you want to find?" className="search__input" />
+            <input value={searchInput} onClick={() => setShowSearchResults(true)} onChange={e => setSearchInput(e.target.value)} maxLength="100" type="text" placeholder="What do you want to find?" className="search__input" />
+            <div className="search__text">
+              <div className="search__input-text" >{searchInput}</div>
+              { searchInput && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchInput.length)}</div> : null }
+            </div>
           </form>
         </div>
-        { searchResults !== null
+        {searchInput && showSearchResults && searchResults !== null
           ? <div className={searchResults ? "search__suggestions" : "search__suggestions hide-suggestions"}>
-              {searchResults.map((result, idx) => <div key={idx} className="search__suggestion">{result.name}</div>)}
+            { searchResults.map((result, idx) => <div key={idx} onMouseEnter={() => setAutoInput(result[1])} onMouseLeave={handleMouseLeave} className="search__suggestion">{result[1]}</div>)}
             </div>
           : null
         }
