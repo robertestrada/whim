@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { baseUrl } from '../config';
@@ -7,7 +7,24 @@ import '../styles/search.css';
 const Search = ({ panelType, setPanelType }) => {
   const [delay, setDelay] = useState(false);
   const [searchInput, setSearchInput] = useState('');
+  const [autoInput, setAutoInput] = useState(null);
   const [searchResults, setSearchResults] = useState(null);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const node = useRef();
+
+  const handleClickOff = e => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setShowSearchResults(false);
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOff);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOff)
+    }
+  }, []);
 
   useEffect(() => {
     if(!delay){
@@ -18,6 +35,7 @@ const Search = ({ panelType, setPanelType }) => {
       } else {
         setSearchInput('');
         setSearchResults(null);
+        setAutoInput(null);
       }
     } else {
       const timeout = setTimeout(() => {
@@ -27,6 +45,7 @@ const Search = ({ panelType, setPanelType }) => {
         } else {
           setSearchInput('');
           setSearchResults(null);
+          setAutoInput(null);
         }
         setDelay(false);
       }, 200);
@@ -43,8 +62,9 @@ const Search = ({ panelType, setPanelType }) => {
       });
       if (response.ok) {
         const responseJSON = await response.json();
-        console.log(responseJSON.data);
         setSearchResults(responseJSON.data);
+        setAutoInput(responseJSON.data[0][1]);
+        setShowSearchResults(true);
       }
   };
 
@@ -56,18 +76,31 @@ const Search = ({ panelType, setPanelType }) => {
     });
     if (response.ok) {
       const responseJSON = await response.json();
-      console.log(responseJSON.data);
       setSearchResults(responseJSON.data);
+      setAutoInput(responseJSON.data[0][1]);
     }
   };
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     getResults(searchInput, 1);
+    setSearchInput('');
+    setSearchResults(null);
+    setAutoInput(null);
+    setShowSearchResults(false);
   };
 
+  const handleMouseLeave = () => {
+    if (searchResults){
+      setAutoInput(searchResults[0][1]);
+    } else {
+      setAutoInput(null);
+    }
+  };
+
+
   return (
-    <div className="search__wrapper">
+    <div className="search__wrapper" ref={node}>
       <div className="search__bar">
         <div className="search__input-wrapper">
           <div className="search__icon-wrapper">
@@ -81,12 +114,16 @@ const Search = ({ panelType, setPanelType }) => {
             </div>
           </div>
           <form className="search__form" onSubmit={handleSearchSubmit}>
-            <input value={searchInput} onChange={e => setSearchInput(e.target.value)} maxLength="100" type="text" placeholder="What do you want to find?" className="search__input" />
+            <input value={searchInput} onClick={() => setShowSearchResults(true)} onChange={e => setSearchInput(e.target.value)} maxLength="100" type="text" placeholder="What do you want to find?" className="search__input" />
+            <div className="search__text">
+              <div className="search__input-text" >{searchInput}</div>
+              { searchInput && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchInput.length)}</div> : null }
+            </div>
           </form>
         </div>
-        { searchResults !== null
+        {searchInput && showSearchResults && searchResults !== null
           ? <div className={searchResults ? "search__suggestions" : "search__suggestions hide-suggestions"}>
-              {searchResults.map((result, idx) => <div key={idx} className="search__suggestion">{result[1]}</div>)}
+            { searchResults.map((result, idx) => <div key={idx} onMouseEnter={() => setAutoInput(result[1])} onMouseLeave={handleMouseLeave} className="search__suggestion">{result[1]}</div>)}
             </div>
           : null
         }
