@@ -5,30 +5,50 @@ import { baseUrl } from '../config';
 import '../styles/search.css';
 
 const Search = ({ panelType, setPanelType }) => {
-  const [delay, setDelay] = useState(true);
+  const [delay, setDelay] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState(null);
 
-  // useEffect(() => {
-  //   const timeout = setTimeout(() => setDelay(false), 2000);
-  //   return () => clearTimeout(timeout);
-  // }, []);
+  useEffect(() => {
+    if(!delay){
+      if (searchInput !== '') {
+        getOptions(searchInput);
+        setSearchInput(searchInput);
+        setDelay(true);
+      } else {
+        setSearchInput('');
+        setSearchResults(null);
+      }
+    } else {
+      const timeout = setTimeout(() => {
+        if(searchInput !== ''){
+          getOptions(searchInput);
+          setSearchInput(searchInput);
+        } else {
+          setSearchInput('');
+          setSearchResults(null);
+        }
+        setDelay(false);
+      }, 200);
+      return () => clearTimeout(timeout);
+    }
+  }, [searchInput]);
 
   const getOptions = async (searchInput) => {
     console.log("searchInput:", searchInput);
-    const response = await fetch(`${baseUrl}/product/search/options`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ searchInput }),
-    });
-    if (response.ok) {
-      const responseJSON = await response.json();
-      console.log(responseJSON.data);
-      setSearchResults(responseJSON.data);
-    }
+      const response = await fetch(`${baseUrl}/product/search/options`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ searchInput }),
+      });
+      if (response.ok) {
+        const responseJSON = await response.json();
+        console.log(responseJSON.data);
+        setSearchResults(responseJSON.data);
+      }
   };
 
-  const getResults = async page => {
+  const getResults = async (searchInput, page) => {
     const response = await fetch(`${baseUrl}/product/search`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -41,18 +61,9 @@ const Search = ({ panelType, setPanelType }) => {
     }
   };
 
-  const handleSearchInput = (e) => {
-    e.preventDefault();
-    console.log(delay);
-    // if(!delay){
-    setSearchInput(e.target.value);
-    getOptions(e.target.value);
-    // }
-  };
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    getResults(1);
+    getResults(searchInput, 1);
   };
 
   return (
@@ -70,7 +81,7 @@ const Search = ({ panelType, setPanelType }) => {
             </div>
           </div>
           <form className="search__form" onSubmit={handleSearchSubmit}>
-            <input value={searchInput} onChange={handleSearchInput} maxLength="100" type="text" placeholder="What do you want to find?" className="search__input" />
+            <input value={searchInput} onChange={e => setSearchInput(e.target.value)} maxLength="100" type="text" placeholder="What do you want to find?" className="search__input" />
           </form>
         </div>
         { searchResults !== null

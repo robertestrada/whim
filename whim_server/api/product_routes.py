@@ -59,7 +59,7 @@ def search_options():
             words = re.split('[^a-zA-Z]', product[key])
             for word in words:
               word_lower = word.lower()
-              if (word_lower.startswith(substring) and word_lower not in stopwords):
+              if (word_lower.startswith(substring) and word_lower not in stopwords and len(word_lower) > 2):
                 if word in options:
                   options[word_lower] += 1
                 else:
