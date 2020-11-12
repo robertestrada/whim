@@ -75,7 +75,7 @@ const Search = ({ panelType, setPanelType }) => {
         </div>
         { searchResults !== null
           ? <div className={searchResults ? "search__suggestions" : "search__suggestions hide-suggestions"}>
-              {searchResults.map((result, idx) => <div key={idx} className="search__suggestion">{result.name}</div>)}
+              {searchResults.map((result, idx) => <div key={idx} className="search__suggestion">{result[1]}</div>)}
             </div>
           : null
         }
