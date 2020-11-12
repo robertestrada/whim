@@ -5,10 +5,17 @@ import { baseUrl } from '../config';
 import '../styles/search.css';
 
 const Search = ({ panelType, setPanelType }) => {
+  const [delay, setDelay] = useState(true);
   const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState(null);
 
-  const getOptions = async () => {
+  // useEffect(() => {
+  //   const timeout = setTimeout(() => setDelay(false), 2000);
+  //   return () => clearTimeout(timeout);
+  // }, []);
+
+  const getOptions = async (searchInput) => {
+    console.log("searchInput:", searchInput);
     const response = await fetch(`${baseUrl}/product/search/options`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -36,8 +43,11 @@ const Search = ({ panelType, setPanelType }) => {
 
   const handleSearchInput = (e) => {
     e.preventDefault();
+    console.log(delay);
+    // if(!delay){
     setSearchInput(e.target.value);
-    getOptions();
+    getOptions(e.target.value);
+    // }
   };
 
   const handleSearchSubmit = (e) => {
