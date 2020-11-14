@@ -43,7 +43,7 @@ def get_product(id):
 @product_routes.route("/search/options", methods=['POST'])
 def search_options():
   requested = request.get_json()
-  substring_raw = requested['searchInput'].lower()
+  substring_raw = requested['input'].lower()
   substring_split = re.split('[^a-zA-Z+\'?s]', substring_raw)
   substring_filter = list(filter(None, substring_split))
   substring = substring_filter[0]
@@ -138,7 +138,7 @@ def search_options():
 def search_products():
   requested = request.get_json()
   page = requested['page']
-  substring = requested['autoInput'].lower()
+  substring = requested['input'].lower()
   requestedF = "%{}%".format(substring)
   print(requestedF)
   results = Product.query.filter(or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))).order_by(Product.created_at).paginate(page, 24, False)
