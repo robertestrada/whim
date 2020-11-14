@@ -53,6 +53,23 @@ const Search = ({ panelType, setPanelType }) => {
     }
   }, [searchInput]);
 
+  useEffect(() => {
+    if (autoInput && !autoInput.startsWith(searchInput)){
+      setAutoInput(null);
+    }
+    if (searchResults !== null){
+      for (let i = 0; i < searchResults.length; i++){
+        const searchResult = searchResults[i][1];
+        if (searchResult.startsWith(searchInput)){
+          const newSearchResults = searchResults.filter(result => result[1].startsWith(searchInput));
+          setSearchResults(newSearchResults);
+          setAutoInput(searchResult);
+          return;
+        }
+      }
+    }
+  }, [searchInput]);
+
   const getOptions = async (searchInput) => {
     console.log("searchInput:", searchInput);
       const response = await fetch(`${baseUrl}/product/search/options`, {
@@ -62,17 +79,21 @@ const Search = ({ panelType, setPanelType }) => {
       });
       if (response.ok) {
         const responseJSON = await response.json();
-        setSearchResults(responseJSON.data);
-        setAutoInput(responseJSON.data[0][1]);
-        setShowSearchResults(true);
+        if (responseJSON.data.length !== 0){
+          if (responseJSON.data[0][1].startsWith(searchInput.toLowerCase())){
+            setSearchResults(responseJSON.data);
+            setAutoInput(responseJSON.data[0][1]);
+            setShowSearchResults(true);
+          }
+        }
       }
   };
 
-  const getResults = async (searchInput, page) => {
+  const getResults = async (autoInput, page) => {
     const response = await fetch(`${baseUrl}/product/search`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ searchInput, page }),
+      body: JSON.stringify({ autoInput, page }),
     });
     if (response.ok) {
       const responseJSON = await response.json();
@@ -81,20 +102,22 @@ const Search = ({ panelType, setPanelType }) => {
     }
   };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    getResults(searchInput, 1);
-    setSearchInput('');
-    setSearchResults(null);
-    setAutoInput(null);
-    setShowSearchResults(false);
-  };
+  const handleSearchSubmit = () => {
+    if (autoInput !== null && searchInput !== ''){
+      if (autoInput.length >= searchInput.length){
 
-  const handleMouseLeave = () => {
-    if (searchResults){
-      setAutoInput(searchResults[0][1]);
-    } else {
+        getResults(autoInput, 1);
+        setSearchInput('');
+        setSearchResults(null);
+        setAutoInput(null);
+        setShowSearchResults(false);
+      }
+    } else if (autoInput === null && searchInput !== ''){
+      getResults(searchInput, 1);
+      setSearchInput('');
+      setSearchResults(null);
       setAutoInput(null);
+      setShowSearchResults(false);
     }
   };
 
@@ -113,8 +136,8 @@ const Search = ({ panelType, setPanelType }) => {
               </svg>
             </div>
           </div>
-          <form className="search__form" onSubmit={handleSearchSubmit}>
-            <input value={searchInput} onClick={() => setShowSearchResults(true)} onChange={e => setSearchInput(e.target.value)} maxLength="100" type="text" placeholder="What do you want to find?" className="search__input" />
+          <form className="search__form" onSubmit={() => handleSearchSubmit()}>
+            <input value={searchInput} onClick={() => setShowSearchResults(true)} onChange={e => setSearchInput(e.target.value)} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
             <div className="search__text">
               <div className="search__input-text" >{searchInput}</div>
               { searchInput && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchInput.length)}</div> : null }
@@ -123,12 +146,12 @@ const Search = ({ panelType, setPanelType }) => {
         </div>
         {searchInput && showSearchResults && searchResults !== null
           ? <div className={searchResults ? "search__suggestions" : "search__suggestions hide-suggestions"}>
-            { searchResults.map((result, idx) => <div key={idx} onMouseEnter={() => setAutoInput(result[1])} onMouseLeave={handleMouseLeave} className="search__suggestion">{result[1]}</div>)}
+            {searchResults.map((result, idx) => <div key={idx} onClick={() => handleSearchSubmit()} onMouseEnter={() => setAutoInput(result[1])} className="search__suggestion">{result[1]}</div>)}
             </div>
           : null
         }
       </div>
-      <div className="search__button">Search</div>
+      <div className="search__button" onClick={() => handleSearchSubmit()}>Search</div>
     </div>
   );
 }
