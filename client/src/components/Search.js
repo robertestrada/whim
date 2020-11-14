@@ -8,21 +8,44 @@ const Search = ({ panelType, setPanelType }) => {
   const [delay, setDelay] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [autoInput, setAutoInput] = useState(null);
-  const [searchResults, setSearchResults] = useState(null);
-  const [showSearchResults, setShowSearchResults] = useState(false);
-  const node = useRef();
+  const [showAutoInput, setShowAutoInput] = useState(true);
+  const [searchSuggestions, setSearchSuggestions] = useState(null);
+  const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
+  const [listTarget, setListTarget] = useState(null);
+  const [allowListNavigation, setAllowListNavigation] = useState(true);
 
-  const handleClickOff = e => {
-    if (node.current.contains(e.target)) {
+  const [searchResults, setSearchResults] = useState(null);
+
+  const nodeSearchWrapper = useRef();
+  const nodeSearchButton = useRef();
+
+  const handleClickOffSearchWrapper = e => {
+    if (nodeSearchWrapper.current.contains(e.target)) {
       return;
     }
-    setShowSearchResults(false);
+    setShowSearchSuggestions(false);
+    setAutoInput(null);
   }
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOff);
+    document.addEventListener("mousedown", handleClickOffSearchWrapper);
     return () => {
-      document.removeEventListener("mousedown", handleClickOff)
+      document.removeEventListener("mousedown", handleClickOffSearchWrapper)
+    }
+  }, []);
+
+  const handleClickOffSearchButton = e => {
+    if (nodeSearchButton.current.contains(e.target)) {
+      return;
+    }
+    setSubmitError(false);
+  }
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOffSearchButton);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOffSearchButton)
     }
   }, []);
 
@@ -34,7 +57,7 @@ const Search = ({ panelType, setPanelType }) => {
         setDelay(true);
       } else {
         setSearchInput('');
-        setSearchResults(null);
+        setSearchSuggestions(null);
         setAutoInput(null);
       }
     } else {
@@ -44,7 +67,7 @@ const Search = ({ panelType, setPanelType }) => {
           setSearchInput(searchInput);
         } else {
           setSearchInput('');
-          setSearchResults(null);
+          setSearchSuggestions(null);
           setAutoInput(null);
         }
         setDelay(false);
@@ -57,73 +80,130 @@ const Search = ({ panelType, setPanelType }) => {
     if (autoInput && !autoInput.startsWith(searchInput)){
       setAutoInput(null);
     }
-    if (searchResults !== null){
-      for (let i = 0; i < searchResults.length; i++){
-        const searchResult = searchResults[i][1];
+    console.log('searchSuggestions:', searchSuggestions);
+    if (searchSuggestions !== null){
+      for (let i = 0; i < searchSuggestions.length; i++){
+        const searchResult = searchSuggestions[i][1];
         if (searchResult.startsWith(searchInput)){
-          const newSearchResults = searchResults.filter(result => result[1].startsWith(searchInput));
-          setSearchResults(newSearchResults);
+          const newSearchSuggestions = searchSuggestions.filter(result => result[1].startsWith(searchInput));
+          setSearchSuggestions(newSearchSuggestions);
           setAutoInput(searchResult);
-          return;
+          break;
         }
       }
     }
   }, [searchInput]);
 
-  const getOptions = async (searchInput) => {
-    console.log("searchInput:", searchInput);
+  const getOptions = async (input) => {
       const response = await fetch(`${baseUrl}/product/search/options`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ searchInput }),
+        body: JSON.stringify({ input }),
       });
       if (response.ok) {
         const responseJSON = await response.json();
         if (responseJSON.data.length !== 0){
-          if (responseJSON.data[0][1].startsWith(searchInput.toLowerCase())){
-            setSearchResults(responseJSON.data);
+          if (responseJSON.data[0][1].startsWith(input.toLowerCase())){
+            setSearchSuggestions(responseJSON.data);
             setAutoInput(responseJSON.data[0][1]);
-            setShowSearchResults(true);
+            setShowSearchSuggestions(true);
           }
+        } else {
+          setSearchSuggestions(['Try different search terms!']);
+          setAutoInput(null);
+          setShowSearchSuggestions(true);
         }
       }
   };
 
-  const getResults = async (autoInput, page) => {
+  const getResults = async (input, page) => {
     const response = await fetch(`${baseUrl}/product/search`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ autoInput, page }),
+      body: JSON.stringify({ input, page }),
     });
     if (response.ok) {
       const responseJSON = await response.json();
       setSearchResults(responseJSON.data);
-      setAutoInput(responseJSON.data[0][1]);
     }
   };
 
-  const handleSearchSubmit = () => {
-    if (autoInput !== null && searchInput !== ''){
-      if (autoInput.length >= searchInput.length){
-
-        getResults(autoInput, 1);
-        setSearchInput('');
-        setSearchResults(null);
-        setAutoInput(null);
-        setShowSearchResults(false);
-      }
-    } else if (autoInput === null && searchInput !== ''){
+  const handleSearchSubmit = e => {
+    e.preventDefault();
+    if (searchSuggestions && searchSuggestions[0] === 'Try different search terms!'){
+      setSubmitError(true);
+    } else if (searchSuggestions === null){
+      setSubmitError(true);
+    } else if (searchSuggestions){
       getResults(searchInput, 1);
-      setSearchInput('');
-      setSearchResults(null);
       setAutoInput(null);
-      setShowSearchResults(false);
+      setShowSearchSuggestions(false);
+      e.target.blur();
     }
   };
 
+  const handleSearchSuggestionSubmit = suggestion => {
+    if (suggestion !== 'Try different search terms!') {
+      getResults(suggestion, 1);
+      setSearchInput(suggestion);
+      setShowSearchSuggestions(false);
+    }
+  };
+
+  const handleTabOrEnterPress = e => {
+    if (e.keyCode === 9){
+      e.preventDefault();
+      setSearchInput(autoInput);
+    }
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      handleSearchSubmit(e);
+    }
+    if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 38 && listTarget > 0){
+      e.preventDefault();
+      setListTarget(listTarget - 1);
+      setAutoInput(searchSuggestions[listTarget - 1][1]);
+    } else if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 40 && listTarget < searchSuggestions.length - 1){
+      e.preventDefault();
+      if (listTarget === null){
+        setListTarget(0);
+      } else {
+        setListTarget(listTarget + 1);
+      }
+      setAutoInput(searchSuggestions[listTarget + 1][1]);
+    } else if (!allowListNavigation && (e.keyCode === 38 || e.keyCode === 40)){
+      e.preventDefault();
+    } else if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 38 && listTarget === 0) {
+      e.preventDefault();
+      setListTarget(null);
+      setAutoInput(searchSuggestions[0][1]);
+    }
+  }
+
+  const handleSuggestionMouseEnter = (suggestion, idx) => {
+    setAllowListNavigation(false);
+    setAutoInput(suggestion);
+    setListTarget(idx);
+  }
+
+  const handleInputClick = e => {
+    e.preventDefault();
+    setListTarget(null);
+    if (searchSuggestions){
+      setAutoInput(searchSuggestions[0][1]);
+    }
+    setAllowListNavigation(true);
+    setShowSearchSuggestions(true);
+  }
+
+  if (searchResults){
+    searchResults.forEach(result => {
+      console.log(result.name);
+    });
+  }
 
   return (
-    <div className="search__wrapper" ref={node}>
+    <div className="search__wrapper" ref={nodeSearchWrapper}>
       <div className="search__bar">
         <div className="search__input-wrapper">
           <div className="search__icon-wrapper">
@@ -136,22 +216,26 @@ const Search = ({ panelType, setPanelType }) => {
               </svg>
             </div>
           </div>
-          <form className="search__form" onSubmit={() => handleSearchSubmit()}>
-            <input value={searchInput} onClick={() => setShowSearchResults(true)} onChange={e => setSearchInput(e.target.value)} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
+          <form className="search__form">
+            <input value={searchInput} onKeyDown={handleTabOrEnterPress} onClick={handleInputClick} onChange={e => setSearchInput(e.target.value)} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
             <div className="search__text">
               <div className="search__input-text" >{searchInput}</div>
-              { searchInput && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchInput.length)}</div> : null }
+              { showAutoInput && searchInput && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchInput.length)}</div> : null }
             </div>
           </form>
         </div>
-        {searchInput && showSearchResults && searchResults !== null
-          ? <div className={searchResults ? "search__suggestions" : "search__suggestions hide-suggestions"}>
-            {searchResults.map((result, idx) => <div key={idx} onClick={() => handleSearchSubmit()} onMouseEnter={() => setAutoInput(result[1])} className="search__suggestion">{result[1]}</div>)}
+        { searchInput && showSearchSuggestions && searchSuggestions !== null && searchSuggestions[0] !== 'Try different search terms!'
+          ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"} >
+            {searchSuggestions.map((result, idx) => <div key={idx} onClick={() => handleSearchSuggestionSubmit(result[1])} onMouseEnter={() => handleSuggestionMouseEnter(result[1], idx)} className={ listTarget === idx ? "search__suggestion suggestion-highlight" : "search__suggestion"}>{result[1]}</div>)}
             </div>
-          : null
+          : searchInput && showSearchSuggestions && searchSuggestions !== null && searchSuggestions[0] === 'Try different search terms!'
+            ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"}>
+                <div className="search__suggestion no-search-result">'Try different search terms!'</div>
+              </div>
+            : null
         }
       </div>
-      <div className="search__button" onClick={() => handleSearchSubmit()}>Search</div>
+      <div ref={nodeSearchButton} className={submitError ? "search__button no-search-allowed" : 'search__button'} onClick={handleSearchSubmit}>Search</div>
     </div>
   );
 }
