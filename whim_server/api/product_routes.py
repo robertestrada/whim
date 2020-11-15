@@ -138,7 +138,9 @@ def search_options():
 def search_products():
   requested = request.get_json()
   page = requested['page']
-  substring = requested['input'].lower()
+  substring_raw = requested['input'].lower()
+  substring_split = substring_raw.split(' ')
+  substring = '%'.join(substring_split)
   requestedF = "%{}%".format(substring)
   print(requestedF)
   results = Product.query.filter(or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))).order_by(Product.created_at).paginate(page, 24, False)
