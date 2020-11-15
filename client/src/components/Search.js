@@ -8,12 +8,12 @@ const Search = ({ panelType, setPanelType }) => {
   const [delay, setDelay] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [autoInput, setAutoInput] = useState(null);
-  const [showAutoInput, setShowAutoInput] = useState(true);
   const [searchSuggestions, setSearchSuggestions] = useState(null);
   const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
   const [submitError, setSubmitError] = useState(false);
   const [listTarget, setListTarget] = useState(null);
   const [allowListNavigation, setAllowListNavigation] = useState(true);
+  const [searchTermError, setSearchTermError] = useState(false);
 
   const [searchResults, setSearchResults] = useState(null);
 
@@ -80,16 +80,24 @@ const Search = ({ panelType, setPanelType }) => {
     if (autoInput && !autoInput.startsWith(searchInput)){
       setAutoInput(null);
     }
-    console.log('searchSuggestions:', searchSuggestions);
+
     if (searchSuggestions !== null){
+      let searchInputTrimmed = searchInput;
+      if (searchInput.endsWith(' ')){
+        searchInputTrimmed = `${searchInput.trimRight()} `
+      }
       for (let i = 0; i < searchSuggestions.length; i++){
         const searchResult = searchSuggestions[i][1];
-        if (searchResult.startsWith(searchInput)){
-          const newSearchSuggestions = searchSuggestions.filter(result => result[1].startsWith(searchInput));
+        if (searchResult.startsWith(searchInputTrimmed) && searchInputTrimmed.split(' ').length > 1){
+          const newSearchSuggestions = searchSuggestions.filter(result => result[1].startsWith(searchInputTrimmed));
+          setSearchTermError(false);
           setSearchSuggestions(newSearchSuggestions);
           setAutoInput(searchResult);
-          break;
+          return;
         }
+      }
+      if (searchInputTrimmed.split(' ').length > 1) {
+        setSearchTermError(true);
       }
     }
   }, [searchInput]);
@@ -104,12 +112,13 @@ const Search = ({ panelType, setPanelType }) => {
         const responseJSON = await response.json();
         if (responseJSON.data.length !== 0){
           if (responseJSON.data[0][1].startsWith(input.toLowerCase())){
+            setSearchTermError(false);
             setSearchSuggestions(responseJSON.data);
             setAutoInput(responseJSON.data[0][1]);
             setShowSearchSuggestions(true);
           }
         } else {
-          setSearchSuggestions(['Try different search terms!']);
+          setSearchTermError(true);
           setAutoInput(null);
           setShowSearchSuggestions(true);
         }
@@ -130,7 +139,7 @@ const Search = ({ panelType, setPanelType }) => {
 
   const handleSearchSubmit = e => {
     e.preventDefault();
-    if (searchSuggestions && searchSuggestions[0] === 'Try different search terms!'){
+    if (searchTermError){
       setSubmitError(true);
     } else if (searchSuggestions === null){
       setSubmitError(true);
@@ -143,7 +152,7 @@ const Search = ({ panelType, setPanelType }) => {
   };
 
   const handleSearchSuggestionSubmit = suggestion => {
-    if (suggestion !== 'Try different search terms!') {
+    if (!searchTermError) {
       getResults(suggestion, 1);
       setSearchInput(suggestion);
       setShowSearchSuggestions(false);
@@ -177,6 +186,10 @@ const Search = ({ panelType, setPanelType }) => {
       e.preventDefault();
       setListTarget(null);
       setAutoInput(searchSuggestions[0][1]);
+    } else if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 38 && listTarget === null) {
+      e.preventDefault();
+      setListTarget(null);
+      setAutoInput(searchSuggestions[0][1]);
     }
   }
 
@@ -196,11 +209,11 @@ const Search = ({ panelType, setPanelType }) => {
     setShowSearchSuggestions(true);
   }
 
-  if (searchResults){
-    searchResults.forEach(result => {
-      console.log(result.name);
-    });
-  }
+  // if (searchResults){
+  //   searchResults.forEach(result => {
+  //     console.log(result.name);
+  //   });
+  // }
 
   return (
     <div className="search__wrapper" ref={nodeSearchWrapper}>
@@ -220,15 +233,15 @@ const Search = ({ panelType, setPanelType }) => {
             <input value={searchInput} onKeyDown={handleTabOrEnterPress} onClick={handleInputClick} onChange={e => setSearchInput(e.target.value)} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
             <div className="search__text">
               <div className="search__input-text" >{searchInput}</div>
-              { showAutoInput && searchInput && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchInput.length)}</div> : null }
+              { searchInput && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchInput.length)}</div> : null }
             </div>
           </form>
         </div>
-        { searchInput && showSearchSuggestions && searchSuggestions !== null && searchSuggestions[0] !== 'Try different search terms!'
+        { searchInput && showSearchSuggestions && searchSuggestions !== null && !searchTermError
           ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"} >
             {searchSuggestions.map((result, idx) => <div key={idx} onClick={() => handleSearchSuggestionSubmit(result[1])} onMouseEnter={() => handleSuggestionMouseEnter(result[1], idx)} className={ listTarget === idx ? "search__suggestion suggestion-highlight" : "search__suggestion"}>{result[1]}</div>)}
             </div>
-          : searchInput && showSearchSuggestions && searchSuggestions !== null && searchSuggestions[0] === 'Try different search terms!'
+          : searchInput && showSearchSuggestions && searchSuggestions !== null && searchTermError
             ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"}>
                 <div className="search__suggestion no-search-result">'Try different search terms!'</div>
               </div>
