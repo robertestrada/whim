@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { Link, useHistory } from 'react-router-dom';
 import { baseUrl } from '../config';
 import '../styles/search.css';
 
@@ -51,7 +51,7 @@ const Search = ({ panelType, setPanelType }) => {
 
   useEffect(() => {
     if(!delay){
-      if (searchInput !== '') {
+      if (searchInput !== '' && !searchInput.startsWith(' ')) {
         getOptions(searchInput);
         setSearchInput(searchInput);
         setDelay(true);
@@ -62,7 +62,7 @@ const Search = ({ panelType, setPanelType }) => {
       }
     } else {
       const timeout = setTimeout(() => {
-        if(searchInput !== ''){
+        if (searchInput !== '' && !searchInput.startsWith(' ')){
           getOptions(searchInput);
           setSearchInput(searchInput);
         } else {
@@ -74,9 +74,13 @@ const Search = ({ panelType, setPanelType }) => {
       }, 200);
       return () => clearTimeout(timeout);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput]);
 
   useEffect(() => {
+    if (searchInput.length > 1){
+      setSubmitError(false);
+    }
     if (autoInput && !autoInput.startsWith(searchInput)){
       setAutoInput(null);
     }
@@ -84,7 +88,8 @@ const Search = ({ panelType, setPanelType }) => {
     if (searchSuggestions !== null){
       let searchInputTrimmed = searchInput;
       if (searchInput.endsWith(' ')){
-        searchInputTrimmed = `${searchInput.trimRight()} `
+        searchInputTrimmed = `${searchInput.trimRight()} `;
+        setSearchInput(searchInputTrimmed);
       }
       for (let i = 0; i < searchSuggestions.length; i++){
         const searchResult = searchSuggestions[i][1];
@@ -100,6 +105,7 @@ const Search = ({ panelType, setPanelType }) => {
         setSearchTermError(true);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchInput]);
 
   const getOptions = async (input) => {
@@ -144,10 +150,14 @@ const Search = ({ panelType, setPanelType }) => {
     } else if (searchSuggestions === null){
       setSubmitError(true);
     } else if (searchSuggestions){
-      getResults(searchInput, 1);
-      setAutoInput(null);
-      setShowSearchSuggestions(false);
-      e.target.blur();
+      if (searchInput.length === 1){
+        setSubmitError(true);
+      } else {
+        getResults(searchInput, 1);
+        setAutoInput(null);
+        setShowSearchSuggestions(false);
+        e.target.blur();
+      }
     }
   };
 
@@ -174,17 +184,17 @@ const Search = ({ panelType, setPanelType }) => {
       setAutoInput(searchSuggestions[listTarget - 1][1]);
     } else if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 40 && listTarget < searchSuggestions.length - 1){
       e.preventDefault();
-      if (listTarget === null){
-        setListTarget(0);
-      } else {
-        setListTarget(listTarget + 1);
-      }
+      setListTarget(listTarget + 1);
       setAutoInput(searchSuggestions[listTarget + 1][1]);
     } else if (!allowListNavigation && (e.keyCode === 38 || e.keyCode === 40)){
       e.preventDefault();
     } else if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 38 && listTarget === 0) {
       e.preventDefault();
       setListTarget(null);
+      setAutoInput(searchSuggestions[0][1]);
+    } else if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 40 && listTarget === null) {
+      e.preventDefault();
+      setListTarget(0);
       setAutoInput(searchSuggestions[0][1]);
     } else if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 38 && listTarget === null) {
       e.preventDefault();
@@ -209,11 +219,11 @@ const Search = ({ panelType, setPanelType }) => {
     setShowSearchSuggestions(true);
   }
 
-  // if (searchResults){
-  //   searchResults.forEach(result => {
-  //     console.log(result.name);
-  //   });
-  // }
+  if (searchResults){
+    searchResults.forEach(result => {
+      console.log(result.name);
+    });
+  }
 
   return (
     <div className="search__wrapper" ref={nodeSearchWrapper}>
