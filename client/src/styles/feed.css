@@ -160,10 +160,15 @@ body {
   margin-top: 34px;
 }
 
-.feed__results-search {
+.feed__results-not-search {
   font-weight: bold;
   text-transform: capitalize;
 }
+
+.feed__results-search {
+  font-weight: bold;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;

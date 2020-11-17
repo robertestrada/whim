@@ -15,7 +15,7 @@ const Product = ({ product_img_url, feed_pricing, feed_almost_gone }) => {
           }`}
           onLoad={() => setImageLoaded(true)}
           />
-        {feed_pricing.change ? <div className="product__percent">{`${feed_pricing.change * 100}%`}</div> : null}
+        {feed_pricing.change ? <div className="product__percent">{`${Math.round(feed_pricing.change * 100)}%`}</div> : null}
         {feed_almost_gone ? <div className="product__almost-gone">"Almost Gone!"</div> : null}
       </div>
     </div>

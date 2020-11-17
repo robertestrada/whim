@@ -10,8 +10,6 @@ import CategoryPanel from './CategoryPanel';
 
 const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
-  // const initialPageData = { "page": 1, "loadMore": false, "tab": "popular"};
-  // const [pageData, setPageData] = useState(initialPageData);
   const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [productsData, setProductsData] = useState({"products": null, "moreData": false});
@@ -70,9 +68,6 @@ const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, 
       }
       setViewSwitch(null);
     }
-    // if (viewSwitch !== "search" && resultsForSearchTerm !== null){
-    //   setResultsForSearchTerm(null);
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewSwitch]);
 
@@ -160,7 +155,7 @@ const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, 
                 </div>
               : <div className="feed__grid-wrapper">
                   {categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
-                    ? <div className="feed__results">Results for "<span className="feed__results-search">{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
+                    ? <div className="feed__results">Results for "<span className={ pageData.tab !== "search" ? "feed__results-not-search" : "feed__results-search"}>{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
                     : <div className="feed__no-results">&nbsp;</div>
                   }
                   <div className="feed__grid">

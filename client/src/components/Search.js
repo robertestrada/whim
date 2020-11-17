@@ -11,6 +11,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
   const [listTarget, setListTarget] = useState(null);
   const [allowListNavigation, setAllowListNavigation] = useState(true);
   const [searchTermError, setSearchTermError] = useState(false);
+  const [lastSearchTerm, setLastSearchTerm] = useState('');
   const nodeSearchWrapper = useRef();
   const nodeSearchButton = useRef();
 
@@ -42,6 +43,13 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
       document.removeEventListener("mousedown", handleClickOffSearchButton)
     }
   }, []);
+
+  useEffect(() => {
+    if (searchTermError){
+      setShowSearchSuggestions(true);
+      setSubmitError(true);
+    }
+  }, [searchTermError]);
 
   useEffect(() => {
     if(!delay){
@@ -124,7 +132,8 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
     } else if (searchSuggestions){
       if (searchTerm.length === 1){
         setSubmitError(true);
-      } else {
+      } else if (searchTerm.length > 1 && lastSearchTerm !== searchTerm){
+        setLastSearchTerm(searchTerm);
         setPageData({ "page": 1, "loadMore": false, "tab": "search" });
         setAllowSearch(true);
         setViewSwitch("search");
@@ -136,7 +145,8 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
   };
 
   const handleSearchSuggestionSubmit = suggestion => {
-    if (!searchTermError) {
+    if (!searchTermError && lastSearchTerm !== suggestion){
+      setLastSearchTerm(suggestion);
       setPageData({ "page": 1, "loadMore": false, "tab": "search" });
       setAllowSearch(true);
       setViewSwitch("search");
@@ -187,6 +197,8 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
 
   const handleInputClick = e => {
     e.preventDefault();
+    setSearchTermError(false);
+    setSubmitError(false);
     setListTarget(null);
     if (searchSuggestions){
       setAutoInput(searchSuggestions[0][1]);
@@ -211,7 +223,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
             </div>
           </div>
           <form className="search__form">
-            <input value={searchTerm} onKeyDown={handleTabOrEnterPress} onClick={handleInputClick} onChange={e => setSearchTerm(e.target.value)} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
+            <input value={searchTerm} onKeyDown={handleTabOrEnterPress} onClick={handleInputClick} onChange={e => !e.target.value.startsWith(' ') ? setSearchTerm(e.target.value) : setSearchTermError(true)} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
             <div className="search__text">
               <div className="search__input-text" >{searchTerm}</div>
               { searchTerm && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchTerm.length)}</div> : null }
@@ -226,7 +238,11 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
             ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"}>
                 <div className="search__suggestion no-search-result">'Try different search terms!'</div>
               </div>
-            : null
+            : showSearchSuggestions && searchTermError
+              ? <div className="search__suggestions">
+                  <div className="search__suggestion no-search-result">'Search must not start with spaces!'</div>
+                </div>
+              : null
         }
       </div>
       <div ref={nodeSearchButton} className={submitError ? "search__button no-search-allowed" : 'search__button'} onClick={handleSearchSubmit}>Search</div>
