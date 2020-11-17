@@ -37,6 +37,10 @@ z-index: 5;
   margin-right: 195px;
 }
 
+.navbar__options.navbar-hidden {
+  visibility: hidden;
+}
+
 .smooth-image-profile {
   width: 24px;
   height: 24px;

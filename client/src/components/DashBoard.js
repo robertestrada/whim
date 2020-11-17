@@ -18,6 +18,10 @@ const DashBoard = () => {
     const [viewSwitchHold, setViewSwitchHold] = useState(null);
     const [viewSwitch, setViewSwitch] = useState(null);
     const [itemIdHold, setItemIdHold] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [allowSearch, setAllowSearch] = useState(false);
+    const initialPageData = { "page": 1, "loadMore": false, "tab": "popular" };
+    const [pageData, setPageData] = useState(initialPageData);
 
     useEffect(() => {
         if (currentUser){
@@ -38,11 +42,11 @@ const DashBoard = () => {
     const handleRemoveItemNo = () => {
         setItemIdHold(null);
         setModalData({ "productId": null, "showModal": false });
-        setModalType('hidden');
+        setModalType('hidden'); 
     }
 
     const handleRemoveItemYes = () => {
-        if(itemIdHold !== null){
+        if (itemIdHold !== null){
             dispatch(removeCartItem(itemIdHold));
             setItemIdHold(null);
             setModalData({ "productId": null, "showModal": false });
@@ -50,8 +54,8 @@ const DashBoard = () => {
         }
     }
 
-    const handleTabChange = (newTab) => {
-        if(panelType === 'cart'){
+    const handleTabChange = newTab => {
+        if (panelType === 'cart'){
             setViewSwitchHold(newTab);
             setModalData({ "productId": null, "showModal": true });
             setModalType('leaveCart');
@@ -88,6 +92,10 @@ const DashBoard = () => {
                 handleTabChange={handleTabChange} 
                 viewSwitch={viewSwitch} 
                 setViewSwitch={setViewSwitch}
+                setSearchTerm={setSearchTerm}
+                searchTerm={searchTerm}
+                setAllowSearch={setAllowSearch}
+                setPageData={setPageData}
             />
             <Feed 
                 setModalType={setModalType} 
@@ -100,6 +108,11 @@ const DashBoard = () => {
                 handleRemoveItem={handleRemoveItem} 
                 itemHold={itemIdHold}
                 setItemHold={setItemIdHold}
+                searchTerm={searchTerm}
+                allowSearch={allowSearch}
+                setAllowSearch={setAllowSearch}
+                pageData={pageData}
+                setPageData={setPageData}
             />
             {panelType === 'feed' ? <SideBanner setPanelType={setPanelType}/> : null }
             <Banner setPanelType={setPanelType}/>
