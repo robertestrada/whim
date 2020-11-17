@@ -2,9 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { baseUrl } from '../config';
 import '../styles/search.css';
 
-const Search = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm }) => {
-  const initialSearchTerm = lastSearchTerm ? lastSearchTerm : '';
-  const [searchInput, setSearchInput] = useState(initialSearchTerm);
+const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm }) => {
   const [delay, setDelay] = useState(false);
   const [autoInput, setAutoInput] = useState(null);
   const [searchSuggestions, setSearchSuggestions] = useState(null);
@@ -46,47 +44,36 @@ const Search = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm }) => {
   }, []);
 
   useEffect(() => {
-    setLastSearchTerm(searchInput);
     if(!delay){
-      if (searchInput !== '' && !searchInput.startsWith(' ')) {
-        getOptions(searchInput);
-        setSearchInput(searchInput);
+      if (searchTerm && !searchTerm.startsWith(' ')) {
+        getOptions(searchTerm);
         setDelay(true);
-      } else {
-        setSearchInput('');
-        setSearchSuggestions(null);
-        setAutoInput(null);
       }
     } else {
       const timeout = setTimeout(() => {
-        if (searchInput !== '' && !searchInput.startsWith(' ')){
-          getOptions(searchInput);
-          setSearchInput(searchInput);
-        } else {
-          setSearchInput('');
-          setSearchSuggestions(null);
-          setAutoInput(null);
+        if (searchTerm && !searchTerm.startsWith(' ')){
+          getOptions(searchTerm);
+          setDelay(false);
         }
-        setDelay(false);
       }, 200);
       return () => clearTimeout(timeout);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchInput]);
+  }, [searchTerm]);
 
   useEffect(() => {
-    if (searchInput.length > 1){
+    if (searchTerm && searchTerm.length > 1){
       setSubmitError(false);
     }
-    if (autoInput && !autoInput.startsWith(searchInput)){
+    if (autoInput && !autoInput.startsWith(searchTerm)){
       setAutoInput(null);
     }
 
     if (searchSuggestions !== null){
-      let searchInputTrimmed = searchInput;
-      if (searchInput.endsWith(' ')){
-        searchInputTrimmed = `${searchInput.trimRight()} `;
-        setSearchInput(searchInputTrimmed);
+      let searchInputTrimmed = searchTerm;
+      if (searchTerm.endsWith(' ')){
+        searchInputTrimmed = `${searchTerm.trimRight()} `;
+        setSearchTerm(searchInputTrimmed);
       }
       for (let i = 0; i < searchSuggestions.length; i++){
         const searchResult = searchSuggestions[i][1];
@@ -103,7 +90,7 @@ const Search = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm }) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchInput]);
+  }, [searchTerm]);
 
   const getOptions = async (input) => {
       const response = await fetch(`${baseUrl}/product/search/options`, {
@@ -135,10 +122,12 @@ const Search = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm }) => {
     } else if (searchSuggestions === null){
       setSubmitError(true);
     } else if (searchSuggestions){
-      if (searchInput.length === 1){
+      if (searchTerm.length === 1){
         setSubmitError(true);
       } else {
-        setSearchTerm(searchInput);
+        setPageData({ "page": 1, "loadMore": false, "tab": "search" });
+        setAllowSearch(true);
+        setViewSwitch("search");
         setAutoInput(null);
         setShowSearchSuggestions(false);
         e.target.blur();
@@ -148,8 +137,10 @@ const Search = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm }) => {
 
   const handleSearchSuggestionSubmit = suggestion => {
     if (!searchTermError) {
+      setPageData({ "page": 1, "loadMore": false, "tab": "search" });
+      setAllowSearch(true);
+      setViewSwitch("search");
       setSearchTerm(suggestion);
-      setSearchInput(suggestion);
       setShowSearchSuggestions(false);
     }
   };
@@ -157,7 +148,7 @@ const Search = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm }) => {
   const handleTabOrEnterPress = e => {
     if (e.keyCode === 9){
       e.preventDefault();
-      setSearchInput(autoInput);
+      setSearchTerm(autoInput);
     }
     if (e.keyCode === 13) {
       e.preventDefault();
@@ -220,18 +211,18 @@ const Search = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm }) => {
             </div>
           </div>
           <form className="search__form">
-            <input value={searchInput} onKeyDown={handleTabOrEnterPress} onClick={handleInputClick} onChange={e => setSearchInput(e.target.value)} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
+            <input value={searchTerm} onKeyDown={handleTabOrEnterPress} onClick={handleInputClick} onChange={e => setSearchTerm(e.target.value)} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
             <div className="search__text">
-              <div className="search__input-text" >{searchInput}</div>
-              { searchInput && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchInput.length)}</div> : null }
+              <div className="search__input-text" >{searchTerm}</div>
+              { searchTerm && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchTerm.length)}</div> : null }
             </div>
           </form>
         </div>
-        { searchInput && showSearchSuggestions && searchSuggestions !== null && !searchTermError
+        { searchTerm && showSearchSuggestions && searchSuggestions !== null && !searchTermError
           ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"} >
             {searchSuggestions.map((result, idx) => <div key={idx} onClick={() => handleSearchSuggestionSubmit(result[1])} onMouseEnter={() => handleSuggestionMouseEnter(result[1], idx)} className={ listTarget === idx ? "search__suggestion suggestion-highlight" : "search__suggestion"}>{result[1]}</div>)}
             </div>
-          : searchInput && showSearchSuggestions && searchSuggestions !== null && searchTermError
+          : searchTerm && showSearchSuggestions && searchSuggestions !== null && searchTermError
             ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"}>
                 <div className="search__suggestion no-search-result">'Try different search terms!'</div>
               </div>

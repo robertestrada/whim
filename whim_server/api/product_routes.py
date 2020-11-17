@@ -138,6 +138,7 @@ def search_options():
 def search_products(page):
   requested = request.get_json()
   substring_raw = requested['searchTerm'].lower()
+  print(f'********** searchTerm: {substring_raw}, page: {page}')
   substring_split = substring_raw.split(' ')
   substring = '%'.join(substring_split)
   requestedF = "%{}%".format(substring)

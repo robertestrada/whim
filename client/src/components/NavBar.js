@@ -5,7 +5,7 @@ import '../styles/navBar.css';
 import Search from './Search';
 import * as AuthActions from '../actions/authentication';
 
-const NavBar = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm, panelType, setPanelType }) => {
+const NavBar = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, panelType, setPanelType }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const profilePicUrl = useSelector((state) => state.authentication.user.pic_url);
@@ -24,14 +24,13 @@ const NavBar = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm, panelType, s
         <Link to="/"><img className="navbar__logo" src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg" alt="" /></Link>
       </div>
       <div className={panelType === 'feed' ? "navbar__options" : "navbar__options navbar-hidden"}>
-        <Search lastSearchTerm={lastSearchTerm} setLastSearchTerm={setLastSearchTerm} setSearchTerm={setSearchTerm} panelType={panelType} setPanelType={setPanelType}/>
+        <Search setPageData={setPageData} setViewSwitch={setViewSwitch} setAllowSearch={setAllowSearch} searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
         <div className="navbar__profile-wrapper">
           <button className="navbar__logout" onClick={handleSubmit}>
             <img
               src={profilePicUrl}
               alt={""}
-              className={`smooth-image-profile image-${imageLoaded ? 'visible' : 'hidden'
-                }`}
+              className={`smooth-image-profile image-${imageLoaded ? 'visible' : 'hidden'}`}
               onLoad={() => setImageLoaded(true)}
             />
           </button>

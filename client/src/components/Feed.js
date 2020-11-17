@@ -8,10 +8,10 @@ import Cart from './Cart';
 import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
 
-const Feed = ({ searchTerm, setSearchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
+const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
-  const initialPageData = { "page": 1, "loadMore": false, "tab": "popular"};
-  const [pageData, setPageData] = useState(initialPageData);
+  // const initialPageData = { "page": 1, "loadMore": false, "tab": "popular"};
+  // const [pageData, setPageData] = useState(initialPageData);
   const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [productsData, setProductsData] = useState({"products": null, "moreData": false});
@@ -21,6 +21,7 @@ const Feed = ({ searchTerm, setSearchTerm, setModalType, panelType, setPanelType
   const ref = useRef(null);
   
   const fetchData = async () => {
+    console.log("pageData: ", pageData);
     const fetchPoint = { 
                         "popular": `popular/${pageData.page}`, 
                         "express": `express/${pageData.page}`, 
@@ -55,7 +56,7 @@ const Feed = ({ searchTerm, setSearchTerm, setModalType, panelType, setPanelType
         setProductsData({ "products": [...resultJSON.data], "moreData": resultJSON.more_data });
         setLoading(false);
       }
-      setSearchTerm(null);
+      console.log("resultJSON: ", resultJSON);
       setAllowScroll(true);
     }
   };
@@ -67,15 +68,20 @@ const Feed = ({ searchTerm, setSearchTerm, setModalType, panelType, setPanelType
         setLoading(true);
         setPageData({ "page": 1, "loadMore": false, "tab": viewSwitch });
       }
-      // setViewSwitch(null);
+      setViewSwitch(null);
     }
-    if (viewSwitch !== "search" && resultsForSearchTerm !== null){
-      setResultsForSearchTerm(null);
-    }
+    // if (viewSwitch !== "search" && resultsForSearchTerm !== null){
+    //   setResultsForSearchTerm(null);
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewSwitch]);
 
   useEffect(() => {
+    if (pageData.tab !== "search"){
+      setResultsForSearchTerm(null);
+    } else if (pageData.tab === "search"){
+      setResultsForSearchTerm(searchTerm);
+    }
     setPanelType('feed');
     setAllowScroll(true);
     fetchData();
@@ -83,14 +89,16 @@ const Feed = ({ searchTerm, setSearchTerm, setModalType, panelType, setPanelType
   }, [pageData.tab]);
 
   useEffect(() => {
-    if (searchTerm !== null){
+    if (allowSearch){
+      setLoading(true);
+      setAllowSearch(false);
       setResultsForSearchTerm(searchTerm);
       setPanelType('feed');
       setAllowScroll(true);
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [allowSearch]);
   
   useEffect(() => {
     if (pageData.page > 1){
