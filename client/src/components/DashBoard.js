@@ -18,12 +18,26 @@ const DashBoard = () => {
     const [viewSwitchHold, setViewSwitchHold] = useState(null);
     const [viewSwitch, setViewSwitch] = useState(null);
     const [itemIdHold, setItemIdHold] = useState(null);
+    const [searchTerm, setSearchTerm] = useState(null);
+    const [lastSearchTerm, setLastSearchTerm] = useState(null);
 
     useEffect(() => {
         if (currentUser){
             dispatch(loadCart(currentUser.id));
         }
     }, [dispatch, currentUser]);
+
+    useEffect(() => {
+        if (searchTerm !== null){
+            setViewSwitch("search");
+        }
+    }, [searchTerm]);
+
+    useEffect(() => {
+        if (viewSwitch !== "search") {
+            setSearchTerm(null);
+        }
+    }, [viewSwitch]);
 
     const handleModalChange = ({ productId, showModal }) => {
         setModalData({ "productId": productId, "showModal": showModal })
@@ -38,11 +52,11 @@ const DashBoard = () => {
     const handleRemoveItemNo = () => {
         setItemIdHold(null);
         setModalData({ "productId": null, "showModal": false });
-        setModalType('hidden');
+        setModalType('hidden'); 
     }
 
     const handleRemoveItemYes = () => {
-        if(itemIdHold !== null){
+        if (itemIdHold !== null){
             dispatch(removeCartItem(itemIdHold));
             setItemIdHold(null);
             setModalData({ "productId": null, "showModal": false });
@@ -50,8 +64,8 @@ const DashBoard = () => {
         }
     }
 
-    const handleTabChange = (newTab) => {
-        if(panelType === 'cart'){
+    const handleTabChange = newTab => {
+        if (panelType === 'cart'){
             setViewSwitchHold(newTab);
             setModalData({ "productId": null, "showModal": true });
             setModalType('leaveCart');
@@ -88,6 +102,9 @@ const DashBoard = () => {
                 handleTabChange={handleTabChange} 
                 viewSwitch={viewSwitch} 
                 setViewSwitch={setViewSwitch}
+                setSearchTerm={setSearchTerm}
+                lastSearchTerm={lastSearchTerm}
+                setLastSearchTerm={setLastSearchTerm}
             />
             <Feed 
                 setModalType={setModalType} 
@@ -100,6 +117,8 @@ const DashBoard = () => {
                 handleRemoveItem={handleRemoveItem} 
                 itemHold={itemIdHold}
                 setItemHold={setItemIdHold}
+                searchTerm={searchTerm}
+                setSearchTerm={setSearchTerm}
             />
             {panelType === 'feed' ? <SideBanner setPanelType={setPanelType}/> : null }
             <Banner setPanelType={setPanelType}/>

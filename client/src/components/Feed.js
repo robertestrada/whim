@@ -8,7 +8,7 @@ import Cart from './Cart';
 import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
 
-const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
+const Feed = ({ searchTerm, setSearchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
   const initialPageData = { "page": 1, "loadMore": false, "tab": "popular"};
   const [pageData, setPageData] = useState(initialPageData);
@@ -16,23 +16,36 @@ const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabCha
   const [loading, setLoading] = useState(false);
   const [productsData, setProductsData] = useState({"products": null, "moreData": false});
   const [catShow, setCatShow] = useState(false);
+  const [resultsForSearchTerm, setResultsForSearchTerm] = useState(null);
   const categories = ["fashion", "gadgets", "home-decor", "household-supplies", "kitchen", "shoes", "tools", "watches"]
   const ref = useRef(null);
   
   const fetchData = async () => {
     const fetchPoint = { 
-                      "popular": `popular/${pageData.page}`, 
-                      "express": `express/${pageData.page}`, 
-                      "fashion": `category/fashion/${pageData.page}`,
-                      "gadgets": `category/gadgets/${pageData.page}`,
-                      "home-decor": `category/home-decor/${pageData.page}`,
-                      "household-supplies": `category/household-supplies/${pageData.page}`,
-                      "kitchen": `category/kitchen/${pageData.page}`,
-                      "shoes": `category/shoes/${pageData.page}`,
-                      "tools": `category/tools/${pageData.page}`,
-                      "watches": `category/watches/${pageData.page}`,
+                        "popular": `popular/${pageData.page}`, 
+                        "express": `express/${pageData.page}`, 
+                        "fashion": `category/fashion/${pageData.page}`,
+                        "gadgets": `category/gadgets/${pageData.page}`,
+                        "home-decor": `category/home-decor/${pageData.page}`,
+                        "household-supplies": `category/household-supplies/${pageData.page}`,
+                        "kitchen": `category/kitchen/${pageData.page}`,
+                        "shoes": `category/shoes/${pageData.page}`,
+                        "tools": `category/tools/${pageData.page}`,
+                        "watches": `category/watches/${pageData.page}`,
+                        "search": `search/${pageData.page}`,
                       };
-    const result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`));
+
+    let result;
+    console.log("pageData.tab: ", pageData.tab);
+    if (pageData.tab === "search"){
+      result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ searchTerm }),
+      }));
+    } else {
+      result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`));
+    }
     if (result.ok) {
       const resultJSON = await result.json();
       if (pageData.loadMore) {
@@ -42,18 +55,22 @@ const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabCha
         setProductsData({ "products": [...resultJSON.data], "moreData": resultJSON.more_data });
         setLoading(false);
       }
+      setSearchTerm(null);
       setAllowScroll(true);
     }
   };
 
   useEffect(() => {
     if (viewSwitch !== null){
-        setPanelType('feed');
-        if (pageData.tab !== viewSwitch) {
-          setLoading(true);
-          setPageData({ "page": 1, "loadMore": false, "tab": viewSwitch });
-        }
-        setViewSwitch(null);
+      setPanelType('feed');
+      if (pageData.tab !== viewSwitch) {
+        setLoading(true);
+        setPageData({ "page": 1, "loadMore": false, "tab": viewSwitch });
+      }
+      // setViewSwitch(null);
+    }
+    if (viewSwitch !== "search" && resultsForSearchTerm !== null){
+      setResultsForSearchTerm(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewSwitch]);
@@ -64,6 +81,16 @@ const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabCha
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageData.tab]);
+
+  useEffect(() => {
+    if (searchTerm !== null){
+      setResultsForSearchTerm(searchTerm);
+      setPanelType('feed');
+      setAllowScroll(true);
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
   
   useEffect(() => {
     if (pageData.page > 1){
@@ -124,8 +151,8 @@ const Feed = ({ setModalType, panelType, setPanelType, modalChange, handleTabCha
                   <LoadingIndicator/>
                 </div>
               : <div className="feed__grid-wrapper">
-                  {categories.includes(pageData.tab.toLowerCase())
-                    ? <div className="feed__results">Results for "<span className="feed__results-search">{pageData.tab}</span>"</div>
+                  {categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
+                    ? <div className="feed__results">Results for "<span className="feed__results-search">{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
                     : <div className="feed__no-results">&nbsp;</div>
                   }
                   <div className="feed__grid">

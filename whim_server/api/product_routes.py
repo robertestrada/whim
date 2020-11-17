@@ -134,18 +134,15 @@ def search_options():
   return {"data": options_list}, 200
 
 
-@product_routes.route("/search", methods=['POST'])
-def search_products():
+@product_routes.route("/search/<int:page>", methods=['POST'])
+def search_products(page):
   requested = request.get_json()
-  page = requested['page']
-  substring_raw = requested['input'].lower()
+  substring_raw = requested['searchTerm'].lower()
   substring_split = substring_raw.split(' ')
   substring = '%'.join(substring_split)
   requestedF = "%{}%".format(substring)
-  print(requestedF)
   results = Product.query.filter(or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))).order_by(Product.created_at).paginate(page, 24, False)
   more_data = results.has_next
   products = results.items
   data = [product.feed_dict() for product in products]
-  print(data)
   return {"data": data, "more_data": more_data}, 200

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { Link, useHistory } from 'react-router-dom';
 import { baseUrl } from '../config';
 import '../styles/search.css';
 
-const Search = ({ panelType, setPanelType }) => {
+const Search = ({ lastSearchTerm, setLastSearchTerm, setSearchTerm }) => {
+  const initialSearchTerm = lastSearchTerm ? lastSearchTerm : '';
+  const [searchInput, setSearchInput] = useState(initialSearchTerm);
   const [delay, setDelay] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
   const [autoInput, setAutoInput] = useState(null);
   const [searchSuggestions, setSearchSuggestions] = useState(null);
   const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
@@ -14,9 +13,6 @@ const Search = ({ panelType, setPanelType }) => {
   const [listTarget, setListTarget] = useState(null);
   const [allowListNavigation, setAllowListNavigation] = useState(true);
   const [searchTermError, setSearchTermError] = useState(false);
-
-  const [searchResults, setSearchResults] = useState(null);
-
   const nodeSearchWrapper = useRef();
   const nodeSearchButton = useRef();
 
@@ -50,6 +46,7 @@ const Search = ({ panelType, setPanelType }) => {
   }, []);
 
   useEffect(() => {
+    setLastSearchTerm(searchInput);
     if(!delay){
       if (searchInput !== '' && !searchInput.startsWith(' ')) {
         getOptions(searchInput);
@@ -131,18 +128,6 @@ const Search = ({ panelType, setPanelType }) => {
       }
   };
 
-  const getResults = async (input, page) => {
-    const response = await fetch(`${baseUrl}/product/search`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ input, page }),
-    });
-    if (response.ok) {
-      const responseJSON = await response.json();
-      setSearchResults(responseJSON.data);
-    }
-  };
-
   const handleSearchSubmit = e => {
     e.preventDefault();
     if (searchTermError){
@@ -153,7 +138,7 @@ const Search = ({ panelType, setPanelType }) => {
       if (searchInput.length === 1){
         setSubmitError(true);
       } else {
-        getResults(searchInput, 1);
+        setSearchTerm(searchInput);
         setAutoInput(null);
         setShowSearchSuggestions(false);
         e.target.blur();
@@ -163,7 +148,7 @@ const Search = ({ panelType, setPanelType }) => {
 
   const handleSearchSuggestionSubmit = suggestion => {
     if (!searchTermError) {
-      getResults(suggestion, 1);
+      setSearchTerm(suggestion);
       setSearchInput(suggestion);
       setShowSearchSuggestions(false);
     }
@@ -219,11 +204,6 @@ const Search = ({ panelType, setPanelType }) => {
     setShowSearchSuggestions(true);
   }
 
-  if (searchResults){
-    searchResults.forEach(result => {
-      console.log(result.name);
-    });
-  }
 
   return (
     <div className="search__wrapper" ref={nodeSearchWrapper}>
