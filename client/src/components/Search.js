@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { baseUrl } from '../config';
 import '../styles/search.css';
 
-const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm }) => {
+const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, lastSearchTerm, setLastSearchTerm }) => {
   const [delay, setDelay] = useState(false);
   const [autoInput, setAutoInput] = useState(null);
   const [searchSuggestions, setSearchSuggestions] = useState(null);
@@ -10,7 +10,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
   const [submitError, setSubmitError] = useState(false);
   const [listTarget, setListTarget] = useState(null);
   const [allowListNavigation, setAllowListNavigation] = useState(true);
-  const [lastSearchTerm, setLastSearchTerm] = useState('');
+  // const [lastSearchTerm, setLastSearchTerm] = useState('');
   const nodeSearchWrapper = useRef();
   const nodeSearchButton = useRef();
 
@@ -134,7 +134,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
   };
 
   const handleTabOrEnterPress = e => {
-    if ((e.keyCode === 9 || (e.keyCode === 39 && e.target.selectionEnd === e.target.value.length)) && autoInput !== null && autoInput.startsWith(searchTerm)){
+    if ((e.keyCode === 9 || (e.keyCode === 39 && e.target.selectionEnd === e.target.value.length && window.getSelection().toString() !== searchTerm)) && autoInput !== null && autoInput.startsWith(searchTerm)){
       e.preventDefault();
       setSearchTerm(autoInput);
     }

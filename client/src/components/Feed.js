@@ -8,7 +8,7 @@ import Cart from './Cart';
 import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
 
-const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
+const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
   const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -74,6 +74,7 @@ const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, 
   useEffect(() => {
     if (pageData.tab !== "search"){
       setResultsForSearchTerm(null);
+      setLastSearchTerm('');
     } else if (pageData.tab === "search"){
       setResultsForSearchTerm(searchTerm.trim());
     }
