@@ -46,6 +46,9 @@ def search_options():
   substring_raw = requested['input'].lower()
   substring_split = re.split('[^a-zA-Z+\'?s]', substring_raw)
   substring_filter = list(filter(None, substring_split))
+  print(f'OPTIONS TERMS: {substring_filter}')
+  if len(substring_filter) == 0:
+    return {"data": []}, 200
   substring = substring_filter[0]
   requestedF = "%{}%".format(substring)
   
@@ -140,6 +143,9 @@ def search_products(page):
   substring_raw = requested['searchTerm'].lower()
   print(f'********** searchTerm: {substring_raw}, page: {page}')
   substring_split = substring_raw.split(' ')
+  print(f'!!!!!! ALL: {all(char == "" for char in substring_split)}')
+  if all(char == '' for char in substring_split):
+    return {"data": [], "more_data": False}, 200
   substring = '%'.join(substring_split)
   requestedF = "%{}%".format(substring)
   results = Product.query.filter(or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))).order_by(Product.created_at).paginate(page, 24, False)

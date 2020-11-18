@@ -75,7 +75,7 @@ const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, 
     if (pageData.tab !== "search"){
       setResultsForSearchTerm(null);
     } else if (pageData.tab === "search"){
-      setResultsForSearchTerm(searchTerm);
+      setResultsForSearchTerm(searchTerm.trim());
     }
     setPanelType('feed');
     setAllowScroll(true);
@@ -87,7 +87,7 @@ const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, 
     if (allowSearch){
       setLoading(true);
       setAllowSearch(false);
-      setResultsForSearchTerm(searchTerm);
+      setResultsForSearchTerm(searchTerm.trim());
       setPanelType('feed');
       setAllowScroll(true);
       fetchData();
@@ -158,8 +158,11 @@ const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, 
                     ? <div className="feed__results">Results for "<span className={ pageData.tab !== "search" ? "feed__results-not-search" : "feed__results-search"}>{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
                     : <div className="feed__no-results">&nbsp;</div>
                   }
-                  <div className="feed__grid">
-                    {productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange} setModalType={setModalType}/>)}
+                  <div className={productsData.products.length > 0 ? "feed__grid" : "feed__no-grid-results"}>
+                    { productsData.products.length > 0
+                      ? productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange} setModalType={setModalType}/>)
+                      : "No Products Found."
+                    }
                   </div>
                 </div>
           }

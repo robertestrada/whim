@@ -10,7 +10,6 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
   const [submitError, setSubmitError] = useState(false);
   const [listTarget, setListTarget] = useState(null);
   const [allowListNavigation, setAllowListNavigation] = useState(true);
-  const [searchTermError, setSearchTermError] = useState(false);
   const [lastSearchTerm, setLastSearchTerm] = useState('');
   const nodeSearchWrapper = useRef();
   const nodeSearchButton = useRef();
@@ -45,21 +44,14 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
   }, []);
 
   useEffect(() => {
-    if (searchTermError){
-      setShowSearchSuggestions(true);
-      setSubmitError(true);
-    }
-  }, [searchTermError]);
-
-  useEffect(() => {
     if(!delay){
-      if (searchTerm && !searchTerm.startsWith(' ')) {
+      if (searchTerm){
         getOptions(searchTerm);
         setDelay(true);
       }
     } else {
       const timeout = setTimeout(() => {
-        if (searchTerm && !searchTerm.startsWith(' ')){
+        if (searchTerm){
           getOptions(searchTerm);
           setDelay(false);
         }
@@ -76,31 +68,21 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
     if (autoInput && !autoInput.startsWith(searchTerm)){
       setAutoInput(null);
     }
-
     if (searchSuggestions !== null){
-      let searchInputTrimmed = searchTerm;
-      if (searchTerm.endsWith(' ')){
-        searchInputTrimmed = `${searchTerm.trimRight()} `;
-        setSearchTerm(searchInputTrimmed);
-      }
       for (let i = 0; i < searchSuggestions.length; i++){
         const searchResult = searchSuggestions[i][1];
-        if (searchResult.startsWith(searchInputTrimmed) && searchInputTrimmed.split(' ').length > 1){
-          const newSearchSuggestions = searchSuggestions.filter(result => result[1].startsWith(searchInputTrimmed));
-          setSearchTermError(false);
+        if (searchResult.startsWith(searchTerm) && searchTerm.split(' ').length > 1){
+          const newSearchSuggestions = searchSuggestions.filter(result => result[1].startsWith(searchTerm));
           setSearchSuggestions(newSearchSuggestions);
           setAutoInput(searchResult);
           return;
         }
       }
-      if (searchInputTrimmed.split(' ').length > 1) {
-        setSearchTermError(true);
-      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
-  const getOptions = async (input) => {
+  const getOptions = async input => {
       const response = await fetch(`${baseUrl}/product/search/options`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -110,13 +92,11 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
         const responseJSON = await response.json();
         if (responseJSON.data.length !== 0){
           if (responseJSON.data[0][1].startsWith(input.toLowerCase())){
-            setSearchTermError(false);
             setSearchSuggestions(responseJSON.data);
             setAutoInput(responseJSON.data[0][1]);
             setShowSearchSuggestions(true);
           }
         } else {
-          setSearchTermError(true);
           setAutoInput(null);
           setShowSearchSuggestions(true);
         }
@@ -125,9 +105,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
 
   const handleSearchSubmit = e => {
     e.preventDefault();
-    if (searchTermError){
-      setSubmitError(true);
-    } else if (searchSuggestions === null){
+    if (searchSuggestions === null || searchTerm === ''){
       setSubmitError(true);
     } else if (searchSuggestions){
       if (searchTerm.length === 1){
@@ -145,7 +123,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
   };
 
   const handleSearchSuggestionSubmit = suggestion => {
-    if (!searchTermError && lastSearchTerm !== suggestion){
+    if (lastSearchTerm !== suggestion){
       setLastSearchTerm(suggestion);
       setPageData({ "page": 1, "loadMore": false, "tab": "search" });
       setAllowSearch(true);
@@ -156,7 +134,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
   };
 
   const handleTabOrEnterPress = e => {
-    if (e.keyCode === 9){
+    if ((e.keyCode === 9 || (e.keyCode === 39 && e.target.selectionEnd === e.target.value.length)) && autoInput !== null && autoInput.startsWith(searchTerm)){
       e.preventDefault();
       setSearchTerm(autoInput);
     }
@@ -164,11 +142,11 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
       e.preventDefault();
       handleSearchSubmit(e);
     }
-    if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 38 && listTarget > 0){
+    if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 38 && listTarget !== null && listTarget > 0){
       e.preventDefault();
       setListTarget(listTarget - 1);
       setAutoInput(searchSuggestions[listTarget - 1][1]);
-    } else if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 40 && listTarget < searchSuggestions.length - 1){
+    } else if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 40 && listTarget !== null && listTarget < searchSuggestions.length - 1){
       e.preventDefault();
       setListTarget(listTarget + 1);
       setAutoInput(searchSuggestions[listTarget + 1][1]);
@@ -187,17 +165,18 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
       setListTarget(null);
       setAutoInput(searchSuggestions[0][1]);
     }
-  }
+  };
 
   const handleSuggestionMouseEnter = (suggestion, idx) => {
-    setAllowListNavigation(false);
-    setAutoInput(suggestion);
-    setListTarget(idx);
-  }
+    if (suggestion.startsWith(searchTerm.toLowerCase())){
+      setAllowListNavigation(false);
+      setAutoInput(suggestion);
+      setListTarget(idx);
+    }
+  };
 
   const handleInputClick = e => {
     e.preventDefault();
-    setSearchTermError(false);
     setSubmitError(false);
     setListTarget(null);
     if (searchSuggestions){
@@ -205,7 +184,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
     }
     setAllowListNavigation(true);
     setShowSearchSuggestions(true);
-  }
+  };
 
 
   return (
@@ -223,26 +202,18 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
             </div>
           </div>
           <form className="search__form">
-            <input value={searchTerm} onKeyDown={handleTabOrEnterPress} onClick={handleInputClick} onChange={e => !e.target.value.startsWith(' ') ? setSearchTerm(e.target.value) : setSearchTermError(true)} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
+            <input value={searchTerm} onKeyDown={e => handleTabOrEnterPress(e)} onClick={handleInputClick} onChange={e => setSearchTerm(e.target.value.trimLeft())} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
             <div className="search__text">
               <div className="search__input-text" >{searchTerm}</div>
               { searchTerm && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchTerm.length)}</div> : null }
             </div>
           </form>
         </div>
-        { searchTerm && showSearchSuggestions && searchSuggestions !== null && !searchTermError
+        { searchTerm && showSearchSuggestions && searchSuggestions !== null
           ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"} >
             {searchSuggestions.map((result, idx) => <div key={idx} onClick={() => handleSearchSuggestionSubmit(result[1])} onMouseEnter={() => handleSuggestionMouseEnter(result[1], idx)} className={ listTarget === idx ? "search__suggestion suggestion-highlight" : "search__suggestion"}>{result[1]}</div>)}
             </div>
-          : searchTerm && showSearchSuggestions && searchSuggestions !== null && searchTermError
-            ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"}>
-                <div className="search__suggestion no-search-result">'Try different search terms!'</div>
-              </div>
-            : showSearchSuggestions && searchTermError
-              ? <div className="search__suggestions">
-                  <div className="search__suggestion no-search-result">'Search must not start with spaces!'</div>
-                </div>
-              : null
+          : null
         }
       </div>
       <div ref={nodeSearchButton} className={submitError ? "search__button no-search-allowed" : 'search__button'} onClick={handleSearchSubmit}>Search</div>
