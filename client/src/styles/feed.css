@@ -148,6 +148,8 @@ body {
 }
 
 .feed__results {
+  width: calc(100vw - 400px);
+  max-width: 900px;
   margin-top: 17px;
   margin-bottom: 17px;
   color: rgb(25, 42, 50);
@@ -160,10 +162,26 @@ body {
   margin-top: 34px;
 }
 
-.feed__results-search {
+.feed__no-grid-results {
+  display: block;
+  margin: 30px 10px 10px;
+  font-size: 16px;
+  font-weight: 300;
+  text-align: center;
+  line-height: 40px;
+  color: rgb(119, 119, 119);
+  border-radius: 8px;
+}
+
+.feed__results-not-search {
   font-weight: bold;
   text-transform: capitalize;
 }
+
+.feed__results-search {
+  font-weight: bold;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;

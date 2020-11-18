@@ -8,10 +8,8 @@ import Cart from './Cart';
 import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
 
-const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
+const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
-  // const initialPageData = { "page": 1, "loadMore": false, "tab": "popular"};
-  // const [pageData, setPageData] = useState(initialPageData);
   const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [productsData, setProductsData] = useState({"products": null, "moreData": false});
@@ -70,17 +68,15 @@ const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, 
       }
       setViewSwitch(null);
     }
-    // if (viewSwitch !== "search" && resultsForSearchTerm !== null){
-    //   setResultsForSearchTerm(null);
-    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewSwitch]);
 
   useEffect(() => {
     if (pageData.tab !== "search"){
       setResultsForSearchTerm(null);
+      setLastSearchTerm('');
     } else if (pageData.tab === "search"){
-      setResultsForSearchTerm(searchTerm);
+      setResultsForSearchTerm(searchTerm.trim());
     }
     setPanelType('feed');
     setAllowScroll(true);
@@ -92,7 +88,7 @@ const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, 
     if (allowSearch){
       setLoading(true);
       setAllowSearch(false);
-      setResultsForSearchTerm(searchTerm);
+      setResultsForSearchTerm(searchTerm.trim());
       setPanelType('feed');
       setAllowScroll(true);
       fetchData();
@@ -160,11 +156,14 @@ const Feed = ({ pageData, setPageData, allowSearch, setAllowSearch, searchTerm, 
                 </div>
               : <div className="feed__grid-wrapper">
                   {categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
-                    ? <div className="feed__results">Results for "<span className="feed__results-search">{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
+                    ? <div className="feed__results">Results for "<span className={ pageData.tab !== "search" ? "feed__results-not-search" : "feed__results-search"}>{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
                     : <div className="feed__no-results">&nbsp;</div>
                   }
-                  <div className="feed__grid">
-                    {productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange} setModalType={setModalType}/>)}
+                  <div className={productsData.products.length > 0 ? "feed__grid" : "feed__no-grid-results"}>
+                    { productsData.products.length > 0
+                      ? productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange} setModalType={setModalType}/>)
+                      : "No Products Found."
+                    }
                   </div>
                 </div>
           }

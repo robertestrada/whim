@@ -46,6 +46,9 @@ def search_options():
   substring_raw = requested['input'].lower()
   substring_split = re.split('[^a-zA-Z+\'?s]', substring_raw)
   substring_filter = list(filter(None, substring_split))
+  print(f'OPTIONS TERMS: {substring_filter}')
+  if len(substring_filter) == 0:
+    return {"data": []}, 200
   substring = substring_filter[0]
   requestedF = "%{}%".format(substring)
   
@@ -136,14 +139,36 @@ def search_options():
 
 @product_routes.route("/search/<int:page>", methods=['POST'])
 def search_products(page):
+  product_ids_seen = set()
   requested = request.get_json()
   substring_raw = requested['searchTerm'].lower()
   print(f'********** searchTerm: {substring_raw}, page: {page}')
   substring_split = substring_raw.split(' ')
+  substring_split_first = substring_split[0]
+  requested_extraF = "%{}%".format(substring_split_first)
+  print(f'!!!!!! ALL: {all(char == "" for char in substring_split)}')
+  if all(char == '' for char in substring_split):
+    return {"data": [], "more_data": False}, 200
   substring = '%'.join(substring_split)
   requestedF = "%{}%".format(substring)
   results = Product.query.filter(or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))).order_by(Product.created_at).paginate(page, 24, False)
   more_data = results.has_next
   products = results.items
+  print(f'PRODUCTS: {products}')
+  for product in products:
+    if product.id not in product_ids_seen:
+      product_ids_seen.add(product.id)
+  print(f'SET: {product_ids_seen}')
   data = [product.feed_dict() for product in products]
+  print(f'MORE_DATA: {more_data}')
+  print(f'substring_split: {substring_split}')
+  print(f'substring_split_first: {substring_split_first}')
+  if not more_data and len(substring_split) > 1:
+    print('INSIDE EXTRA')
+    extra_results = Product.query.filter(and_(Product.id.notin_(product_ids_seen), or_(Product.name.ilike(requested_extraF), Product.category.ilike(requested_extraF), Product.description.ilike(requested_extraF)))).order_by(Product.created_at).paginate(page, 24, False)
+    extra_more_data = extra_results.has_next
+    extra_products = extra_results.items
+    extra_data = [product.feed_dict() for product in extra_products]
+    new_data = data + extra_data
+    return {"data": new_data, "more_data": extra_more_data}, 200
   return {"data": data, "more_data": more_data}, 200
