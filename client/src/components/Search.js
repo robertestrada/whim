@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { baseUrl } from '../config';
 import '../styles/search.css';
 
-const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, lastSearchTerm, setLastSearchTerm }) => {
+const Search = ({ setSubmittedSearchFilters, setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, lastSearchTerm, setLastSearchTerm }) => {
   const [delay, setDelay] = useState(false);
   const [autoInput, setAutoInput] = useState(null);
   const [searchSuggestions, setSearchSuggestions] = useState(null);
@@ -10,7 +10,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
   const [submitError, setSubmitError] = useState(false);
   const [listTarget, setListTarget] = useState(null);
   const [allowListNavigation, setAllowListNavigation] = useState(true);
-  // const [lastSearchTerm, setLastSearchTerm] = useState('');
+  const [searchFilters, setSearchFilters] = useState({ "filters": null, "open": true });
   const nodeSearchWrapper = useRef();
   const nodeSearchButton = useRef();
 
@@ -61,6 +61,34 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
+  const getOptions = async input => {
+    const response = await fetch(`${baseUrl}/product/search/options`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ input }),
+    });
+    if (response.ok) {
+      const responseJSON = await response.json();
+      if (responseJSON.data.length !== 0) {
+        if (responseJSON.data[0][1].startsWith(input.toLowerCase())) {
+          setSearchSuggestions(responseJSON.data);
+          setAutoInput(responseJSON.data[0][1]);
+          setShowSearchSuggestions(true);
+        }
+      } else {
+        setAutoInput(null);
+        setShowSearchSuggestions(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (searchSuggestions !== null && searchTerm.split(' ').length === 1 && searchTerm.split(' ')[0] !== searchSuggestions[0]) {
+      setSearchFilters(searchSuggestions);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getOptions]);
+
   useEffect(() => {
     if (searchTerm && searchTerm.length > 1){
       setSubmitError(false);
@@ -82,28 +110,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
-  const getOptions = async input => {
-      const response = await fetch(`${baseUrl}/product/search/options`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ input }),
-      });
-      if (response.ok) {
-        const responseJSON = await response.json();
-        if (responseJSON.data.length !== 0){
-          if (responseJSON.data[0][1].startsWith(input.toLowerCase())){
-            setSearchSuggestions(responseJSON.data);
-            setAutoInput(responseJSON.data[0][1]);
-            setShowSearchSuggestions(true);
-          }
-        } else {
-          setAutoInput(null);
-          setShowSearchSuggestions(true);
-        }
-      }
-  };
-
-  const handleSearchSubmit = e => {
+  const handleSearchSubmit = async e => {
     e.preventDefault();
     if (searchSuggestions === null || searchTerm === ''){
       setSubmitError(true);
@@ -111,6 +118,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
       if (searchTerm.length === 1){
         setSubmitError(true);
       } else if (searchTerm.length > 1 && lastSearchTerm !== searchTerm){
+        setSubmittedSearchFilters(searchFilters);
         setLastSearchTerm(searchTerm);
         setPageData({ "page": 1, "loadMore": false, "tab": "search" });
         setAllowSearch(true);
@@ -124,6 +132,7 @@ const Search = ({ setPageData, setViewSwitch, setAllowSearch, searchTerm, setSea
 
   const handleSearchSuggestionSubmit = suggestion => {
     if (lastSearchTerm !== suggestion){
+      setSubmittedSearchFilters(searchFilters);
       setLastSearchTerm(suggestion);
       setPageData({ "page": 1, "loadMore": false, "tab": "search" });
       setAllowSearch(true);

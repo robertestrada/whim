@@ -1,0 +1,31 @@
+.filter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  left: 115px;
+  top: 52px;
+  width: calc(100% - 250px - 115px);
+  transition: all 0.35s ease 0s;
+  z-index: 2;
+  background-color: rgb(248, 250, 251);
+  padding: 12px 0px;
+  /* overflow: hidden; */
+  /* max-width: 900px; */
+}
+
+.filter__tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 12px;
+  margin: 0px 8px;
+  border-radius: 26px;
+  height: 40px;
+  border: 1px solid rgb(175, 199, 209);
+  cursor: pointer;
+  background-color: rgb(255, 255, 255);
+  color: rgb(72, 99, 111);
+  font-size: 16px;
+  font-weight: 300;
+}

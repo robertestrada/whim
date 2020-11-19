@@ -20,6 +20,7 @@ const DashBoard = () => {
     const [itemIdHold, setItemIdHold] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [lastSearchTerm, setLastSearchTerm] = useState('');
+    const [submittedSearchFilters, setSubmittedSearchFilters] = useState({ "filters": null, "open": true });
     const [allowSearch, setAllowSearch] = useState(false);
     const initialPageData = { "page": 1, "loadMore": false, "tab": "popular" };
     const [pageData, setPageData] = useState(initialPageData);
@@ -95,6 +96,7 @@ const DashBoard = () => {
                 setViewSwitch={setViewSwitch}
                 setSearchTerm={setSearchTerm}
                 searchTerm={searchTerm}
+                setSubmittedSearchFilters={setSubmittedSearchFilters}
                 setAllowSearch={setAllowSearch}
                 setPageData={setPageData}
                 lastSearchTerm={lastSearchTerm}
@@ -112,6 +114,8 @@ const DashBoard = () => {
                 itemHold={itemIdHold}
                 setItemHold={setItemIdHold}
                 searchTerm={searchTerm}
+                submittedSearchFilters={submittedSearchFilters}
+                setSubmittedSearchFilters={setSubmittedSearchFilters}
                 allowSearch={allowSearch}
                 setAllowSearch={setAllowSearch}
                 pageData={pageData}

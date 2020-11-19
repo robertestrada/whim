@@ -7,8 +7,9 @@ import Product from './Product';
 import Cart from './Cart';
 import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
+import FeedFilter from './FeedFilter';
 
-const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
+const Feed = ({ submittedSearchFilters, setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
   const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -19,7 +20,6 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
   const ref = useRef(null);
   
   const fetchData = async () => {
-    console.log("pageData: ", pageData);
     const fetchPoint = { 
                         "popular": `popular/${pageData.page}`, 
                         "express": `express/${pageData.page}`, 
@@ -35,7 +35,6 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
                       };
 
     let result;
-    console.log("pageData.tab: ", pageData.tab);
     if (pageData.tab === "search"){
       result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
         method: 'POST',
@@ -54,7 +53,6 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
         setProductsData({ "products": [...resultJSON.data], "moreData": resultJSON.more_data });
         setLoading(false);
       }
-      console.log("resultJSON: ", resultJSON);
       setAllowScroll(true);
     }
   };
@@ -155,7 +153,11 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
                   <LoadingIndicator/>
                 </div>
               : <div className="feed__grid-wrapper">
-                  {categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
+                  { resultsForSearchTerm
+                    ? <FeedFilter submittedSearchFilters={submittedSearchFilters}/>
+                    : null
+                  }
+                  { categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
                     ? <div className="feed__results">Results for "<span className={ pageData.tab !== "search" ? "feed__results-not-search" : "feed__results-search"}>{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
                     : <div className="feed__no-results">&nbsp;</div>
                   }
