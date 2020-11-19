@@ -19,6 +19,7 @@ const DashBoard = () => {
     const [viewSwitch, setViewSwitch] = useState(null);
     const [itemIdHold, setItemIdHold] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
+    const [tagTerm, setTagTerm] = useState(null);
     const [lastSearchTerm, setLastSearchTerm] = useState('');
     const [submittedSearchFilters, setSubmittedSearchFilters] = useState({ "filters": null, "open": true });
     const [allowSearch, setAllowSearch] = useState(false);
@@ -101,6 +102,7 @@ const DashBoard = () => {
                 setPageData={setPageData}
                 lastSearchTerm={lastSearchTerm}
                 setLastSearchTerm={setLastSearchTerm}
+                setTagTerm={setTagTerm}
             />
             <Feed 
                 setModalType={setModalType} 
@@ -120,7 +122,10 @@ const DashBoard = () => {
                 setAllowSearch={setAllowSearch}
                 pageData={pageData}
                 setPageData={setPageData}
+                lastSearchTerm={lastSearchTerm}
                 setLastSearchTerm={setLastSearchTerm}
+                tagTerm={tagTerm}
+                setTagTerm={setTagTerm}
             />
             {panelType === 'feed' ? <SideBanner setPanelType={setPanelType}/> : null }
             <Banner setPanelType={setPanelType}/>

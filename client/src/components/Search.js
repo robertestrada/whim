@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { baseUrl } from '../config';
 import '../styles/search.css';
 
-const Search = ({ setSubmittedSearchFilters, setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, lastSearchTerm, setLastSearchTerm }) => {
+const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, lastSearchTerm, setLastSearchTerm }) => {
   const [delay, setDelay] = useState(false);
   const [autoInput, setAutoInput] = useState(null);
   const [searchSuggestions, setSearchSuggestions] = useState(null);
@@ -118,6 +118,7 @@ const Search = ({ setSubmittedSearchFilters, setPageData, setViewSwitch, setAllo
       if (searchTerm.length === 1){
         setSubmitError(true);
       } else if (searchTerm.length > 1 && lastSearchTerm !== searchTerm){
+        setTagTerm(null);
         setSubmittedSearchFilters(searchFilters);
         setLastSearchTerm(searchTerm);
         setPageData({ "page": 1, "loadMore": false, "tab": "search" });
@@ -132,6 +133,7 @@ const Search = ({ setSubmittedSearchFilters, setPageData, setViewSwitch, setAllo
 
   const handleSearchSuggestionSubmit = suggestion => {
     if (lastSearchTerm !== suggestion){
+      setTagTerm(null);
       setSubmittedSearchFilters(searchFilters);
       setLastSearchTerm(suggestion);
       setPageData({ "page": 1, "loadMore": false, "tab": "search" });

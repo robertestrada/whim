@@ -1,4 +1,4 @@
-.filter {
+.filter__wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,6 +12,11 @@
   padding: 12px 0px;
   /* overflow: hidden; */
   /* max-width: 900px; */
+}
+
+.filter__tags {
+  display: flex;
+  width: auto;
 }
 
 .filter__tag {

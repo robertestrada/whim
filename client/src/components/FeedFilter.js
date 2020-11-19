@@ -1,12 +1,10 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/feedFilter.css';
 
 
-const FeedFilter = ({ submittedSearchFilters }) => {
-  const [filterSize, setFilterSize] = useState(1);
+const FeedFilter = ({ setTagTerm, submittedSearchFilters }) => {
+  const [filterSize, setFilterSize] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-  const [renderedFilters, setRenderedFilters] = useState(submittedSearchFilters.slice(0, 1));
-  const filterWidth = useRef(null);
 
   const getWindowWidth = () => {
     setWindowWidth(window.innerWidth);
@@ -18,30 +16,32 @@ const FeedFilter = ({ submittedSearchFilters }) => {
   }, []);
 
   useEffect(() => {
-    if (filterWidth.current && filterSize < submittedSearchFilters.length && filterWidth.current.offsetWidth + 100 < windowWidth){
-      setFilterSize(filterSize + 1);
-    }
-  }, [windowWidth]);
+    
+  }, []);
 
   useEffect(() => {
-    setRenderedFilters(submittedSearchFilters.slice(0, filterSize));
-  }, [filterSize]);
+    let filterCount = 0;
+    let totalTagsSize = 0;
+    for (let i = 0; i < submittedSearchFilters.length; i++){
+      const tagSize = (submittedSearchFilters[i][1].length * 8) + 24 + 16;
+      if ((totalTagsSize + tagSize) < (windowWidth - 250 - 115 - 140)){
+        totalTagsSize += tagSize;
+        filterCount += 1;
+      }
+    }
+    setFilterSize(filterCount);
+  }, [windowWidth]);
 
-
-
-  const handleClick = () => {
-
-  }
-
-  if (filterWidth.current){
-    console.log("filterWidth: ", filterWidth.current.offsetWidth);
-    console.log("windowWidth: ", windowWidth)
-    console.log("filterSize: ", filterSize);
-  }
+  const handleTagClick = i => {
+    console.log(submittedSearchFilters[i][1]);
+    setTagTerm(submittedSearchFilters[i][1]);
+  };
 
   return (
-    <div className="filter" ref={filterWidth}>
-      { renderedFilters ? renderedFilters.map((filter, idx) => <div key={idx} onClick={idx => handleClick(idx)} className="filter__tag">{filter[1]}</div>) : null }
+    <div className="filter__wrapper">
+      <div className="filter__tags">
+        {filterSize > 0 ? submittedSearchFilters.map((filter, idx) => filterSize > idx ? <div key={idx} onClick={() => handleTagClick(idx)} className="filter__tag">{filter[1]}</div> : null) : null }
+      </div>
     </div>
   );
 }
