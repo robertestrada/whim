@@ -143,6 +143,12 @@ body {
   width: calc(100vw - 365px);
 }
 
+.feed__filter-loader {
+  padding-top: 52px;
+  width: calc(100vw - 400px);
+  max-width: 900px;
+}
+
 .feed__loader-spacer {
   height: 100vh;
 }
@@ -156,6 +162,10 @@ body {
   font-size: 16px;
   font-weight: 400;
   white-space: nowrap;
+}
+
+.feed__results.filters-show {
+  margin-top: 84px;
 }
 
 .feed__no-results {

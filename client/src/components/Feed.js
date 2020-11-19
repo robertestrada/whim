@@ -7,11 +7,13 @@ import Product from './Product';
 import Cart from './Cart';
 import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
+import FeedFilter from './FeedFilter';
 
-const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
+const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
   const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [filterLoading, setFilterLoading] = useState(false);
   const [productsData, setProductsData] = useState({"products": null, "moreData": false});
   const [catShow, setCatShow] = useState(false);
   const [resultsForSearchTerm, setResultsForSearchTerm] = useState(null);
@@ -19,7 +21,6 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
   const ref = useRef(null);
   
   const fetchData = async () => {
-    console.log("pageData: ", pageData);
     const fetchPoint = { 
                         "popular": `popular/${pageData.page}`, 
                         "express": `express/${pageData.page}`, 
@@ -35,13 +36,20 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
                       };
 
     let result;
-    console.log("pageData.tab: ", pageData.tab);
     if (pageData.tab === "search"){
-      result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ searchTerm }),
-      }));
+      if (tagTerm === null){
+        result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ searchTerm }),
+        }));
+      } else {
+        result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ "searchTerm": tagTerm }),
+        }));
+      }
     } else {
       result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`));
     }
@@ -53,8 +61,8 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
       else if (!pageData.loadMore) {
         setProductsData({ "products": [...resultJSON.data], "moreData": resultJSON.more_data });
         setLoading(false);
+        setFilterLoading(false);
       }
-      console.log("resultJSON: ", resultJSON);
       setAllowScroll(true);
     }
   };
@@ -75,6 +83,9 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
     if (pageData.tab !== "search"){
       setResultsForSearchTerm(null);
       setLastSearchTerm('');
+      setTagTerm(null);
+    } else if (pageData.tab === "search" && tagTerm !== null){
+      setResultsForSearchTerm(tagTerm);
     } else if (pageData.tab === "search"){
       setResultsForSearchTerm(searchTerm.trim());
     }
@@ -104,13 +115,29 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
   }, [pageData.page]);
 
   useEffect(() => {
+    console.log("tagTerm: ", tagTerm);
+    if (tagTerm !== null && tagTerm !== lastSearchTerm) {
+      setLastSearchTerm(tagTerm);
+      setResultsForSearchTerm(tagTerm);
+      setFilterLoading(true);
+      setPageData({ "page": 1, "loadMore": false, "tab": "search" });
+      fetchData();
+    }
+  }, [tagTerm]);
 
+  useEffect(() => {
     
   }, [catShow]);
   
   useLayoutEffect(() => {
-      ref.current.scrollTop = 0;
+    ref.current.scrollTop = 0;
   }, [pageData.tab]);
+
+  useLayoutEffect(() => {
+    if (tagTerm !== null) {
+      ref.current.scrollTop = 0;
+    }
+  }, [tagTerm]);
 
   const handleScroll = (e) => {
     const target = e.target
@@ -155,16 +182,25 @@ const Feed = ({ setLastSearchTerm, pageData, setPageData, allowSearch, setAllowS
                   <LoadingIndicator/>
                 </div>
               : <div className="feed__grid-wrapper">
-                  {categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
-                    ? <div className="feed__results">Results for "<span className={ pageData.tab !== "search" ? "feed__results-not-search" : "feed__results-search"}>{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
+                  { resultsForSearchTerm
+                  ? <FeedFilter setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
+                    : null
+                  }
+                  { categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
+                    ? <div className={pageData.tab === "search" ? "feed__results filters-show" : "feed__results"}>Results for "<span className={ pageData.tab !== "search" ? "feed__results-not-search" : "feed__results-search"}>{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
                     : <div className="feed__no-results">&nbsp;</div>
                   }
-                  <div className={productsData.products.length > 0 ? "feed__grid" : "feed__no-grid-results"}>
-                    { productsData.products.length > 0
-                      ? productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange} setModalType={setModalType}/>)
-                      : "No Products Found."
-                    }
-                  </div>
+                  { filterLoading
+                    ? <div className="feed__filter-loader" >
+                        <LoadingIndicator />
+                      </div>
+                    : <div className={productsData.products.length > 0 ? "feed__grid" : "feed__no-grid-results"}>
+                        { productsData.products.length > 0
+                          ? productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange} setModalType={setModalType}/>)
+                          : "No Products Found."
+                        }
+                      </div>
+                  }
                 </div>
           }
         </div>
