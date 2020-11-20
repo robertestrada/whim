@@ -123,6 +123,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
       setPageData({ "page": 1, "loadMore": false, "tab": "search" });
       fetchData();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tagTerm]);
 
   useEffect(() => {
@@ -183,7 +184,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
                 </div>
               : <div className="feed__grid-wrapper">
                   { resultsForSearchTerm
-                  ? <FeedFilter setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
+                  ? <FeedFilter searchTerm={searchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
                     : null
                   }
                   { categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm

@@ -34,3 +34,117 @@
   font-size: 16px;
   font-weight: 300;
 }
+
+.filter__tag-path {
+  display: flex;
+  align-items: center;
+  width: auto;
+}
+
+.filter__tag.tag-selected {
+  background-color: rgb(175, 199, 209);
+  color: rgb(255, 255, 255);
+  font-weight: 500;
+}
+
+.filter__tag-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+  border-radius: 100%;
+  height: 20px;
+  width: 20px;
+  margin-left: 8px;
+}
+
+.filter__tag-close-svg {
+  width: 10px;
+  height: 10px;
+  color: rgb(175, 199, 209);
+}
+
+.filter__button-wrapper {
+  position: fixed;
+  left: 150px;
+  display: flex;
+  justify-content: center;
+  z-index: 2;
+  transform: translateX(-50%);
+}
+
+.filter__button-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  cursor: pointer;
+  box-shadow: rgba(72, 99, 111, 0.5) 0px 3px 12px 0px;
+}
+
+.filter__button-icon-svg {
+  width: 40px;
+  height: 40px;
+}
+
+.filter__button-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 300;
+  white-space: nowrap;
+  color: rgb(25, 42, 50);
+  margin-top: 4px;
+}
+
+.filter__choices-wrapper {
+  position: fixed;
+  top: 52px;
+  left: 72.5px;
+  margin-left: 36px;
+  display: flex;
+  padding: 24px;
+  max-height: 300px;
+  max-width: 1000px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(212, 227, 235);
+  overflow: hidden;
+  transition: max-width 0.5s ease 0s, max-height 0.5s ease 0s, padding 0.5s ease 0s, border 0.5s ease 0s;
+  z-index: 5;
+}
+
+.filter__choices-wrapper.hide-choices {
+  max-height: 0px;
+  max-width: 0px;
+  padding: 0px;
+  border: 0px solid rgb(212, 227, 235);
+}
+
+.filter__choices-close-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 0px 0px 0px 16px;
+}
+
+.filter__choices-close-button {
+  border-radius: 4px;
+  padding: 0px 16px;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 16px;
+  height: 40px;
+  min-width: 104px;
+  background-color: rgb(47, 183, 236);
+  color: rgb(255, 255, 255);
+  transition: background-color 0.2s ease 0s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.filter__choices-clear-all {
+  color: rgb(47, 183, 236);
+  margin-top: 16px;
+  cursor: pointer;
+}
