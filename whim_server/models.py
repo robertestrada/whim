@@ -13,12 +13,14 @@ class User(db.Model):
   first_name = db.Column(db.String(40), nullable = False)
   last_name = db.Column(db.String(40), nullable = False)
   email = db.Column(db.String(255), nullable = False, unique = True)
+  country = db.Column(db.String(2), nullable = False)
   hashed_password = db.Column(db.String, nullable = False)
   pic_url = db.Column(db.String)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   
   orders = db.relationship("Order", backref='user')
+  ratings = db.relationship("Rating", backref='user')
   
   def to_dict(self):
     return {
@@ -51,7 +53,7 @@ class User(db.Model):
       self.hashed_password = generate_password_hash(password)
 
   def check_password(self, password):
-      return check_password_hash(self.password, password)
+      return check_password_hash(self.password, password) 
     
 
 class Merchant(db.Model):
@@ -129,6 +131,7 @@ class Product(db.Model):
   
   options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="joined")
   orders = db.relationship("Order", backref="product", cascade="all, delete-orphan", lazy="joined")
+  ratings = db.relationship("Rating", backref="product", cascade="all, delete-orphan", lazy="joined")
     
   def feed_pricing(self):
     pricing = {"change": 0, "starting": 0, "ending": 0}
@@ -261,3 +264,44 @@ class Option(db.Model):
           "created_at": self.created_at,
           "updated_at": self.updated_at,
         }
+    
+
+class Rating(db.Model):
+  __tablename__ = 'ratings'
+
+  id = db.Column(db.Integer, primary_key=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+  product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+  rating = db.Column(db.Integer, nullable=False)
+  created_at = db.Column(db.DateTime, default=datetime.now)
+  updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+  def to_dict(self):
+    return {
+        "id": self.id,
+        "user_id": self.user_id,
+        "product_id": self.product_id,
+        "rating": self.rating,
+        "created_at": self.created_at,
+        "updated_at": self.updated_at,
+    }
+    
+class Comment(db.Model):
+  __tablename__ = 'comments'
+
+  id = db.Column(db.Integer, primary_key=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+  product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+  comment = db.Column(db.String(2000), nullable=False)
+  created_at = db.Column(db.DateTime, default=datetime.now)
+  updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+  def to_dict(self):
+    return {
+        "id": self.id,
+        "user_id": self.user_id,
+        "product_id": self.product_id,
+        "comment": self.comment,
+        "created_at": self.created_at,
+        "updated_at": self.updated_at,
+    }
