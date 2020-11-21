@@ -686,7 +686,7 @@ with app.app_context():
       product_rating = 0
       if rating_type >= 3:
         product_rating = randint(4, 5)
-        product_comment = choice(positive_comments)
+        product_comment = choice(positive_comments)git 
       else:
         product_rating = randint(1, 3)
         product_comment = choice(negative_comments)
