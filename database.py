@@ -681,15 +681,19 @@ with app.app_context():
   products_list = Product.query.all()
   for user in users_list:
     rated_products = sample(products_list, randint(5, 20))
+    used_comments = set()
     for rated_product in rated_products:
       rating_type = randint(1, 10)
       product_rating = 0
+      product_comment = ''
       if rating_type >= 3:
         product_rating = randint(4, 5)
-        product_comment = choice(positive_comments)git 
+        product_comment = choice(positive_comments)
+        used_comments.add(product_comment)
       else:
         product_rating = randint(1, 3)
         product_comment = choice(negative_comments)
+        used_comments.add(product_comment)
       new_rating = Rating(user_id=user.id, product_id=rated_product.id, rating=product_rating)
       new_comment = Comment(user_id=user.id, product_id=rated_product.id, comment=product_comment)
       ratings_list.append(new_rating)
