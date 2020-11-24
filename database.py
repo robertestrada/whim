@@ -686,14 +686,17 @@ with app.app_context():
       rating_type = randint(1, 10)
       product_rating = 0
       product_comment = ''
-      if rating_type >= 3:
-        product_rating = randint(4, 5)
-        product_comment = choice(positive_comments)
-        used_comments.add(product_comment)
-      else:
-        product_rating = randint(1, 3)
-        product_comment = choice(negative_comments)
-        used_comments.add(product_comment)
+      comment_searching = True
+      while comment_searching:
+        if rating_type >= 3:
+          product_rating = randint(4, 5)
+          product_comment = choice(positive_comments)
+        else:
+          product_rating = randint(1, 3)
+          product_comment = choice(negative_comments)
+        if product_comment not in used_comments:
+          comment_searching = False
+      used_comments.add(product_comment)
       new_rating = Rating(user_id=user.id, product_id=rated_product.id, rating=product_rating)
       new_comment = Comment(user_id=user.id, product_id=rated_product.id, comment=product_comment)
       ratings_list.append(new_rating)
