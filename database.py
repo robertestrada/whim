@@ -700,7 +700,12 @@ with app.app_context():
       new_rating = Rating(user_id=user.id, product_id=rated_product.id, rating=product_rating)
       new_comment = Comment(user_id=user.id, product_id=rated_product.id, comment=product_comment)
       ratings_list.append(new_rating)
+      comments_list.append(new_comment)
   for rating in ratings_list:
-    db.session.add(ratings_list)
+    db.session.add(rating)
+  db.session.commit()
+  
+  for comment in comments_list:
+    db.session.add(comment)
   db.session.commit()
   
