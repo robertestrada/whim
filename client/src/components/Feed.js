@@ -9,7 +9,7 @@ import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
 import FeedFilter from './FeedFilter';
 
-const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
+const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setSearchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
   const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -41,13 +41,13 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
         result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ searchTerm }),
+          body: JSON.stringify(searchTerm),
         }));
       } else {
         result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ "searchTerm": tagTerm }),
+          body: JSON.stringify({ "term": tagTerm, 'rating': searchTerm.rating, 'price': searchTerm.price }),
         }));
       }
     } else {
@@ -63,6 +63,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
         setLoading(false);
         setFilterLoading(false);
       }
+      console.log(resultJSON.data);
       setAllowScroll(true);
     }
   };
@@ -87,7 +88,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
     } else if (pageData.tab === "search" && tagTerm !== null){
       setResultsForSearchTerm(tagTerm);
     } else if (pageData.tab === "search"){
-      setResultsForSearchTerm(searchTerm.trim());
+      setResultsForSearchTerm(searchTerm.term.trim());
     }
     setPanelType('feed');
     setAllowScroll(true);
@@ -99,7 +100,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
     if (allowSearch){
       setLoading(true);
       setAllowSearch(false);
-      setResultsForSearchTerm(searchTerm.trim());
+      setResultsForSearchTerm(searchTerm.term.trim());
       setPanelType('feed');
       setAllowScroll(true);
       fetchData();
@@ -125,6 +126,12 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tagTerm]);
+
+  useEffect(() => {
+    console.log("searchTerm.rating:", searchTerm.rating);
+    setPageData({ "page": 1, "loadMore": false, "tab": "search" });
+    fetchData();
+  }, [searchTerm.rating]);
 
   useEffect(() => {
     
@@ -184,7 +191,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
                 </div>
               : <div className="feed__grid-wrapper">
                   { resultsForSearchTerm
-                  ? <FeedFilter searchTerm={searchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
+                  ? <FeedFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
                     : null
                   }
                   { categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm

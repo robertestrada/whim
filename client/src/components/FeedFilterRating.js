@@ -2,20 +2,20 @@ import React, { useEffect, useState } from 'react';
 import '../styles/feedFilter.css';
 
 
-const FeedFilterRating = ({ idx, radioSelected, setRadioSelected }) => {
+const FeedFilterRating = ({ idx, searchTerm, setSearchTerm }) => {
   
   // useEffect(() => {
 
   // }, [radioSelected]);
 
   const handleRadioClick = () => {
-    setRadioSelected(idx);
+    setSearchTerm({ ...searchTerm, 'rating': idx });
   };
 
   return (
     <div key={idx} className="filter__rating-option" onClick={() => handleRadioClick()}>
-      <div className={ radioSelected === idx ? "filter__rating-radio radio-selected" : "filter__rating-radio" }>
-        <div className={ radioSelected === idx ? "filter__rating-dot dot-selected" : "filter__rating-dot" }></div>
+      <div className={ searchTerm.rating === idx ? "filter__rating-radio radio-selected" : "filter__rating-radio" }>
+        <div className={ searchTerm.rating === idx ? "filter__rating-dot dot-selected" : "filter__rating-dot" }></div>
       </div>
       <div className="filter__stars-wrapper">
         { [...Array(idx)].map((star, sdx) => {

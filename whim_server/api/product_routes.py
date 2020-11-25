@@ -141,7 +141,9 @@ def search_options():
 def search_products(page):
   product_ids_seen = set()
   requested = request.get_json()
-  substring_raw = requested['searchTerm'].lower()
+  rating = requested['rating']
+  price = requested['price']
+  substring_raw = requested['term'].lower()
   print(f'********** searchTerm: {substring_raw}, page: {page}')
   substring_split = substring_raw.split(' ')
   substring_split_first = substring_split[0]

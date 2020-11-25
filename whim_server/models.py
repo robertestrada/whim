@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates, backref
+from statistics import mean
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
@@ -172,6 +173,10 @@ class Product(db.Model):
                           })
     return options_list
   
+  def feed_ratings(self):
+    ratings_list = [rating.rating for rating in self.ratings]
+    return mean(ratings_list)
+  
   def main_dict(self):
     return {
           "id": self.id,
@@ -225,6 +230,7 @@ class Product(db.Model):
           "shipping_usa": self.shipping_usa,
           "verified": self.verified,
           "feed_past_orders": self.feed_past_orders(),
+          "feed_ratings": self.feed_ratings(),
           "created_at": self.created_at,
           "updated_at": self.updated_at,
         }

@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react';
 import '../styles/feedFilter.css';
 
 
-const FeedFilterRatingClear = ({ setRadioSelected }) => {
+const FeedFilterRatingClear = ({ searchTerm, setSearchTerm }) => {
 
   // useEffect(() => {
 
   // }, []);
 
   const handleClearClick = () => {
-
-    setRadioSelected(null);
+    setSearchTerm({ ...searchTerm, 'rating': null });
   };
 
 
