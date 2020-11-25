@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import FeedFilterRatings from './FeedFilterRatings';
 import '../styles/feedFilter.css';
 
 
@@ -10,7 +11,7 @@ const FeedFilterChoices = ({ showFilterChoices, handleButtonClose, handleClearAl
 
   return (
     <div className={ showFilterChoices ? "filter__choices-wrapper" : "filter__choices-wrapper hide-choices"}>
-      
+      <FeedFilterRatings/>
       <div className="filter__choices-close-wrapper">
         <div className="filter__choices-close-button" onClick={() => handleButtonClose()}>Close</div>
         <div className="filter__choices-clear-all" onClick={() => handleClearAll()}>Clear All</div>
