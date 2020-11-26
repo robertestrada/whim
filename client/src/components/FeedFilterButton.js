@@ -2,13 +2,10 @@ import React, { useEffect, useState } from 'react';
 import '../styles/feedFilter.css';
 
 
-const FeedFilterButton = ({ handleButtonOpen }) => {
-
-  useEffect(() => {
-
-  }, []);
-
-
+const FeedFilterButton = ({ searchTerm, handleButtonOpen }) => {
+  const filterCount = Object.entries(searchTerm).reduce((count, entry) => entry[0] !== 'term' && entry[1] !== null ? count += 1 : count, 0);
+  useEffect(() => {}, [searchTerm.rating, searchTerm.price]);
+  
 
   return (
     <div className="filter__button-wrapper">
@@ -27,7 +24,7 @@ const FeedFilterButton = ({ handleButtonOpen }) => {
             </g>
           </g>
         </svg>
-        <div className="filter__button-count">Filter</div>
+        <div className="filter__button-count">{filterCount > 0 ? `Filter (${filterCount})` : 'Filter'}</div>
       </div>
     </div>
   );

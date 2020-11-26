@@ -72,7 +72,7 @@ const FeedFilter = ({ searchTerm, setSearchTerm, tagTerm, setTagTerm, submittedS
               {tagTerm}
               <div className="filter__tag-close">
                 <svg className="filter__tag-close-svg" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" >
-                  <g stroke="#afc7d1" stroke-width="1.5" fill="none" fillRule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+                  <g stroke="#afc7d1" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M1 1l8 8M9 1L1 9"></path>
                   </g>
                 </svg>
@@ -83,7 +83,7 @@ const FeedFilter = ({ searchTerm, setSearchTerm, tagTerm, setTagTerm, submittedS
             { filterSize > 0 ? submittedSearchFilters.map((filter, idx) => filterSize > idx && filter[1] !== searchTerm.term ? <div key={idx} onClick={() => handleTagClick(idx)} className="filter__tag">{filter[1]}</div> : null) : null }
           </div>
       }
-      <FeedFilterButton handleButtonOpen={handleButtonOpen} />
+      <FeedFilterButton searchTerm={searchTerm} handleButtonOpen={handleButtonOpen} />
       { hiddenFilterChoices ? <FeedFilterChoices searchTerm={searchTerm} setSearchTerm={setSearchTerm} showFilterChoices={showFilterChoices} handleButtonClose={handleButtonClose} handleClearAll={handleClearAll} /> : null }
     </div>
   );
