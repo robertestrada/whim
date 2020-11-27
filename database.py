@@ -490,7 +490,7 @@ with app.app_context():
   o_list = []
   products_list = Product.query.all()
   for product in products_list:
-    price = randrange(5, 101)
+    price = randrange(5, 201)
     price_delta = randrange(0, round(price / 2))
     base_weight = randrange(1, 21)
     if(product.category == 'fashion'):
@@ -573,6 +573,12 @@ with app.app_context():
     
   for o in o_list:
     db.session.add(o)
+  db.session.commit()
+  
+  products_list = Product.query.all()
+  for product in products_list:
+    product.set_lowest_price()
+    db.session.add(product)
   db.session.commit()
 
   positive_comments = [

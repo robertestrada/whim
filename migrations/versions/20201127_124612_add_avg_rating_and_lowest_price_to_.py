@@ -1,8 +1,8 @@
-"""Add comments and ratings
+"""Add avg rating and lowest price to Product model
 
-Revision ID: 532c2322add8
+Revision ID: 745070282a3d
 Revises: 
-Create Date: 2020-11-23 20:04:27.960217
+Create Date: 2020-11-27 12:46:12.613725
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '532c2322add8'
+revision = '745070282a3d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -51,6 +51,8 @@ def upgrade():
     sa.Column('advert', sa.Boolean(), nullable=False),
     sa.Column('verified', sa.Boolean(), nullable=True),
     sa.Column('shipping_speed', sa.Integer(), nullable=False),
+    sa.Column('avg_rating', sa.Float(), nullable=True),
+    sa.Column('lowest_price', sa.Float(), nullable=True),
     sa.Column('shipping_usa', sa.Boolean(), nullable=False),
     sa.Column('merchant_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), nullable=True),

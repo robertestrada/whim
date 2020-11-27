@@ -143,7 +143,7 @@ def search_products(page):
   product_ids_seen = set()
   requested = request.get_json()
   rating = requested['rating']
-  # price = requested['price']
+  price = requested['price']
   substring_raw = requested['term'].lower()
   substring_split = substring_raw.split(' ')
   substring_split_first = substring_split[0]
@@ -154,8 +154,13 @@ def search_products(page):
   requestedF = "%{}%".format(substring)
   results = {}
   base_query = or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))
+  filter_queries = []
   if rating:
-    results = Product.query.filter(and_(Product.avg_rating >= rating, base_query)).order_by(Product.created_at).paginate(page, 24, False)
+    filter_queries.append(Product.avg_rating >= rating)
+  # if price:
+    # filter_queries.append(Product. >= price)
+  if len(filter_queries) > 0:
+    results = Product.query.filter(and_(*filter_queries, base_query)).order_by(Product.created_at).paginate(page, 24, False)
   else:
     results = Product.query.filter(base_query).order_by(Product.created_at).paginate(page, 24, False)
   
