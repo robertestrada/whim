@@ -125,6 +125,7 @@ class Product(db.Model):
   advert = db.Column(db.Boolean, nullable=False)
   verified = db.Column(db.Boolean, default=False)
   shipping_speed = db.Column(db.Integer, nullable=False)
+  avg_rating = db.Column(db.Float)
   shipping_usa = db.Column(db.Boolean, nullable=False)
   merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
@@ -176,6 +177,15 @@ class Product(db.Model):
   def feed_ratings(self):
     ratings_list = [rating.rating for rating in self.ratings]
     return mean(ratings_list)
+
+  def set_average_rating(self, average_rating):
+    if self.avg_rating:
+      ratings_list = [rating.rating for rating in self.ratings]
+      ratings_list.append(average_rating)
+      self.avg_rating = mean(ratings_list)
+    else:
+      self.avg_rating = average_rating
+
   
   def main_dict(self):
     return {
@@ -200,40 +210,41 @@ class Product(db.Model):
     
   def cart_dict(self):
     return {
-        "id": self.id,
-        "name": self.name,
-        "imgs_folder": self.imgs_folder,
-        "description": self.description,
-        "category": self.category,
-        "instant_buy": self.instant_buy,
-        "add_on": self.add_on,
-        "shipping_speed": self.shipping_speed,
-        "shipping_usa": self.shipping_usa,
-        "verified": self.verified,
-        "merchant": self.merchant.to_dict(),
-        "created_at": self.created_at,
-        "updated_at": self.updated_at,
+      "id": self.id,
+      "name": self.name,
+      "imgs_folder": self.imgs_folder,
+      "description": self.description,
+      "category": self.category,
+      "instant_buy": self.instant_buy,
+      "add_on": self.add_on,
+      "shipping_speed": self.shipping_speed,
+      "shipping_usa": self.shipping_usa,
+      "verified": self.verified,
+      "merchant": self.merchant.to_dict(),
+      "created_at": self.created_at,
+      "updated_at": self.updated_at,
     }
     
   def feed_dict(self):
     return {
-          "id": self.id,
-          "name": self.name,
-          "category": self.category,
-          "imgs_folder": self.imgs_folder,
-          "feed_pricing": self.feed_pricing(),
-          "feed_almost_gone": self.feed_almost_gone(),
-          "instant_buy": self.instant_buy,
-          "add_on": self.add_on,
-          "advert": self.advert,
-          "shipping_speed": self.shipping_speed,
-          "shipping_usa": self.shipping_usa,
-          "verified": self.verified,
-          "feed_past_orders": self.feed_past_orders(),
-          "feed_ratings": self.feed_ratings(),
-          "created_at": self.created_at,
-          "updated_at": self.updated_at,
-        }
+      "id": self.id,
+      "name": self.name,
+      "category": self.category,
+      "imgs_folder": self.imgs_folder,
+      "feed_pricing": self.feed_pricing(),
+      "feed_almost_gone": self.feed_almost_gone(),
+      "instant_buy": self.instant_buy,
+      "add_on": self.add_on,
+      "advert": self.advert,
+      "shipping_speed": self.shipping_speed,
+      "shipping_usa": self.shipping_usa,
+      "verified": self.verified,
+      "feed_past_orders": self.feed_past_orders(),
+      "feed_ratings": self.feed_ratings(),
+      "avg_rating": self.avg_rating,
+      "created_at": self.created_at,
+      "updated_at": self.updated_at,
+    }
 
 
 class Option(db.Model):

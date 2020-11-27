@@ -678,8 +678,9 @@ with app.app_context():
   ratings_list = []
   comments_list = []
   users_list = User.query.all()
-  products_list = Product.query.all()
+  
   for user in users_list:
+    products_list = Product.query.all()
     rated_products = sample(products_list, randint(5, 20))
     used_comments = set()
     for rated_product in rated_products:
@@ -699,13 +700,9 @@ with app.app_context():
       used_comments.add(product_comment)
       new_rating = Rating(user_id=user.id, product_id=rated_product.id, rating=product_rating)
       new_comment = Comment(user_id=user.id, product_id=rated_product.id, comment=product_comment)
-      ratings_list.append(new_rating)
-      comments_list.append(new_comment)
-  for rating in ratings_list:
-    db.session.add(rating)
-  db.session.commit()
-  
-  for comment in comments_list:
-    db.session.add(comment)
-  db.session.commit()
-  
+      db.session.add(new_rating)
+      db.session.add(new_comment)
+      db.session.commit()
+
+      rated_product.set_average_rating(product_rating)
+      db.session.commit()
