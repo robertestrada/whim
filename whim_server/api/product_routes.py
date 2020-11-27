@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from whim_server.models import db, User, Product, Option, Order, Merchant
 from sqlalchemy import and_, or_, desc
+from sqlalchemy.sql import func
 import datetime
 import re
 
@@ -141,7 +142,9 @@ def search_options():
 def search_products(page):
   product_ids_seen = set()
   requested = request.get_json()
-  substring_raw = requested['searchTerm'].lower()
+  rating = requested['rating']
+  # price = requested['price']
+  substring_raw = requested['term'].lower()
   print(f'********** searchTerm: {substring_raw}, page: {page}')
   substring_split = substring_raw.split(' ')
   substring_split_first = substring_split[0]
@@ -151,7 +154,8 @@ def search_products(page):
     return {"data": [], "more_data": False}, 200
   substring = '%'.join(substring_split)
   requestedF = "%{}%".format(substring)
-  results = Product.query.filter(or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))).order_by(Product.created_at).paginate(page, 24, False)
+  base_query = or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))
+  results = Product.query.filter(base_query).order_by(Product.created_at).paginate(page, 24, False)
   more_data = results.has_next
   products = results.items
   print(f'PRODUCTS: {products}')

@@ -4,7 +4,7 @@ import FeedFilterChoices from './FeedFilterChoices';
 import '../styles/feedFilter.css';
 
 
-const FeedFilter = ({ searchTerm, tagTerm, setTagTerm, submittedSearchFilters }) => {
+const FeedFilter = ({ searchTerm, setSearchTerm, tagTerm, setTagTerm, submittedSearchFilters }) => {
   const [filterSize, setFilterSize] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [showFilterChoices, setShowFilterChoices] = useState(false);
@@ -24,7 +24,7 @@ const FeedFilter = ({ searchTerm, tagTerm, setTagTerm, submittedSearchFilters })
     let totalTagsSize = 0;
     for (let i = 0; i < submittedSearchFilters.length; i++){
       const tagSize = (submittedSearchFilters[i][1].length * 8) + 24 + 16;
-      if ((totalTagsSize + tagSize) < (windowWidth - 250 - 115 - 140) && searchTerm !== submittedSearchFilters[i][1]){
+      if ((totalTagsSize + tagSize) < (windowWidth - 250 - 115 - 140) && searchTerm.term !== submittedSearchFilters[i][1]){
         totalTagsSize += tagSize;
         filterCount += 1;
       }
@@ -48,7 +48,7 @@ const FeedFilter = ({ searchTerm, tagTerm, setTagTerm, submittedSearchFilters })
   };
 
   const handleTagExit = () => {
-    setTagTerm(searchTerm);
+    setTagTerm(searchTerm.term);
   };
 
   const handleButtonOpen = () => {
@@ -65,14 +65,14 @@ const FeedFilter = ({ searchTerm, tagTerm, setTagTerm, submittedSearchFilters })
 
   return (
     <div className="filter__wrapper">
-      { tagTerm !== null && tagTerm !== searchTerm
+      { tagTerm !== null && tagTerm !== searchTerm.term
         ? <div className="filter__tag-path">
-            {`${searchTerm} / `}
+            {`${searchTerm.term} / `}
             <div onClick={() => handleTagExit()} className="filter__tag tag-selected">
               {tagTerm}
               <div className="filter__tag-close">
                 <svg className="filter__tag-close-svg" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" >
-                  <g stroke="#afc7d1" stroke-width="1.5" fill="none" fillRule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+                  <g stroke="#afc7d1" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M1 1l8 8M9 1L1 9"></path>
                   </g>
                 </svg>
@@ -80,11 +80,11 @@ const FeedFilter = ({ searchTerm, tagTerm, setTagTerm, submittedSearchFilters })
             </div>
           </div>
         : <div className="filter__tags">
-            { filterSize > 0 ? submittedSearchFilters.map((filter, idx) => filterSize > idx && filter[1] !== searchTerm ? <div key={idx} onClick={() => handleTagClick(idx)} className="filter__tag">{filter[1]}</div> : null) : null }
+            { filterSize > 0 ? submittedSearchFilters.map((filter, idx) => filterSize > idx && filter[1] !== searchTerm.term ? <div key={idx} onClick={() => handleTagClick(idx)} className="filter__tag">{filter[1]}</div> : null) : null }
           </div>
       }
-      <FeedFilterButton handleButtonOpen={handleButtonOpen} />
-      { hiddenFilterChoices ? <FeedFilterChoices showFilterChoices={showFilterChoices} handleButtonClose={handleButtonClose} handleClearAll={handleClearAll} /> : null }
+      <FeedFilterButton searchTerm={searchTerm} handleButtonOpen={handleButtonOpen} />
+      { hiddenFilterChoices ? <FeedFilterChoices searchTerm={searchTerm} setSearchTerm={setSearchTerm} showFilterChoices={showFilterChoices} handleButtonClose={handleButtonClose} handleClearAll={handleClearAll} /> : null }
     </div>
   );
 }

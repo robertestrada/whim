@@ -45,21 +45,21 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
 
   useEffect(() => {
     if(!delay){
-      if (searchTerm){
-        getOptions(searchTerm);
+      if (searchTerm.term){
+        getOptions(searchTerm.term);
         setDelay(true);
       }
     } else {
       const timeout = setTimeout(() => {
-        if (searchTerm){
-          getOptions(searchTerm);
+        if (searchTerm.term){
+          getOptions(searchTerm.term);
           setDelay(false);
         }
       }, 200);
       return () => clearTimeout(timeout);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchTerm.term]);
 
   const getOptions = async input => {
     const response = await fetch(`${baseUrl}/product/search/options`, {
@@ -83,24 +83,24 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
   };
 
   useEffect(() => {
-    if (searchSuggestions !== null && searchTerm.split(' ').length === 1 && searchTerm.split(' ')[0] !== searchSuggestions[0]) {
+    if (searchSuggestions !== null && searchTerm.term.split(' ').length === 1 && searchTerm.term.split(' ')[0] !== searchSuggestions[0]) {
       setSearchFilters(searchSuggestions);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getOptions]);
 
   useEffect(() => {
-    if (searchTerm && searchTerm.length > 1){
+    if (searchTerm.term && searchTerm.term.length > 1){
       setSubmitError(false);
     }
-    if (autoInput && !autoInput.startsWith(searchTerm)){
+    if (autoInput && !autoInput.startsWith(searchTerm.term)){
       setAutoInput(null);
     }
     if (searchSuggestions !== null){
       for (let i = 0; i < searchSuggestions.length; i++){
         const searchResult = searchSuggestions[i][1];
-        if (searchResult.startsWith(searchTerm) && searchTerm.split(' ').length > 1){
-          const newSearchSuggestions = searchSuggestions.filter(result => result[1].startsWith(searchTerm));
+        if (searchResult.startsWith(searchTerm.term) && searchTerm.term.split(' ').length > 1){
+          const newSearchSuggestions = searchSuggestions.filter(result => result[1].startsWith(searchTerm.term));
           setSearchSuggestions(newSearchSuggestions);
           setAutoInput(searchResult);
           return;
@@ -108,19 +108,19 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchTerm.term]);
 
   const handleSearchSubmit = async e => {
     e.preventDefault();
-    if (searchSuggestions === null || searchTerm === ''){
+    if (searchSuggestions === null || searchTerm.term === ''){
       setSubmitError(true);
     } else if (searchSuggestions){
-      if (searchTerm.length === 1){
+      if (searchTerm.term.length === 1){
         setSubmitError(true);
-      } else if (searchTerm.length > 1 && lastSearchTerm !== searchTerm){
+      } else if (searchTerm.term.length > 1 && lastSearchTerm !== searchTerm.term){
         setTagTerm(null);
         setSubmittedSearchFilters(searchFilters);
-        setLastSearchTerm(searchTerm);
+        setLastSearchTerm(searchTerm.term);
         setPageData({ "page": 1, "loadMore": false, "tab": "search" });
         setAllowSearch(true);
         setViewSwitch("search");
@@ -139,15 +139,15 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
       setPageData({ "page": 1, "loadMore": false, "tab": "search" });
       setAllowSearch(true);
       setViewSwitch("search");
-      setSearchTerm(suggestion);
+      setSearchTerm({ ...searchTerm, 'term': suggestion });
       setShowSearchSuggestions(false);
     }
   };
 
   const handleTabOrEnterPress = e => {
-    if ((e.keyCode === 9 || (e.keyCode === 39 && e.target.selectionEnd === e.target.value.length && window.getSelection().toString() !== searchTerm)) && autoInput !== null && autoInput.startsWith(searchTerm)){
+    if ((e.keyCode === 9 || (e.keyCode === 39 && e.target.selectionEnd === e.target.value.length && window.getSelection().toString() !== searchTerm.term)) && autoInput !== null && autoInput.startsWith(searchTerm.term)){
       e.preventDefault();
-      setSearchTerm(autoInput);
+      setSearchTerm({ ...searchTerm, 'term': autoInput });
     }
     if (e.keyCode === 13) {
       e.preventDefault();
@@ -179,7 +179,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
   };
 
   const handleSuggestionMouseEnter = (suggestion, idx) => {
-    if (suggestion.startsWith(searchTerm.toLowerCase())){
+    if (suggestion.startsWith(searchTerm.term.toLowerCase())){
       setAllowListNavigation(false);
       setAutoInput(suggestion);
       setListTarget(idx);
@@ -213,14 +213,14 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
             </div>
           </div>
           <form className="search__form">
-            <input value={searchTerm} onKeyDown={e => handleTabOrEnterPress(e)} onClick={handleInputClick} onChange={e => setSearchTerm(e.target.value.trimLeft())} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
+            <input value={searchTerm.term} onKeyDown={e => handleTabOrEnterPress(e)} onClick={handleInputClick} onChange={e => setSearchTerm({ ...searchTerm, 'term': e.target.value.trimLeft()})} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
             <div className="search__text">
-              <div className="search__input-text" >{searchTerm}</div>
-              { searchTerm && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchTerm.length)}</div> : null }
+              <div className="search__input-text" >{searchTerm.term}</div>
+              { searchTerm.term && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchTerm.term.length)}</div> : null }
             </div>
           </form>
         </div>
-        { searchTerm && showSearchSuggestions && searchSuggestions !== null
+        { searchTerm.term && showSearchSuggestions && searchSuggestions !== null
           ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"} >
             {searchSuggestions.map((result, idx) => <div key={idx} onClick={() => handleSearchSuggestionSubmit(result[1])} onMouseEnter={() => handleSuggestionMouseEnter(result[1], idx)} className={ listTarget === idx ? "search__suggestion suggestion-highlight" : "search__suggestion"}>{result[1]}</div>)}
             </div>
