@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import '../styles/feedFilter.css';
 
 
-const FeedFilterRating = ({ idx, searchTerm, setSearchTerm }) => {
+const FeedFilterRating = ({ idx, setPageData, searchTerm, setSearchTerm }) => {
   
   // useEffect(() => {
 
   // }, [radioSelected]);
 
   const handleRadioClick = () => {
+    setPageData({ "page": 1, "loadMore": false, "tab": "search" });
     setSearchTerm({ ...searchTerm, 'rating': idx });
   };
 

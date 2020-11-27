@@ -34,7 +34,8 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
                         "watches": `category/watches/${pageData.page}`,
                         "search": `search/${pageData.page}`,
                       };
-
+    console.log("searchTerm: ", searchTerm);
+    console.log("pageData: ", pageData);
     let result;
     if (pageData.tab === "search"){
       if (tagTerm === null){
@@ -116,7 +117,6 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   }, [pageData.page]);
 
   useEffect(() => {
-    console.log("tagTerm: ", tagTerm);
     if (tagTerm !== null && tagTerm !== lastSearchTerm) {
       setLastSearchTerm(tagTerm);
       setResultsForSearchTerm(tagTerm);
@@ -128,9 +128,13 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   }, [tagTerm]);
 
   useEffect(() => {
-    console.log("searchTerm.rating:", searchTerm.rating);
-    setPageData({ "page": 1, "loadMore": false, "tab": "search" });
-    fetchData();
+    if (searchTerm.rating !== null && searchTerm.term !== ''){
+      setFilterLoading(true);
+      fetchData();
+    } else if (searchTerm.rating === null && searchTerm.term !== ''){
+      setFilterLoading(true);
+      fetchData();
+    }
   }, [searchTerm.rating]);
 
   useEffect(() => {
@@ -146,6 +150,14 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
       ref.current.scrollTop = 0;
     }
   }, [tagTerm]);
+
+  useLayoutEffect(() => {
+    if (searchTerm.rating !== null) {
+      ref.current.scrollTop = 0;
+    } else if (searchTerm.rating === null && (searchTerm.term !== '' || tagTerm !== null)){
+      ref.current.scrollTop = 0;
+    }
+  }, [searchTerm.rating]);
 
   const handleScroll = (e) => {
     const target = e.target
@@ -191,7 +203,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
                 </div>
               : <div className="feed__grid-wrapper">
                   { resultsForSearchTerm
-                  ? <FeedFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
+                  ? <FeedFilter setPageData={setPageData} searchTerm={searchTerm} setSearchTerm={setSearchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
                     : null
                   }
                   { categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
