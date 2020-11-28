@@ -126,6 +126,7 @@ class Product(db.Model):
   verified = db.Column(db.Boolean, default=False)
   shipping_speed = db.Column(db.Integer, nullable=False)
   avg_rating = db.Column(db.Float)
+  lowest_price = db.Column(db.Float)
   shipping_usa = db.Column(db.Boolean, nullable=False)
   merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
@@ -134,7 +135,10 @@ class Product(db.Model):
   options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="joined")
   orders = db.relationship("Order", backref="product", cascade="all, delete-orphan", lazy="joined")
   ratings = db.relationship("Rating", backref="product", cascade="all, delete-orphan", lazy="joined")
-    
+  
+  def set_lowest_price(self):
+    self.lowest_price = min([option.price_ending for option in self.options])
+  
   def feed_pricing(self):
     pricing = {"change": 0, "starting": 0, "ending": 0}
     for option in self.options:
@@ -242,6 +246,7 @@ class Product(db.Model):
       "feed_past_orders": self.feed_past_orders(),
       "feed_ratings": self.feed_ratings(),
       "avg_rating": self.avg_rating,
+      "lowest_price": self.lowest_price,
       "created_at": self.created_at,
       "updated_at": self.updated_at,
     }

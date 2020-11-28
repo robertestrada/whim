@@ -143,32 +143,37 @@ def search_products(page):
   product_ids_seen = set()
   requested = request.get_json()
   rating = requested['rating']
-  # price = requested['price']
+  price = requested['price']
   substring_raw = requested['term'].lower()
-  print(f'********** searchTerm: {substring_raw}, page: {page}')
   substring_split = substring_raw.split(' ')
   substring_split_first = substring_split[0]
   requested_extraF = "%{}%".format(substring_split_first)
-  print(f'!!!!!! ALL: {all(char == "" for char in substring_split)}')
   if all(char == '' for char in substring_split):
     return {"data": [], "more_data": False}, 200
   substring = '%'.join(substring_split)
   requestedF = "%{}%".format(substring)
+  # results = {}
   base_query = or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))
-  results = Product.query.filter(base_query).order_by(Product.created_at).paginate(page, 24, False)
+  filter_queries = []
+  if rating != -1:
+    filter_queries.append(Product.avg_rating >= rating)
+  price_ranges = [(0, 5), (5, 10), (10, 20), (20, 50), (50, 100), (100, 1000000)]
+  
+  if price != -1:
+    low, high = price_ranges[price]
+    filter_queries.append(and_(low < Product.lowest_price, Product.lowest_price <= high)) 
+  # if len(filter_queries) > 0:
+  results = Product.query.filter(and_(*filter_queries, base_query)).order_by(Product.created_at).paginate(page, 24, False)
+  # else:
+    # results = Product.query.filter(base_query).order_by(Product.created_at).paginate(page, 24, False)
+  
   more_data = results.has_next
   products = results.items
-  print(f'PRODUCTS: {products}')
   for product in products:
     if product.id not in product_ids_seen:
       product_ids_seen.add(product.id)
-  print(f'SET: {product_ids_seen}')
   data = [product.feed_dict() for product in products]
-  print(f'MORE_DATA: {more_data}')
-  print(f'substring_split: {substring_split}')
-  print(f'substring_split_first: {substring_split_first}')
   if not more_data and len(substring_split) > 1:
-    print('INSIDE EXTRA')
     extra_results = Product.query.filter(and_(Product.id.notin_(product_ids_seen), or_(Product.name.ilike(requested_extraF), Product.category.ilike(requested_extraF), Product.description.ilike(requested_extraF)))).order_by(Product.created_at).paginate(page, 24, False)
     extra_more_data = extra_results.has_next
     extra_products = extra_results.items

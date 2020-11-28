@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import '../styles/feedFilter.css';
 
 
-const FeedFilterRatingClear = ({ searchTerm, setSearchTerm }) => {
+const FeedFilterRatingClear = ({ setPageData, searchTerm, setSearchTerm }) => {
 
-  // useEffect(() => {
-
-  // }, []);
-
-  const handleClearClick = () => {
-    setSearchTerm({ ...searchTerm, 'rating': null });
+  const handleClearRatingClick = () => {
+    console.log("CLEARCLICK RATING");
+    setPageData({ "page": 1, "loadMore": false, "tab": "search" });
+    setSearchTerm({ ...searchTerm, 'rating': -1 });
   };
 
 
   return (
-    <div className="filter__rating-option" onClick={() => handleClearClick()}>
+    <div className="filter__rating-option" onClick={() => handleClearRatingClick()}>
       <div className="filter__rating-radio">
         <div className="filter__rating-dot"/>
       </div>

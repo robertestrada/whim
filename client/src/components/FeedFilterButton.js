@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import '../styles/feedFilter.css';
 
 
 const FeedFilterButton = ({ searchTerm, handleButtonOpen }) => {
-  const filterCount = Object.entries(searchTerm).reduce((count, entry) => entry[0] !== 'term' && entry[1] !== null ? count += 1 : count, 0);
+  const filterCount = Object.entries(searchTerm).reduce((count, entry) => entry[0] !== 'term' && entry[1] !== -1 ? count += 1 : count, 0);
   useEffect(() => {}, [searchTerm.rating, searchTerm.price]);
   
 
