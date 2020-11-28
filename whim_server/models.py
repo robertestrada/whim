@@ -246,6 +246,7 @@ class Product(db.Model):
       "feed_past_orders": self.feed_past_orders(),
       "feed_ratings": self.feed_ratings(),
       "avg_rating": self.avg_rating,
+      "lowest_price": self.lowest_price,
       "created_at": self.created_at,
       "updated_at": self.updated_at,
     }

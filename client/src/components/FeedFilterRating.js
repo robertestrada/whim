@@ -3,10 +3,6 @@ import '../styles/feedFilter.css';
 
 
 const FeedFilterRating = ({ idx, setPageData, searchTerm, setSearchTerm }) => {
-  
-  // useEffect(() => {
-
-  // }, [radioSelected]);
 
   const handleRadioClick = () => {
     setPageData({ "page": 1, "loadMore": false, "tab": "search" });

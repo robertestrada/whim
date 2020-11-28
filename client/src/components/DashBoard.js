@@ -18,7 +18,7 @@ const DashBoard = () => {
     const [viewSwitchHold, setViewSwitchHold] = useState(null);
     const [viewSwitch, setViewSwitch] = useState(null);
     const [itemIdHold, setItemIdHold] = useState(null);
-    const [searchTerm, setSearchTerm] = useState({'term': '', 'rating': null, 'price': null});
+    const [searchTerm, setSearchTerm] = useState({'term': '', 'rating': -1, 'price': -1});
     const [tagTerm, setTagTerm] = useState(null);
     const [lastSearchTerm, setLastSearchTerm] = useState('');
     const [submittedSearchFilters, setSubmittedSearchFilters] = useState({ "filters": null, "open": true });

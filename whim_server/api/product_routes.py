@@ -152,17 +152,20 @@ def search_products(page):
     return {"data": [], "more_data": False}, 200
   substring = '%'.join(substring_split)
   requestedF = "%{}%".format(substring)
-  results = {}
+  # results = {}
   base_query = or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))
   filter_queries = []
-  if rating:
+  if rating != -1:
     filter_queries.append(Product.avg_rating >= rating)
-  # if price:
-    # filter_queries.append(Product. >= price)
-  if len(filter_queries) > 0:
-    results = Product.query.filter(and_(*filter_queries, base_query)).order_by(Product.created_at).paginate(page, 24, False)
-  else:
-    results = Product.query.filter(base_query).order_by(Product.created_at).paginate(page, 24, False)
+  price_ranges = [(0, 5), (5, 10), (10, 20), (20, 50), (50, 100), (100, 1000000)]
+  
+  if price != -1:
+    low, high = price_ranges[price]
+    filter_queries.append(and_(low < Product.lowest_price, Product.lowest_price <= high)) 
+  # if len(filter_queries) > 0:
+  results = Product.query.filter(and_(*filter_queries, base_query)).order_by(Product.created_at).paginate(page, 24, False)
+  # else:
+    # results = Product.query.filter(base_query).order_by(Product.created_at).paginate(page, 24, False)
   
   more_data = results.has_next
   products = results.items

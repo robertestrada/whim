@@ -128,14 +128,24 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   }, [tagTerm]);
 
   useEffect(() => {
-    if (searchTerm.rating !== null && searchTerm.term !== ''){
+    if (searchTerm.rating !== -1 && searchTerm.term !== ''){
       setFilterLoading(true);
       fetchData();
-    } else if (searchTerm.rating === null && searchTerm.term !== ''){
+    } else if (searchTerm.rating === -1 && searchTerm.term !== ''){
       setFilterLoading(true);
       fetchData();
     }
   }, [searchTerm.rating]);
+
+  useEffect(() => {
+    if (searchTerm.price !== -1 && searchTerm.term !== '') {
+      setFilterLoading(true);
+      fetchData();
+    } else if (searchTerm.price === -1 && searchTerm.term !== '') {
+      setFilterLoading(true);
+      fetchData();
+    }
+  }, [searchTerm.price]);
 
   useEffect(() => {
     
@@ -152,12 +162,20 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   }, [tagTerm]);
 
   useLayoutEffect(() => {
-    if (searchTerm.rating !== null) {
+    if (searchTerm.rating !== -1) {
       ref.current.scrollTop = 0;
-    } else if (searchTerm.rating === null && (searchTerm.term !== '' || tagTerm !== null)){
+    } else if (searchTerm.rating === -1 && (searchTerm.term !== '' || tagTerm !== null)){
       ref.current.scrollTop = 0;
     }
   }, [searchTerm.rating]);
+
+  useLayoutEffect(() => {
+    if (searchTerm.price !== -1) {
+      ref.current.scrollTop = 0;
+    } else if (searchTerm.price === -1 && (searchTerm.term !== '' || tagTerm !== null)) {
+      ref.current.scrollTop = 0;
+    }
+  }, [searchTerm.price]);
 
   const handleScroll = (e) => {
     const target = e.target

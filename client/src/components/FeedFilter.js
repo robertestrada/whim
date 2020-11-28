@@ -48,6 +48,7 @@ const FeedFilter = ({ setPageData, searchTerm, setSearchTerm, tagTerm, setTagTer
   };
 
   const handleTagExit = () => {
+    setPageData({ "page": 1, "loadMore": false, "tab": "search" });
     setTagTerm(searchTerm.term);
   };
 
@@ -60,7 +61,7 @@ const FeedFilter = ({ setPageData, searchTerm, setSearchTerm, tagTerm, setTagTer
   };
 
   const handleClearAll = () => {
-
+    setSearchTerm({ ...searchTerm, 'rating': -1, 'price': -1 });
   };
 
   return (
@@ -84,7 +85,7 @@ const FeedFilter = ({ setPageData, searchTerm, setSearchTerm, tagTerm, setTagTer
           </div>
       }
       <FeedFilterButton searchTerm={searchTerm} handleButtonOpen={handleButtonOpen} />
-      { hiddenFilterChoices ? <FeedFilterChoices setPageData={setPageData} searchTerm={searchTerm} setSearchTerm={setSearchTerm} showFilterChoices={showFilterChoices} handleButtonClose={handleButtonClose} handleClearAll={handleClearAll} /> : null }
+      { hiddenFilterChoices ? <FeedFilterChoices setPageData={setPageData} searchTerm={searchTerm} setSearchTerm={setSearchTerm} showFilterChoices={showFilterChoices} setShowFilterChoices={setShowFilterChoices} handleButtonClose={handleButtonClose} handleClearAll={handleClearAll} /> : null }
     </div>
   );
 }

@@ -4,18 +4,15 @@ import '../styles/feedFilter.css';
 
 const FeedFilterRatingClear = ({ setPageData, searchTerm, setSearchTerm }) => {
 
-  // useEffect(() => {
-
-  // }, []);
-
-  const handleClearClick = () => {
+  const handleClearRatingClick = () => {
+    console.log("CLEARCLICK RATING");
     setPageData({ "page": 1, "loadMore": false, "tab": "search" });
-    setSearchTerm({ ...searchTerm, 'rating': null });
+    setSearchTerm({ ...searchTerm, 'rating': -1 });
   };
 
 
   return (
-    <div className="filter__rating-option" onClick={() => handleClearClick()}>
+    <div className="filter__rating-option" onClick={() => handleClearRatingClick()}>
       <div className="filter__rating-radio">
         <div className="filter__rating-dot"/>
       </div>
