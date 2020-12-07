@@ -59,7 +59,7 @@ const Cart = ({ setModalType, modalChange, setPanelType, handleRemoveItem, itemH
                         </div>
                         <div className="cart__return-policy-wrapper">
                           <div className="cart__return-svg-wrapper">
-                            <svg className="cart__return-svg" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                            <svg className="cart__return-svg" viewBox="0 0 40 40" >
                               <g fill="none" fillRule="evenodd">
                                 <path d="M36.098 9.716c-.93 12.852-6.27 22.005-16.02 27.46-4.97-3.398-8.783-7.24-11.441-11.527l27.46-15.933z" fill="#49C3EE"></path>
                                 <path d="M3.902 9.765c3.823-2.295 9.373-5.481 15.986-7.814 5.08 2.032 10.084 4.115 16.21 7.814-.934 12.74-6.3 21.815-16.098 27.222C9.459 29.877 4.093 20.802 3.902 9.765z" fillOpacity=".84" fill="#2fb7ec"></path>

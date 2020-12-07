@@ -8,7 +8,7 @@ const CartEmpty = ({ setPanelType }) => {
   return (
     <div className="cart__empty-wrapper">
       <div className="cart__icon-wrapper">
-        <svg className="cart__icon-svg" viewBox="0 0 21 17" xmlns="http://www.w3.org/2000/svg">
+        <svg className="cart__icon-svg" viewBox="0 0 21 17">
           <g fill="none" fillRule="evenodd">
             <g transform="translate(.56 .52)" fill="#192a32">
               <ellipse cx="14.753" cy="14.813" rx="1.366" ry="1.285"></ellipse>

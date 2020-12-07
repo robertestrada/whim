@@ -11,7 +11,7 @@ const ModalImages = ({ handleModalExit }) => {
         </div>
       </div>
       <button className="modal__close" onClick={() => handleModalExit()}>
-        <svg width="14px" height="14px" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg">
+        <svg width="14px" height="14px" viewBox="0 0 10 10" >
           <g stroke="#3C4646" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
             <path d="M1 1l8 8M9 1L1 9"></path>
           </g>

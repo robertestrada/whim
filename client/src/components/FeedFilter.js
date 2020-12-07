@@ -43,7 +43,6 @@ const FeedFilter = ({ setPageData, searchTerm, setSearchTerm, tagTerm, setTagTer
   }, [showFilterChoices]);
 
   const handleTagClick = i => {
-    console.log(submittedSearchFilters[i][1]);
     setTagTerm(submittedSearchFilters[i][1]);
   };
 
@@ -72,7 +71,7 @@ const FeedFilter = ({ setPageData, searchTerm, setSearchTerm, tagTerm, setTagTer
             <div onClick={() => handleTagExit()} className="filter__tag tag-selected">
               {tagTerm}
               <div className="filter__tag-close">
-                <svg className="filter__tag-close-svg" viewBox="0 0 10 10" xmlns="http://www.w3.org/2000/svg" >
+                <svg className="filter__tag-close-svg" viewBox="0 0 10 10" >
                   <g stroke="#afc7d1" strokeWidth="1.5" fill="none" fillRule="evenodd" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M1 1l8 8M9 1L1 9"></path>
                   </g>

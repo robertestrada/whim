@@ -34,8 +34,6 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
                         "watches": `category/watches/${pageData.page}`,
                         "search": `search/${pageData.page}`,
                       };
-    console.log("searchTerm: ", searchTerm);
-    console.log("pageData: ", pageData);
     let result;
     if (pageData.tab === "search"){
       if (tagTerm === null){
@@ -64,7 +62,6 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
         setLoading(false);
         setFilterLoading(false);
       }
-      console.log(resultJSON.data);
       setAllowScroll(true);
     }
   };

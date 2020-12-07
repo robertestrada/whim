@@ -5,7 +5,6 @@ import '../styles/feedFilter.css';
 const FeedFilterPriceClear = ({ setPageData, searchTerm, setSearchTerm }) => {
 
   const handleClearPriceClick = () => {
-    console.log("CLEARCLICK PRICE");
     setPageData({ "page": 1, "loadMore": false, "tab": "search" });
     setSearchTerm({ ...searchTerm, 'price': -1 });
   };

@@ -5,7 +5,6 @@ import '../styles/feedFilter.css';
 const FeedFilterRatingClear = ({ setPageData, searchTerm, setSearchTerm }) => {
 
   const handleClearRatingClick = () => {
-    console.log("CLEARCLICK RATING");
     setPageData({ "page": 1, "loadMore": false, "tab": "search" });
     setSearchTerm({ ...searchTerm, 'rating': -1 });
   };
