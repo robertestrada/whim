@@ -47,7 +47,9 @@ def search_options():
   terms_raw = requested['input'].lower()
   terms_split = re.split('[^a-zA-Z+\'?s]', terms_raw)
   terms_list = list(filter(None, terms_split))
-  terms = ' '.join(terms_list)
+  terms_list_first = terms_list[0]
+  terms_list_last = terms_list[-1]
+  terms_string = ' '.join(terms_list)
   terms_query_joined = '%'.join(terms_list)
   terms_query = "%{}%".format(terms_query_joined)
   
@@ -60,34 +62,71 @@ def search_options():
   products_query = Product.query.filter(or_(Product.name.ilike(terms_query), Product.category.ilike(terms_query), Product.description.ilike(terms_query))).all()
   products_dict = [product.search_dict() for product in products_query]
   
+  # iterate through products
   for product in products_dict:
+    # iterate through product fields
     for key in product:
       words_unfiltered = re.split('[^a-zA-Z+\'?s]', product[key].lower())
       words = list(filter(None, words_unfiltered))
+      
       words_length = len(words)
-      terms_length = len(terms)
+      terms_list_length = len(terms_list)
+      
+      # iterate through field's string
       for i in range(0, words_length):
-        words_focus_list = []
-        for k in range(0, terms_length):
-          words_focus_list.append(words[i + k])
-        words_focus = ' '.join(words_focus_list)
+        words_current = words[i]
+        # words_current_list = []
+        words_last = words[i + terms_list_length - 1]
+        # [ watch ] = words_focus
+        # [ watch, for, men ] = words_focus
         
-        if words_focus.startswith(terms):
-          if words_focus in products:
-            products[words_focus] += 1
-          else:
-            products[words_focus] = 1
+        # [ wat ] = terms_list
+        # [ watch, for ] = terms_list
+        # [ watch, for, men ] = terms_list
+        
+        if terms_list_length == 1 and words_current.startswith(terms_list_last):
+          major_terms_count = 3
+          j = i + 1
+          words_current_list = [words_current]
+          while major_terms_count > 0 and j < words_length:
+            words_next = words[j]
+            words_current_list.append(words_next)
+            if words_next not in stopwords:
+              major_terms_count -= 1
+            j += 1
             
-          extra_words = words[i:i + 4]
-          for word in extra_words:
-            words_focus_list.append(words[i + k])
+          words_current_string = ' '.join(words_current_list)
+          if words_current_string in products:
+            products[words_current_string] += 1
+          else:
+            products[words_current_string] = 1
+            
+        elif (i + terms_list_length <= words_length) and (words[i: i + terms_list_length - 1] == terms_list[:-1]) and words_last.startswith(terms_list_last):
+          starting_major_terms_count = 0
+          for term in terms_list:
+            if term not in stopwords:
+              starting_major_terms_count += 1
+              
+          major_terms_count = 4 - starting_major_terms_count
+          j = i + terms_list_length
+          words_current_list = terms_list[:-1] + [words_last]
+          while major_terms_count > 0 and j < words_length:
+            words_next = words[j]
+            words_current_list.append(words_next)
+            if words_next not in stopwords:
+              major_terms_count -= 1
+            j += 1
+            
+          words_current_string = ' '.join(words_current_list)
+          if words_current_string in products:
+            products[words_current_string] += 1
+          else:
+            products[words_current_string] = 1
         
-        
-    
-    
-    
-    
-    
+        possible_terms = sorted([(value, key) for (key, value) in products.items()], reverse=True)
+  return {"data": possible_terms}, 200
+
+
   
   # options_one = {}
   # options_two = {}
@@ -165,7 +204,7 @@ def search_options():
   
   # options_list = sorted(options, key=lambda x: len(x[1]))
 
-  return {"data": options_list}, 200
+  # return {"data": options_list}, 200
 
 
 @product_routes.route("/search/<int:page>", methods=['POST'])
