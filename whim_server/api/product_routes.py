@@ -47,9 +47,7 @@ def search_options():
   terms_raw = requested['input'].lower()
   terms_split = re.split('[^a-zA-Z+\'?s]', terms_raw)
   terms_list = list(filter(None, terms_split))
-  terms_list_first = terms_list[0]
   terms_list_last = terms_list[-1]
-  terms_string = ' '.join(terms_list)
   terms_query_joined = '%'.join(terms_list)
   terms_query = "%{}%".format(terms_query_joined)
   
@@ -73,33 +71,28 @@ def search_options():
       terms_list_length = len(terms_list)
       
       # iterate through field's string
-      for i in range(0, words_length):
+      for i in range(0, words_length - terms_list_length):
         words_current = words[i]
-        # words_current_list = []
         words_last = words[i + terms_list_length - 1]
-        # [ watch ] = words_focus
-        # [ watch, for, men ] = words_focus
-        
-        # [ wat ] = terms_list
-        # [ watch, for ] = terms_list
-        # [ watch, for, men ] = terms_list
         
         if terms_list_length == 1 and words_current.startswith(terms_list_last):
-          major_terms_count = 3
-          j = i + 1
-          words_current_list = [words_current]
+          major_terms_count = 4
+          j = i
+          words_current_list = []
           while major_terms_count > 0 and j < words_length:
             words_next = words[j]
             words_current_list.append(words_next)
-            if words_next not in stopwords:
+            
+            if words_next not in stopwords and len(words_next) > 1:
               major_terms_count -= 1
+              words_current_string = ' '.join(words_current_list)
+              if words_current_string in products:
+                products[words_current_string] += 1
+              else:
+                products[words_current_string] = 1
+            
             j += 1
             
-          words_current_string = ' '.join(words_current_list)
-          if words_current_string in products:
-            products[words_current_string] += 1
-          else:
-            products[words_current_string] = 1
             
         elif (i + terms_list_length <= words_length) and (words[i: i + terms_list_length - 1] == terms_list[:-1]) and words_last.startswith(terms_list_last):
           starting_major_terms_count = 0
@@ -113,98 +106,18 @@ def search_options():
           while major_terms_count > 0 and j < words_length:
             words_next = words[j]
             words_current_list.append(words_next)
-            if words_next not in stopwords:
-              major_terms_count -= 1
-            j += 1
             
-          words_current_string = ' '.join(words_current_list)
-          if words_current_string in products:
-            products[words_current_string] += 1
-          else:
-            products[words_current_string] = 1
+            if words_next not in stopwords and len(words_next) > 1:
+              major_terms_count -= 1
+              words_current_string = ' '.join(words_current_list)
+              if words_current_string in products:
+                products[words_current_string] += 1
+              else:
+                products[words_current_string] = 1
+            j += 1
         
-        possible_terms = sorted([(value, key) for (key, value) in products.items()], reverse=True)
+        possible_terms = sorted([(value, key) for (key, value) in products.items()], reverse=True)[:10]
   return {"data": possible_terms}, 200
-
-
-  
-  # options_one = {}
-  # options_two = {}
-  # options_three = {}
-  
-  # for product in productsAll:
-  #   for key in product:
-  #     words = re.split('[^a-zA-Z+\'?s]', product[key])
-  #     words = list(filter(None, words))
-  #     for i in range(0, 3):
-  #       if (i == 0):
-  #         for word in words:
-  #           word_lower = word.lower()
-  #           if (word_lower.startswith(substring) and word_lower not in stopwords and len(word_lower) > 2):
-  #             if word_lower in options_one:
-  #               options_one[word_lower] += 1
-  #             else:
-  #               options_one[word_lower] = 1
-  #       elif i > 0 and (key == 'name' or key == 'description'):
-  #         for j, word in enumerate(words):
-  #           word_lower = word.lower()
-  #           if word_lower.startswith(substring) and (j < len(words) - i) and len(word_lower) > 2:
-  #             word_phrase_count = 1
-  #             word_phrase = [word_lower]
-  #             k = j + 1
-  #             while word_phrase_count < i + 1:
-  #               if k >= len(words) - i:
-  #                 start_idx = j + 1
-  #                 word_phrase += words[start_idx:]
-  #                 word_phrase_count += i
-  #               else:
-  #                 other_word_lower = words[k].lower()
-  #                 if other_word_lower in stopwords:
-  #                   word_phrase.append(other_word_lower)
-  #                   k += 1
-  #                 else:
-  #                   word_phrase.append(other_word_lower)
-  #                   k += 1
-  #                   word_phrase_count += 1
-  #             joined_word_phrase = ' '.join(word_phrase)
-  #             if i == 1:
-  #               if joined_word_phrase in options_two:
-  #                 options_two[joined_word_phrase] += 1
-  #               else:
-  #                 options_two[joined_word_phrase] = 1
-  #             elif i == 2:
-  #               if joined_word_phrase in options_three:
-  #                 options_three[joined_word_phrase] += 1
-  #               else:
-  #                 options_three[joined_word_phrase] = 1
-                    
-  # options_one_list = sorted(((value, key) for (key, value) in options_one.items()), reverse=True)
-  # options_two_list = sorted(((value, key) for (key, value) in options_two.items()), reverse=True)
-  # options_three_list = sorted(((value, key) for (key, value) in options_three.items()), reverse=True)
-  
-  # options_one_length = len(options_one_list)
-  # options_two_length = len(options_two_list)
-  # options_three_length = len(options_three_list)
-
-  # options = []
-  # if options_one_length + options_two_length + options_three_length >= 10:
-  #   idx = 0
-  #   while len(options) < 10:
-  #     for i in range(0, 3):
-  #       if len(options) < 10:
-  #         if i == 0 and idx < options_one_length:
-  #           options.append(options_one_list[idx])
-  #         if i == 1 and idx < options_two_length:
-  #           options.append(options_two_list[idx])
-  #         if i == 2 and idx < options_three_length: 
-  #           options.append(options_three_list[idx])
-  #     idx += 1
-  # else:
-  #   options = options_one_list + options_two_list + options_three_list
-  
-  # options_list = sorted(options, key=lambda x: len(x[1]))
-
-  # return {"data": options_list}, 200
 
 
 @product_routes.route("/search/<int:page>", methods=['POST'])

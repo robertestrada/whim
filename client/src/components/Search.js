@@ -69,6 +69,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
     });
     if (response.ok) {
       const responseJSON = await response.json();
+      console.log("DATA: ", responseJSON.data);
       if (responseJSON.data.length !== 0) {
         if (responseJSON.data[0][1].startsWith(input.toLowerCase())) {
           setSearchSuggestions(responseJSON.data);
