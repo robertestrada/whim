@@ -45,7 +45,7 @@ def get_product(id):
 def search_options():
   requested = request.get_json()
   terms_raw = requested['input'].lower()
-  terms_split = re.split('[^a-zA-Z+\'?s]', terms_raw)
+  terms_split = re.split('[^a-z0-9+\'?s]', terms_raw)
   terms_list = list(filter(None, terms_split))
   terms_list_last = terms_list[-1]
   terms_query_joined = '%'.join(terms_list)
@@ -57,14 +57,15 @@ def search_options():
   stopwords = {'shipping', 'shipped', 'express', 'delivery', 'ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
 
   products = {}
-  products_query = Product.query.filter(or_(Product.name.ilike(terms_query), Product.category.ilike(terms_query), Product.description.ilike(terms_query))).all()
+  products_query = Product.query.filter(or_(Product.name.ilike(terms_query), Product.category.like(terms_query), Product.description.ilike(terms_query))).all()
   products_dict = [product.search_dict() for product in products_query]
   
   # iterate through products
   for product in products_dict:
     # iterate through product fields
     for key in product:
-      words_unfiltered = re.split('[^a-zA-Z+\'?s]', product[key].lower())
+      words_uppercase = product[key].lower()
+      words_unfiltered = re.split('[^a-z0-9+\'?s]', words_uppercase)
       words = list(filter(None, words_unfiltered))
       
       words_length = len(words)
@@ -83,16 +84,14 @@ def search_options():
             words_next = words[j]
             words_current_list.append(words_next)
             
-            if words_next not in stopwords and len(words_next) > 1:
+            if words_next not in stopwords and len(words_next) > 1 and not words_next.isnumeric():
               major_terms_count -= 1
               words_current_string = ' '.join(words_current_list)
               if words_current_string in products:
                 products[words_current_string] += 1
               else:
                 products[words_current_string] = 1
-            
             j += 1
-            
             
         elif (i + terms_list_length <= words_length) and (words[i: i + terms_list_length - 1] == terms_list[:-1]) and words_last.startswith(terms_list_last):
           starting_major_terms_count = 0
@@ -107,7 +106,7 @@ def search_options():
             words_next = words[j]
             words_current_list.append(words_next)
             
-            if words_next not in stopwords and len(words_next) > 1:
+            if words_next not in stopwords and len(words_next) > 1 and not words_next.isnumeric():
               major_terms_count -= 1
               words_current_string = ' '.join(words_current_list)
               if words_current_string in products:
@@ -115,8 +114,7 @@ def search_options():
               else:
                 products[words_current_string] = 1
             j += 1
-        
-        possible_terms = sorted([(value, key) for (key, value) in products.items()], reverse=True)[:10]
+  possible_terms = sorted([(value, key) for (key, value) in products.items()], reverse=True)[:10]
   return {"data": possible_terms}, 200
 
 

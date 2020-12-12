@@ -115,11 +115,11 @@ class Product(db.Model):
   __tablename__ = 'products'
 
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(255), nullable=False)
-  description = db.Column(db.Text, nullable=False)
+  name = db.Column(db.String(255), nullable=False, index=True)
+  description = db.Column(db.String(4000), nullable=False, index=True)
   imgs_folder = db.Column(db.String(255), nullable=False)
   product_imgs_amt = db.Column(db.Integer, nullable=False)
-  category = db.Column(db.String(255), nullable=False)
+  category = db.Column(db.String(255), nullable=False, index=True)
   instant_buy = db.Column(db.Boolean, nullable=False)
   add_on = db.Column(db.Boolean, nullable=False)
   advert = db.Column(db.Boolean, nullable=False)
