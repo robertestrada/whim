@@ -9,7 +9,7 @@ const SideReferral = () => {
       <div className="side-referral__card-container">
         <div className="side-referral__card-wrapper">
           <div className="side-referral__card-img-wrapper">
-            <svg className="side-referral__card-svg" viewBox="0 0 168 159" xmlns="http://www.w3.org/2000/svg">
+            <svg className="side-referral__card-svg" viewBox="0 0 168 159">
               <defs>
                 <linearGradient x1="94.786%" y1="43.509%" x2="15.401%" y2="58.652%" id="a">
                   <stop stopColor="#FFF" stopOpacity="0" offset="0%"></stop>

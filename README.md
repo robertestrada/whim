@@ -2,7 +2,7 @@
 
 Whim, a Wish clone, is a social network for sharing products. Users can find, collect, and share products with their friends, enabling a connected shopping experience.
 
-[Live Demo: whim-app.herokuapp.com](http://whim-app.herokuapp.com/)
+[Live Demo: whim-app.herokuapp.com](https://whim-app.herokuapp.com/)
 
 ## Technologies
 * Backend: Flask/SQLAlchemy/Alembic/PostgreSQL

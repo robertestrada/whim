@@ -10,7 +10,7 @@ const FeedFilterButton = ({ searchTerm, handleButtonOpen }) => {
   return (
     <div className="filter__button-wrapper">
       <div className="filter__button-icon" onClick={() => handleButtonOpen()}>
-        <svg className="filter__button-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+        <svg className="filter__button-icon-svg" viewBox="0 0 40 40">
           <g fill="none" fillRule="evenodd">
             <circle cx="20" cy="20" r="20" fill="#2fb7ec" fillRule="nonzero"></circle>
             <g fill="#FFF" transform="translate(11 11.5)">
