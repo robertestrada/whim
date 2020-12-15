@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates, backref
+from sqlalchemy.sql import func
+from sqlalchemy.dialects import postgresql
 from statistics import mean
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -109,17 +111,22 @@ class Order(db.Model):
           "updated_at": self.updated_at,
           "date_paid": self.date_paid,
           }
+    
+
+def to_tsvector_ix(*columns):
+    s = " || ' ' || ".join(columns)
+    return func.to_tsvector('english', db.text(s))
 
 
 class Product(db.Model):
   __tablename__ = 'products'
 
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(255), nullable=False, index=True)
-  description = db.Column(db.String(4000), nullable=False, index=True)
+  name = db.Column(db.String(255), nullable=False)
+  description = db.Column(db.String(4000), nullable=False)
   imgs_folder = db.Column(db.String(255), nullable=False)
   product_imgs_amt = db.Column(db.Integer, nullable=False)
-  category = db.Column(db.String(255), nullable=False, index=True)
+  category = db.Column(db.String(255), nullable=False)
   instant_buy = db.Column(db.Boolean, nullable=False)
   add_on = db.Column(db.Boolean, nullable=False)
   advert = db.Column(db.Boolean, nullable=False)
@@ -135,6 +142,16 @@ class Product(db.Model):
   options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="joined")
   orders = db.relationship("Order", backref="product", cascade="all, delete-orphan", lazy="joined")
   ratings = db.relationship("Rating", backref="product", cascade="all, delete-orphan", lazy="joined")
+  
+  __ts_vector__ = to_tsvector_ix('name', 'description', 'category')
+  
+  __table_args__ = (
+    db.Index(
+      'ix_products_tsv',
+      __ts_vector__,
+      postgresql_using='gin'
+    ),
+  )
   
   def set_lowest_price(self):
     self.lowest_price = min([option.price_ending for option in self.options])

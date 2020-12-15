@@ -55,7 +55,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
           getOptions(searchTerm.term);
           setDelay(false);
         }
-      }, 200);
+      }, 500);
       return () => clearTimeout(timeout);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

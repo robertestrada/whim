@@ -1,8 +1,8 @@
-"""Add avg rating and lowest price to Product model
+"""Add gin index for product model
 
-Revision ID: 745070282a3d
+Revision ID: 53b8e30e5cbf
 Revises: 
-Create Date: 2020-11-27 12:46:12.613725
+Create Date: 2020-12-14 23:06:38.922272
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '745070282a3d'
+revision = '53b8e30e5cbf'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,7 +42,7 @@ def upgrade():
     op.create_table('products',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=255), nullable=False),
-    sa.Column('description', sa.Text(), nullable=False),
+    sa.Column('description', sa.String(length=4000), nullable=False),
     sa.Column('imgs_folder', sa.String(length=255), nullable=False),
     sa.Column('product_imgs_amt', sa.Integer(), nullable=False),
     sa.Column('category', sa.String(length=255), nullable=False),
