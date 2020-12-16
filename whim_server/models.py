@@ -111,11 +111,6 @@ class Order(db.Model):
           "updated_at": self.updated_at,
           "date_paid": self.date_paid,
           }
-    
-
-def to_tsvector_ix(*columns):
-    s = " || ' ' || ".join(columns)
-    return func.to_tsvector('english', db.text(s))
 
 
 class Product(db.Model):
@@ -142,16 +137,6 @@ class Product(db.Model):
   options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="joined")
   orders = db.relationship("Order", backref="product", cascade="all, delete-orphan", lazy="joined")
   ratings = db.relationship("Rating", backref="product", cascade="all, delete-orphan", lazy="joined")
-  
-  __ts_vector__ = to_tsvector_ix('name', 'description', 'category')
-  
-  __table_args__ = (
-    db.Index(
-      'ix_products_tsv',
-      __ts_vector__,
-      postgresql_using='gin'
-    ),
-  )
   
   def set_lowest_price(self):
     self.lowest_price = min([option.price_ending for option in self.options])
@@ -351,3 +336,22 @@ class Comment(db.Model):
         "created_at": self.created_at,
         "updated_at": self.updated_at,
     }
+    
+    
+class Keyword(db.Model):
+  __tablename__ = 'keywords'
+
+  id = db.Column(db.Integer, primary_key=True)
+  terms = db.Column(db.String(255), nullable=False)
+  score = db.Column(db.Integer, nullable=False)
+  created_at = db.Column(db.DateTime, default=datetime.now)
+  updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+  
+  __table_args__ = (
+    db.Index(
+      'ix_keywords',
+      'terms',
+      postgresql_using='gin',
+      postgresql_ops={'terms': 'gin_trgm_ops'}
+    ),
+  )

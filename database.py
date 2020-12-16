@@ -1,11 +1,13 @@
 from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from random import randrange, random, randint, shuffle, choice, sample
+from sqlalchemy import and_, or_, desc
+import re
 import string
 load_dotenv()
 
 from whim_server import app, db
-from whim_server.models import User, Merchant, Product, Option, Rating, Comment
+from whim_server.models import User, Merchant, Product, Option, Rating, Comment, Keyword
 
 with app.app_context():
   db.drop_all()
@@ -484,8 +486,7 @@ with app.app_context():
   shuffle(p_list)
   for p in p_list:
     db.session.add(p)
-    print(f'PRODUCT ID: {p.name}')
-    db.session.commit()
+  db.session.commit()
   
   #options
   o_list = []
@@ -714,3 +715,43 @@ with app.app_context():
       rated_product.set_average_rating(product_rating)
       db.session.commit()
       
+      
+
+  stopwords = {'shipping', 'shipped', 'express', 'delivery', 'ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
+  comments_list = []
+  az_nums = list(string.digits + string.ascii_lowercase)
+  print(f'******** AZ NUMS: {az_nums}')
+  products = {}
+  for char in az_nums:
+    char_f = f'%{char}%'
+    products_query = Product.query.filter(or_(Product.name.ilike(char_f), Product.category.like(char_f), Product.description.ilike(char_f))).all()
+    products_dict = [product.search_dict() for product in products_query]
+    for product in products_dict:
+      for key in product:
+        words_lowercase = product[key].lower()
+        words_unfiltered = re.split('[^a-z0-9+\'?s]', words_lowercase)
+        words = list(filter(None, words_unfiltered))
+        words_length = len(words)
+        for i in range(0, words_length):
+          words_current = words[i]
+          if words_current.startswith(char):
+            major_terms_count = 4
+            j = i
+            words_current_list = []
+            while major_terms_count > 0 and j < words_length:
+              words_next = words[j]
+              words_current_list.append(words_next)
+              if words_next not in stopwords:
+                major_terms_count -= 1
+                words_current_string = ' '.join(words_current_list)
+                if words_current_string in products:
+                  products[words_current_string] += 1
+                else:
+                  products[words_current_string] = 1
+              j += 1
+              
+  for phrase in products:
+    new_keyword = Keyword(terms=phrase, score=products[phrase])
+    db.session.add(new_keyword)
+  db.session.commit()
+
