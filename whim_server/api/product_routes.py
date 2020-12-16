@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from whim_server.models import db, User, Product, Option, Order, Merchant
 from sqlalchemy import and_, or_, desc
 from sqlalchemy.sql import func
+from sqlalchemy.dialects import postgresql
 import datetime
 import re
 
@@ -48,6 +49,10 @@ def search_options():
   terms_split = re.split('[^a-z0-9+\'?s]', terms_raw)
   terms_list = list(filter(None, terms_split))
   terms_list_last = terms_list[-1]
+  # terms_query = ' & '.join(terms_list)
+  # terms_pre = ' & '.join(terms_list)
+  # terms_query = f'{terms_pre}:*'
+  # print(f'******* terms_query: {terms_query}')
   terms_query_joined = '%'.join(terms_list)
   terms_query = "%{}%".format(terms_query_joined)
   
@@ -57,7 +62,9 @@ def search_options():
   stopwords = {'shipping', 'shipped', 'express', 'delivery', 'ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
 
   products = {}
-  products_query = Product.query.filter(or_(Product.name.ilike(terms_query), Product.category.like(terms_query), Product.description.ilike(terms_query))).all()
+  products_query = Product.query.filter(Product.keywords.ilike(terms_query)).all()
+  # products_query = Product.query.filter(or_(Product.name.ilike(terms_query), Product.category.like(terms_query), Product.description.ilike(terms_query))).all()
+  # products_query = Product.query.filter(Product.__ts_vector__.match(terms_query, postgresql_regconfig='english')).all()
   products_dict = [product.search_dict() for product in products_query]
   
   # iterate through products

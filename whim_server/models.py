@@ -1,5 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates, backref
+from sqlalchemy.sql import func
+from sqlalchemy.dialects import postgresql
 from statistics import mean
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -115,11 +117,11 @@ class Product(db.Model):
   __tablename__ = 'products'
 
   id = db.Column(db.Integer, primary_key=True)
-  name = db.Column(db.String(255), nullable=False, index=True)
-  description = db.Column(db.String(4000), nullable=False, index=True)
+  name = db.Column(db.String(255), nullable=False)
+  description = db.Column(db.String(4000), nullable=False)
   imgs_folder = db.Column(db.String(255), nullable=False)
   product_imgs_amt = db.Column(db.Integer, nullable=False)
-  category = db.Column(db.String(255), nullable=False, index=True)
+  category = db.Column(db.String(255), nullable=False)
   instant_buy = db.Column(db.Boolean, nullable=False)
   add_on = db.Column(db.Boolean, nullable=False)
   advert = db.Column(db.Boolean, nullable=False)
@@ -334,3 +336,22 @@ class Comment(db.Model):
         "created_at": self.created_at,
         "updated_at": self.updated_at,
     }
+    
+    
+class Keyword(db.Model):
+  __tablename__ = 'keywords'
+
+  id = db.Column(db.Integer, primary_key=True)
+  terms = db.Column(db.String(255), nullable=False)
+  score = db.Column(db.Integer, nullable=False)
+  created_at = db.Column(db.DateTime, default=datetime.now)
+  updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+  
+  __table_args__ = (
+    db.Index(
+      'ix_keywords',
+      'terms',
+      postgresql_using='gin',
+      postgresql_ops={'terms': 'gin_trgm_ops'}
+    ),
+  )
