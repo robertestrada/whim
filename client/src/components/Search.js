@@ -4,6 +4,7 @@ import '../styles/search.css';
 
 const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, lastSearchTerm, setLastSearchTerm }) => {
   const [delay, setDelay] = useState(false);
+  const [loadedSuggestions, setLoadedSuggestions] = useState(null);
   const [autoInput, setAutoInput] = useState(null);
   const [searchSuggestions, setSearchSuggestions] = useState(null);
   const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
@@ -21,6 +22,21 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
     setShowSearchSuggestions(false);
     setAutoInput(null);
   }
+
+  const loadOptions = async () => {
+    const response = await fetch(`${baseUrl}/product/search/options/load`);
+    if (response.ok) {
+      const responseJSON = await response.json();
+      console.log("DATA: ", responseJSON.data);
+      if (responseJSON.data){
+        setLoadedSuggestions(responseJSON.data);
+      }
+    }
+  };
+
+  useEffect(() => {
+    loadOptions();
+  }, []);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOffSearchWrapper);
@@ -46,16 +62,30 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
   useEffect(() => {
     if(!delay){
       if (searchTerm.term){
-        getOptions(searchTerm.term);
-        setDelay(true);
+        if (searchTerm.term.length === 1){
+          setSearchSuggestions(loadedSuggestions[searchTerm.term]);
+          setAutoInput(loadedSuggestions[searchTerm.term][0][1]);
+          setShowSearchSuggestions(true);
+          setDelay(true);
+        } else if (searchTerm.term.length > 1){
+          getOptions(searchTerm.term);
+          setDelay(true);
+        }
       }
     } else {
       const timeout = setTimeout(() => {
         if (searchTerm.term){
-          getOptions(searchTerm.term);
-          setDelay(false);
+          if (searchTerm.term.length === 1) {
+            setSearchSuggestions(loadedSuggestions[searchTerm.term]);
+            setAutoInput(loadedSuggestions[searchTerm.term][0][1]);
+            setShowSearchSuggestions(true);
+            setDelay(false);
+          } else if (searchTerm.term.length > 1) {
+            getOptions(searchTerm.term);
+            setDelay(false);
+          }
         }
-      }, 500);
+      }, 250);
       return () => clearTimeout(timeout);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -198,6 +228,9 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
     setShowSearchSuggestions(true);
   };
 
+  if (loadedSuggestions){
+    console.log("loadedSuggestions: ", loadedSuggestions);
+  }
 
   return (
     <div className="search__wrapper" ref={nodeSearchWrapper}>
