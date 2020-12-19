@@ -18,10 +18,10 @@ const DashBoard = () => {
     const [viewSwitchHold, setViewSwitchHold] = useState(null);
     const [viewSwitch, setViewSwitch] = useState(null);
     const [itemIdHold, setItemIdHold] = useState(null);
-    const [searchTerm, setSearchTerm] = useState({'term': '', 'rating': -1, 'price': -1});
+    const [searchTerm, setSearchTerm] = useState('');
     const [tagTerm, setTagTerm] = useState(null);
-    const [lastSearchTerm, setLastSearchTerm] = useState('');
-    const [submittedSearchFilters, setSubmittedSearchFilters] = useState({ "filters": null, "open": true });
+    const [lastSearchTerm, setLastSearchTerm] = useState({ 'term': '', 'rating': -1, 'price': -1 });
+    const [submittedSearchFilters, setSubmittedSearchFilters] = useState(null);
     const [allowSearch, setAllowSearch] = useState(false);
     const initialPageData = { "page": 1, "loadMore": false, "tab": "popular" };
     const [pageData, setPageData] = useState(initialPageData);

@@ -2,17 +2,17 @@ import React from 'react';
 import '../styles/feedFilter.css';
 
 
-const FeedFilterRating = ({ idx, setPageData, searchTerm, setSearchTerm }) => {
+const FeedFilterRating = ({ idx, setPageData, lastSearchTerm, setLastSearchTerm }) => {
 
   const handleRadioClick = () => {
     setPageData({ "page": 1, "loadMore": false, "tab": "search" });
-    setSearchTerm({ ...searchTerm, 'rating': idx });
+    setLastSearchTerm({ ...lastSearchTerm, 'rating': idx });
   };
 
   return (
     <div key={idx} className="filter__rating-option" onClick={() => handleRadioClick()}>
-      <div className={ searchTerm.rating === idx ? "filter__rating-radio radio-selected" : "filter__rating-radio" }>
-        <div className={ searchTerm.rating === idx ? "filter__rating-dot dot-selected" : "filter__rating-dot" }></div>
+      <div className={ lastSearchTerm.rating === idx ? "filter__rating-radio radio-selected" : "filter__rating-radio" }>
+        <div className={ lastSearchTerm.rating === idx ? "filter__rating-dot dot-selected" : "filter__rating-dot" }></div>
       </div>
       <div className="filter__stars-wrapper">
         { [...Array(idx)].map((star, sdx) => {

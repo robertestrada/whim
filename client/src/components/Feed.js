@@ -9,7 +9,7 @@ import FeedTabs from './FeedTabs';
 import CategoryPanel from './CategoryPanel';
 import FeedFilter from './FeedFilter';
 
-const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setSearchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
+const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
   const { promiseInProgress } = usePromiseTracker();
   const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,13 +40,13 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
         result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(searchTerm),
+          body: JSON.stringify(lastSearchTerm),
         }));
       } else {
         result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ "term": tagTerm, 'rating': searchTerm.rating, 'price': searchTerm.price }),
+          body: JSON.stringify({ "term": tagTerm, 'rating': lastSearchTerm.rating, 'price': lastSearchTerm.price }),
         }));
       }
     } else {
@@ -54,6 +54,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
     }
     if (result.ok) {
       const resultJSON = await result.json();
+      console.log(resultJSON.data);
       if (pageData.loadMore) {
         setProductsData({ "products": [...productsData.products, ...resultJSON.data], "moreData": resultJSON.more_data });
       }
@@ -81,12 +82,12 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   useEffect(() => {
     if (pageData.tab !== "search"){
       setResultsForSearchTerm(null);
-      setLastSearchTerm('');
+      setLastSearchTerm({ ...lastSearchTerm, 'rating': -1, 'price': -1 });
       setTagTerm(null);
     } else if (pageData.tab === "search" && tagTerm !== null){
       setResultsForSearchTerm(tagTerm);
     } else if (pageData.tab === "search"){
-      setResultsForSearchTerm(searchTerm.term.trim());
+      setResultsForSearchTerm(lastSearchTerm.term.trim());
     }
     setPanelType('feed');
     setAllowScroll(true);
@@ -98,7 +99,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
     if (allowSearch){
       setLoading(true);
       setAllowSearch(false);
-      setResultsForSearchTerm(searchTerm.term.trim());
+      setResultsForSearchTerm(lastSearchTerm.term.trim());
       setPanelType('feed');
       setAllowScroll(true);
       fetchData();
@@ -114,9 +115,13 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   }, [pageData.page]);
 
   useEffect(() => {
-    if (tagTerm !== null && tagTerm !== lastSearchTerm) {
-      setLastSearchTerm(tagTerm);
+    if (tagTerm !== null) {
       setResultsForSearchTerm(tagTerm);
+      setFilterLoading(true);
+      setPageData({ "page": 1, "loadMore": false, "tab": "search" });
+      fetchData();
+    } else {
+      setResultsForSearchTerm(lastSearchTerm.term);
       setFilterLoading(true);
       setPageData({ "page": 1, "loadMore": false, "tab": "search" });
       fetchData();
@@ -125,24 +130,26 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   }, [tagTerm]);
 
   useEffect(() => {
-    if (searchTerm.rating !== -1 && searchTerm.term !== ''){
+    if (lastSearchTerm.rating !== -1 && lastSearchTerm.term !== ''){
       setFilterLoading(true);
       fetchData();
-    } else if (searchTerm.rating === -1 && searchTerm.term !== ''){
+    } else if (lastSearchTerm.rating === -1 && lastSearchTerm.term !== ''){
       setFilterLoading(true);
       fetchData();
     }
-  }, [searchTerm.rating]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastSearchTerm.rating]);
 
   useEffect(() => {
-    if (searchTerm.price !== -1 && searchTerm.term !== '') {
+    if (lastSearchTerm.price !== -1 && lastSearchTerm.term !== '') {
       setFilterLoading(true);
       fetchData();
-    } else if (searchTerm.price === -1 && searchTerm.term !== '') {
+    } else if (lastSearchTerm.price === -1 && lastSearchTerm.term !== '') {
       setFilterLoading(true);
       fetchData();
     }
-  }, [searchTerm.price]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastSearchTerm.price]);
 
   useEffect(() => {
     
@@ -159,28 +166,30 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   }, [tagTerm]);
 
   useLayoutEffect(() => {
-    if (searchTerm.rating !== -1) {
+    if (lastSearchTerm.rating !== -1) {
       ref.current.scrollTop = 0;
-    } else if (searchTerm.rating === -1 && (searchTerm.term !== '' || tagTerm !== null)){
+    } else if (lastSearchTerm.rating === -1 && (lastSearchTerm.term !== '' || tagTerm !== null)){
       ref.current.scrollTop = 0;
     }
-  }, [searchTerm.rating]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastSearchTerm.rating]);
 
   useLayoutEffect(() => {
-    if (searchTerm.price !== -1) {
+    if (lastSearchTerm.price !== -1) {
       ref.current.scrollTop = 0;
-    } else if (searchTerm.price === -1 && (searchTerm.term !== '' || tagTerm !== null)) {
+    } else if (lastSearchTerm.price === -1 && (lastSearchTerm.term !== '' || tagTerm !== null)){
       ref.current.scrollTop = 0;
     }
-  }, [searchTerm.price]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastSearchTerm.price]);
 
   const handleScroll = (e) => {
     const target = e.target
-    if (allowScroll && ((target.scrollHeight - target.scrollTop - (target.scrollTop / 2) <= target.clientHeight) && productsData.moreData)) {
+    if (allowScroll && ((target.scrollHeight - target.scrollTop - (target.scrollTop / 2) <= target.clientHeight) && productsData.moreData)){
       setAllowScroll(false);
       setPageData({...pageData, "page": pageData.page + 1, "loadMore": true});
     }
-    else if (target.scrollHeight - target.scrollTop === target.clientHeight && !productsData.moreData) {
+    else if (target.scrollHeight - target.scrollTop === target.clientHeight && !productsData.moreData){
       setAllowScroll(false);
       setPageData({ ...pageData, "loadMore": false });
     }
@@ -218,7 +227,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
                 </div>
               : <div className="feed__grid-wrapper">
                   { resultsForSearchTerm
-                  ? <FeedFilter setPageData={setPageData} searchTerm={searchTerm} setSearchTerm={setSearchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
+                  ? <FeedFilter setPageData={setPageData} fetchData={fetchData} setResultsForSearchTerm={setResultsForSearchTerm} setFilterLoading={setFilterLoading} lastSearchTerm={lastSearchTerm} setLastSearchTerm={setLastSearchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
                     : null
                   }
                   { categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
