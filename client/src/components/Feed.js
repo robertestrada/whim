@@ -82,7 +82,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   useEffect(() => {
     if (pageData.tab !== "search"){
       setResultsForSearchTerm(null);
-      setLastSearchTerm({ ...lastSearchTerm, 'rating': -1, 'price': -1 });
+      setLastSearchTerm({ 'term': '', 'rating': -1, 'price': -1 });
       setTagTerm(null);
     } else if (pageData.tab === "search" && tagTerm !== null){
       setResultsForSearchTerm(tagTerm);
@@ -227,7 +227,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
                 </div>
               : <div className="feed__grid-wrapper">
                   { resultsForSearchTerm
-                  ? <FeedFilter setPageData={setPageData} fetchData={fetchData} setResultsForSearchTerm={setResultsForSearchTerm} setFilterLoading={setFilterLoading} lastSearchTerm={lastSearchTerm} setLastSearchTerm={setLastSearchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
+                  ? <FeedFilter setPageData={setPageData} lastSearchTerm={lastSearchTerm} setLastSearchTerm={setLastSearchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
                     : null
                   }
                   { categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
