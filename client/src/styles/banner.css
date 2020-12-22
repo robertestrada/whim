@@ -1,8 +1,9 @@
 .banner__item-wrapper {
   position: fixed;
   right: 250px;
-  top: 52px;
+  top: 118px;
   width: 466px;
+  pointer-events: none;
 }
 
 .banner__item-container {

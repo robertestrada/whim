@@ -230,7 +230,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
     <div className="search__wrapper" ref={nodeSearchWrapper}>
       <div className="search__bar">
         <div className="search__input-wrapper">
-          <div className="search__icon-wrapper">
+          <div className="search__icon-wrapper" onClick={handleSearchSubmit}>
             <div className="search__svg-wrapper">
               <svg viewBox="0 0 24 24">
                 <g fill="none" fillRule="evenodd">
