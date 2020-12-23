@@ -1,6 +1,6 @@
 .dashboard {
   display: flex;
-  
+  height: 100%;
   flex-direction: column;
   padding-left: 115px;
   padding-right: 250px;

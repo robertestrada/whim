@@ -10,16 +10,6 @@ body {
   align-items: center;
 }
 
-.feed__logo-button {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 150px;
-  height: 50px;
-  cursor: pointer;
-  z-index: 5;
-}
-
 .feed__tabs {
   display: flex;
   position: fixed;
@@ -103,7 +93,10 @@ body {
 
 .feed__scroll-wrapper {
   display: flex;
-  width: 100%;
+  /* width: 100vw; */
+  min-height: 0px;
+  flex: 1 1 auto;
+  /* margin-top: 48px; */
   background-color: rgb(248, 250, 251);
   transition: background-color 0.5s ease;
 }

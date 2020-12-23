@@ -5,7 +5,7 @@ import '../styles/navBar.css';
 import Search from './Search';
 import * as AuthActions from '../actions/authentication';
 
-const NavBar = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, panelType, setPanelType, lastSearchTerm, setLastSearchTerm }) => {
+const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, panelType, setPanelType, lastSearchTerm, setLastSearchTerm }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const profilePicUrl = useSelector((state) => state.authentication.user.pic_url);
@@ -20,8 +20,8 @@ const NavBar = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
 
   return (
     <div className="navbar">
-      <div className="navbar__logo-wrapper">
-        <Link to="/"><img className="navbar__logo" src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg" alt="" /></Link>
+      <div className="navbar__logo-wrapper" onClick={() => handleTabChange('popular')}>
+        <img className="navbar__logo" src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg" alt="" />
       </div>
       <div className={panelType === 'feed' ? "navbar__options" : "navbar__options navbar-hidden"}>
         <Search setTagTerm={setTagTerm} setSubmittedSearchFilters={setSubmittedSearchFilters} setPageData={setPageData} setViewSwitch={setViewSwitch} setAllowSearch={setAllowSearch} searchTerm={searchTerm} setSearchTerm={setSearchTerm} lastSearchTerm={lastSearchTerm} setLastSearchTerm={setLastSearchTerm}/>

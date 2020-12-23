@@ -3,7 +3,6 @@ import '../styles/feed.css';
 
 
 const FeedTabs = ({ pageData, handleTabChange, setCatShow, handleCategoryClick }) => {
-
   return (
       <div className="feed__tabs">
         <div className="feed__top-features">Top Features</div>
