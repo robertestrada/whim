@@ -10,7 +10,7 @@ const Modal = ({ modalType, setModalType, modalData: { productId, showModal }, m
 
   return (
     <div className={showModal ? "modal show" : "modal"}>
-      { modalType === 'modalType'
+      { modalType === 'checkedOut'
         ? <ModalCheckedOut setModalType={setModalType} modalChange={modalChange}/>
         : modalType === 'product'
           ? <ModalProduct setModalType={setModalType} productId={productId} modalChange={modalChange}/>

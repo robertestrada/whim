@@ -4,7 +4,8 @@ import { loadCart, removeCartItem } from '../actions/cart';
 import NavBar from './NavBar';
 import Feed from './Feed';
 import SideBanner from './SideBanner';
-import Banner from './Banner';
+import FeedTabs from './FeedTabs';
+import CategoryPanel from './CategoryPanel';
 import Modal from './Modal';
 import '../styles/dashboard.css';
 
@@ -25,6 +26,7 @@ const DashBoard = () => {
     const [allowSearch, setAllowSearch] = useState(false);
     const initialPageData = { "page": 1, "loadMore": false, "tab": "popular" };
     const [pageData, setPageData] = useState(initialPageData);
+    const [catShow, setCatShow] = useState(false);
 
     useEffect(() => {
         if (currentUser){
@@ -82,6 +84,14 @@ const DashBoard = () => {
         setModalType('hidden');
     }
 
+    const handleCategoryClick = () => {
+        if (catShow) {
+            setCatShow(false);
+        } else {
+            setCatShow(true);
+        }
+    }
+
     if (!currentUser){
         return null
     }
@@ -104,7 +114,10 @@ const DashBoard = () => {
                 setLastSearchTerm={setLastSearchTerm}
                 setTagTerm={setTagTerm}
             />
+            <FeedTabs pageData={pageData} handleTabChange={handleTabChange} setCatShow={setCatShow} handleCategoryClick={handleCategoryClick} />
+            <CategoryPanel catShow={catShow} mouseEnter={() => setCatShow(true)} mouseLeave={() => setCatShow(false)} categoryFetch={handleTabChange} />
             <Feed 
+                catShow={catShow}
                 setModalType={setModalType} 
                 panelType={panelType} 
                 setPanelType={setPanelType} 
@@ -129,7 +142,7 @@ const DashBoard = () => {
                 setTagTerm={setTagTerm}
             />
             {panelType === 'feed' ? <SideBanner setPanelType={setPanelType}/> : null }
-            <Banner setPanelType={setPanelType}/>
+            
             <Modal 
                 modalType={modalType} 
                 setModalType={setModalType} 

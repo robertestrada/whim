@@ -5,17 +5,20 @@ import { baseUrl } from '../config';
 import '../styles/feed.css';
 import Product from './Product';
 import Cart from './Cart';
-import FeedTabs from './FeedTabs';
-import CategoryPanel from './CategoryPanel';
 import FeedFilter from './FeedFilter';
+import Banner from './Banner';
 
-const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, pageData, setPageData, allowSearch, setAllowSearch, searchTerm, setModalType, panelType, setPanelType, modalChange, handleTabChange, viewSwitch, setViewSwitch, handleRemoveItem, itemHold, setItemHold }) => {
+const Feed = ({ catShow, tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, 
+                pageData, setPageData, allowSearch, setAllowSearch, setModalType, 
+                panelType, setPanelType, modalChange, viewSwitch, setViewSwitch, 
+                handleRemoveItem, itemHold, setItemHold 
+              }) => {
   const { promiseInProgress } = usePromiseTracker();
   const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filterLoading, setFilterLoading] = useState(false);
   const [productsData, setProductsData] = useState({"products": null, "moreData": false});
-  const [catShow, setCatShow] = useState(false);
+  
   const [resultsForSearchTerm, setResultsForSearchTerm] = useState(null);
   const categories = ["fashion", "gadgets", "home-decor", "household-supplies", "kitchen", "shoes", "tools", "watches"]
   const ref = useRef(null);
@@ -54,7 +57,6 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
     }
     if (result.ok) {
       const resultJSON = await result.json();
-      console.log(resultJSON.data);
       if (pageData.loadMore) {
         setProductsData({ "products": [...productsData.products, ...resultJSON.data], "moreData": resultJSON.more_data });
       }
@@ -118,12 +120,12 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
     if (tagTerm !== null) {
       setResultsForSearchTerm(tagTerm);
       setFilterLoading(true);
-      setPageData({ "page": 1, "loadMore": false, "tab": "search" });
+      setPageData({ ...pageData, "page": 1, "loadMore": false });
       fetchData();
     } else {
       setResultsForSearchTerm(lastSearchTerm.term);
       setFilterLoading(true);
-      setPageData({ "page": 1, "loadMore": false, "tab": "search" });
+      setPageData({ ...pageData, "page": 1, "loadMore": false });
       fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -195,13 +197,7 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
     }
   }
 
-  const handleCategoryClick = () => {
-    if(catShow){
-      setCatShow(false);
-    } else {
-      setCatShow(true);
-    }
-  }
+
   
   const LoadingIndicator = () => {
     return (
@@ -213,42 +209,49 @@ const Feed = ({ tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, set
   }
 
   return (
-    <div className="feed">
-      <div className="feed__logo-button" onClick={() => handleTabChange('popular')}/>
-      <FeedTabs pageData={pageData} handleTabChange={handleTabChange} setCatShow={setCatShow} handleCategoryClick={handleCategoryClick}/>
-      <CategoryPanel catShow={catShow} mouseEnter={() => setCatShow(true)} mouseLeave={() => setCatShow(false)} categoryFetch={handleTabChange} />
-      <div className={panelType === 'feed' ? "feed__scroll-wrapper" : "feed__scroll-wrapper cart-visible"}>
-        <div className="feed__scroll" ref={ref} onScroll={handleScroll}>
-          { panelType === 'cart'
-            ? <Cart setModalType={setModalType} setPanelType={setPanelType} modalChange={modalChange} handleRemoveItem={handleRemoveItem} itemHold={itemHold} setItemHold={setItemHold}/>
-            : loading || (((promiseInProgress && !productsData.products) && !pageData.loadMore) || (!productsData.products && !pageData.loadMore))
-              ? <div className="feed__loader" >
-                  <LoadingIndicator/>
-                </div>
-              : <div className="feed__grid-wrapper">
-                  { resultsForSearchTerm
-                  ? <FeedFilter setPageData={setPageData} lastSearchTerm={lastSearchTerm} setLastSearchTerm={setLastSearchTerm} tagTerm={tagTerm} setTagTerm={setTagTerm} submittedSearchFilters={submittedSearchFilters}/>
-                    : null
-                  }
-                  { categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
-                    ? <div className={pageData.tab === "search" ? "feed__results filters-show" : "feed__results"}>Results for "<span className={ pageData.tab !== "search" ? "feed__results-not-search" : "feed__results-search"}>{resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}</span>"</div>
-                    : <div className="feed__no-results">&nbsp;</div>
-                  }
-                  { filterLoading
-                    ? <div className="feed__filter-loader" >
-                        <LoadingIndicator />
-                      </div>
-                    : <div className={productsData.products.length > 0 ? "feed__grid" : "feed__no-grid-results"}>
-                        { productsData.products.length > 0
-                          ? productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange} setModalType={setModalType}/>)
-                          : "No Products Found."
-                        }
-                      </div>
-                  }
-                </div>
-          }
-        </div>
+    <div className={panelType === 'feed' ? "feed__scroll-wrapper" : "feed__scroll-wrapper cart-visible"}>
+      <div className="feed__scroll" ref={ref} onScroll={handleScroll}>
+        { panelType === 'cart'
+          ? <Cart setModalType={setModalType} setPanelType={setPanelType} modalChange={modalChange} handleRemoveItem={handleRemoveItem} itemHold={itemHold} setItemHold={setItemHold}/>
+          : loading || (((promiseInProgress && !productsData.products) && !pageData.loadMore) || (!productsData.products && !pageData.loadMore))
+            ? <div className="feed__loader" >
+                <LoadingIndicator/>
+              </div>
+            : <div className="feed__grid-wrapper">
+                { resultsForSearchTerm
+                  ? <FeedFilter 
+                    setPageData={setPageData} 
+                    lastSearchTerm={lastSearchTerm} 
+                    setLastSearchTerm={setLastSearchTerm} 
+                    tagTerm={tagTerm} 
+                    setTagTerm={setTagTerm} 
+                    submittedSearchFilters={submittedSearchFilters}/>
+                  : null
+                }
+                { categories.includes(pageData.tab.toLowerCase()) || resultsForSearchTerm
+                  ? <div className={pageData.tab === "search" ? "feed__results filters-show" : "feed__results"}>
+                      Results for "
+                      <span className={ pageData.tab !== "search" ? "feed__results-not-search" : "feed__results-search"}>
+                        {resultsForSearchTerm ? resultsForSearchTerm : pageData.tab}
+                      </span>"
+                    </div>
+                  : <div className="feed__no-results">&nbsp;</div>
+                }
+                { filterLoading
+                  ? <div className="feed__filter-loader" >
+                      <LoadingIndicator />
+                    </div>
+                  : <div className={productsData.products.length > 0 ? "feed__grid" : "feed__no-grid-results"}>
+                      { productsData.products.length > 0
+                        ? productsData.products.map((product, pdx) => <Product key={pdx} pdx={pdx} product={product} modalChange={modalChange} setModalType={setModalType}/>)
+                        : "No Products Found."
+                      }
+                    </div>
+                }
+              </div>
+        }
       </div>
+      <Banner setPanelType={setPanelType} />
     </div>
   );
 }
