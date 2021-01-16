@@ -46,10 +46,16 @@ def sign_in():
 
       email = request.json.get('email', None)
       password = request.json.get('password', None)
+      print('json email: ', email)
+      print('json pass: ', password)
       if not email or not password:
         return jsonify({"msg": "Please fill out all fields"}), 400
 
-      user = User.query.filter(User.email==email).one()
+      user = User.query.filter(User.email== email).one()
+      print(f'user.id: {user.id}')
+      print(f'user.password: {user.password}')
+      print(f'given password: {password}')
+      print(f'user check password: {user.check_password(password)}')
       if (user.check_password(password)):
         access_token = create_access_token(identity=email)
         return {"token": access_token, "user": user.to_dict()}, 200

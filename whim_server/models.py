@@ -46,17 +46,20 @@ class User(db.Model):
 
   @property
   def password(self):
-      return self.hashed_password
+    return self.hashed_password
 
   def set_password(self, password):
-      if not re.match('\d.*[A-Z]|[A-Z].*\d', password):
-          raise AssertionError('Password must contain 1 capital letter and 1 number')
-      if len(password) < 8 or len(password) > 50:
-          raise AssertionError('Password must be between 8 and 50 characters')
-      self.hashed_password = generate_password_hash(password)
+    if not re.match('\d.*[A-Z]|[A-Z].*\d', password):
+      raise AssertionError('Password must contain 1 capital letter and 1 number')
+    if len(password) < 8 or len(password) > 50:
+      raise AssertionError('Password must be between 8 and 50 characters')
+    self.hashed_password = generate_password_hash(password)
 
   def check_password(self, password):
-      return check_password_hash(self.password, password) 
+    print(f'model self.password: {self.password}')
+    print(f'model arg password: {password}')
+    print(f'check_password_hash: {check_password_hash(self.password, password)}')
+    return check_password_hash(self.password, password)
     
 
 class Merchant(db.Model):
