@@ -1,15 +1,9 @@
 .dashboard {
   display: flex;
+  box-sizing: border-box;
   height: 100%;
   flex-direction: column;
   padding-left: 115px;
   padding-right: 250px;
   padding-top: 52px;
-  /* position: sticky; */
-  /* align-items: flex-start; */
-  justify-content: center;
-  /* min-height: 100vh; */
-  /* overflow-x: hidden;  */
-  /* overflow-y: auto;  */
-  /* height: calc(100vh - 58px - 67px); */
 }
