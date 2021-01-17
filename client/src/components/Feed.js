@@ -24,7 +24,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
   
   
   const fetchData = async () => {
-    console.log("fetching", pageData);
     const fetchPoint = { 
                         "popular": `popular/${pageData.page}`, 
                         "express": `express/${pageData.page}`, 
@@ -56,7 +55,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
     } else {
       result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`));
     }
-    console.log("fetched", pageData);
     if (result.ok) {
       const resultJSON = await result.json();
       if (pageData.loadMore) {
@@ -121,7 +119,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
   }, [pageData.page]);
 
   useEffect(() => {
-    console.log("tagTerm effect: ", );
     if (tagTerm !== null) {
       setResultsForSearchTerm(tagTerm);
       setFilterLoading(true);
@@ -174,7 +171,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
     )
   }
 
-  console.log("products: ", productsData.products);
 
   return (
     <div className="feed__scroll-wrapper">

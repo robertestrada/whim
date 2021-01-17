@@ -14,6 +14,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
   const [searchFilters, setSearchFilters] = useState({ "filters": null, "open": true });
   const nodeSearchWrapper = useRef();
   const nodeSearchButton = useRef();
+  const inputRef = useRef();
 
   const handleClickOffSearchWrapper = e => {
     if (nodeSearchWrapper.current.contains(e.target)) {
@@ -173,9 +174,16 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
     }
   };
 
+  useEffect(() => {
+    if (searchTerm && listTarget === 0){
+      inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
+    }
+  }, [searchTerm]);
+
   const handleTabOrEnterPress = e => {
     if ((e.keyCode === 9 || (e.keyCode === 39 && e.target.selectionEnd === e.target.value.length && window.getSelection().toString() !== searchTerm)) && autoInput !== null && autoInput.startsWith(searchTerm)){
       e.preventDefault();
+      setListTarget(0);
       setSearchTerm(autoInput);
     }
     if (e.keyCode === 13) {
@@ -226,6 +234,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
     setShowSearchSuggestions(true);
   };
 
+
   return (
     <div className="search__wrapper" ref={nodeSearchWrapper}>
       <div className="search__bar">
@@ -240,22 +249,44 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
               </svg>
             </div>
           </div>
-          <form className="search__form">
-            <input value={searchTerm} onKeyDown={e => handleTabOrEnterPress(e)} onClick={handleInputClick} onChange={e => setSearchTerm(e.target.value.trimLeft())} maxLength="24" type="text" placeholder="What do you want to find?" className="search__input" />
-            <div className="search__text">
-              <div className="search__input-text" >{searchTerm}</div>
-              { searchTerm && autoInput ? <div className="search__input-suggestion" >{autoInput.slice(searchTerm.length)}</div> : null }
+          <div className="search__form-wrapper">
+            <div className="search__form">
+              <input 
+                value={searchTerm} 
+                onKeyDown={e => handleTabOrEnterPress(e)} 
+                onClick={handleInputClick} 
+                onChange={e => setSearchTerm(e.target.value.trimLeft())} 
+                maxLength="100" type="text" placeholder="What do you want to find?" className="search__input" 
+                ref={inputRef}
+                />
+              <div className="search__text">
+                <div className="search__input-text" >{searchTerm}</div>
+                { searchTerm && autoInput && searchTerm.length < 25
+                  ? <div className="search__input-suggestion" >{autoInput.slice(searchTerm.length)}</div> 
+                  : null 
+                }
+              </div>
             </div>
-          </form>
+          </div>
         </div>
         { searchTerm && showSearchSuggestions && searchSuggestions !== null
           ? <div className={searchSuggestions ? "search__suggestions" : "search__suggestions hide-suggestions"} >
-            {searchSuggestions.map((result, idx) => <div key={idx} onClick={() => handleSearchSuggestionSubmit(result[1])} onMouseEnter={() => handleSuggestionMouseEnter(result[1], idx)} className={ listTarget === idx ? "search__suggestion suggestion-highlight" : "search__suggestion"}>{result[1]}</div>)}
+            {searchSuggestions.map((result, idx) => <div key={idx} 
+                                                      onClick={() => handleSearchSuggestionSubmit(result[1])} 
+                                                      onMouseEnter={() => handleSuggestionMouseEnter(result[1], idx)} 
+                                                      className={ listTarget === idx 
+                                                                  ? "search__suggestion suggestion-highlight" 
+                                                                  : "search__suggestion"
+                                                                }>
+                                                      {result[1]}
+                                                    </div>)}
             </div>
           : null
         }
       </div>
-      <div ref={nodeSearchButton} className={submitError ? "search__button no-search-allowed" : 'search__button'} onClick={handleSearchSubmit}>Search</div>
+      <div ref={nodeSearchButton} 
+        className={submitError ? "search__button no-search-allowed" : 'search__button'} 
+        onClick={handleSearchSubmit}>Search</div>
     </div>
   );
 }
