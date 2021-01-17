@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loadCart, removeCartItem } from '../actions/cart';
 import NavBar from './NavBar';
@@ -55,35 +55,36 @@ const DashBoard = ({ panelType, setPanelType }) => {
         return () => {
             window.removeEventListener("scroll", handleScroll);
         }
+            // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scrollPosition]);
 
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-    // }, [pageData.tab]);
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pageData.tab]);
 
-    // useEffect(() => {
-    //     if (tagTerm !== null) {
-    //         window.scrollTo(0, 0);
-    //     }
-    // }, [tagTerm]);
+    useEffect(() => {
+        if (tagTerm !== null) {
+            window.scrollTo(0, 0);
+        }
+    }, [tagTerm]);
 
-    // useEffect(() => {
-    //     if (lastSearchTerm.rating !== -1) {
-    //         window.scrollTo(0, 0);
-    //     } else if (lastSearchTerm.rating === -1 && (lastSearchTerm.term !== '' || tagTerm !== null)) {
-    //         window.scrollTo(0, 0);
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [lastSearchTerm.rating]);
+    useEffect(() => {
+        if (lastSearchTerm.rating !== -1) {
+            window.scrollTo(0, 0);
+        } else if (lastSearchTerm.rating === -1 && (lastSearchTerm.term !== '' || tagTerm !== null)) {
+            window.scrollTo(0, 0);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lastSearchTerm.rating]);
 
-    // useEffect(() => {
-    //     if (lastSearchTerm.price !== -1) {
-    //         window.scrollTo(0, 0);
-    //     } else if (lastSearchTerm.price === -1 && (lastSearchTerm.term !== '' || tagTerm !== null)) {
-    //         window.scrollTo(0, 0);
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [lastSearchTerm.price]);
+    useEffect(() => {
+        if (lastSearchTerm.price !== -1) {
+            window.scrollTo(0, 0);
+        } else if (lastSearchTerm.price === -1 && (lastSearchTerm.term !== '' || tagTerm !== null)) {
+            window.scrollTo(0, 0);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lastSearchTerm.price]);
 
 
     const handleModalChange = ({ productId, showModal }) => {
@@ -99,7 +100,7 @@ const DashBoard = ({ panelType, setPanelType }) => {
     const handleRemoveItemNo = () => {
         setItemIdHold(null);
         setModalData({ "productId": null, "showModal": false });
-        setModalType('hidden'); 
+        setModalType('hidden');
     }
 
     const handleRemoveItemYes = () => {
@@ -150,10 +151,7 @@ const DashBoard = ({ panelType, setPanelType }) => {
 
 
     return (
-        <div className="dashboard" 
-            // ref={ref} 
-            // onScroll={handleScroll}
-        >
+        <div className="dashboard">
             <NavBar 
                 panelType={panelType} 
                 setPanelType={setPanelType} 
