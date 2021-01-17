@@ -16,7 +16,6 @@ const LogIn = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(email, password);
     await dispatch(AuthActions.removeAuth());
     const storeReady = await dispatch(AuthActions.signIn(email, password));
     if (storeReady) {

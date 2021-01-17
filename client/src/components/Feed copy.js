@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useLayoutEffect } from 'react';
 import { usePromiseTracker, trackPromise } from 'react-promise-tracker';
 import Loader from 'react-loader-spinner';
 import { baseUrl } from '../config';
@@ -8,20 +8,20 @@ import Cart from './Cart';
 import FeedFilter from './FeedFilter';
 import Banner from './Banner';
 
-const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, 
+const Feed = ({ catShow, tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, 
                 pageData, setPageData, allowSearch, setAllowSearch, setModalType, 
                 panelType, setPanelType, modalChange, viewSwitch, setViewSwitch, 
                 handleRemoveItem, itemHold, setItemHold 
               }) => {
   const { promiseInProgress } = usePromiseTracker();
-  
+  const [allowScroll, setAllowScroll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [filterLoading, setFilterLoading] = useState(false);
-
+  const [productsData, setProductsData] = useState({"products": null, "moreData": false});
   
   const [resultsForSearchTerm, setResultsForSearchTerm] = useState(null);
   const categories = ["fashion", "gadgets", "home-decor", "household-supplies", "kitchen", "shoes", "tools", "watches"]
-  
+  const ref = useRef(null);
   
   const fetchData = async () => {
     const fetchPoint = { 
@@ -157,7 +157,45 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
     
   }, [catShow]);
   
-  
+  useLayoutEffect(() => {
+    ref.current.scrollTop = 0;
+  }, [pageData.tab]);
+
+  useLayoutEffect(() => {
+    if (tagTerm !== null) {
+      ref.current.scrollTop = 0;
+    }
+  }, [tagTerm]);
+
+  useLayoutEffect(() => {
+    if (lastSearchTerm.rating !== -1) {
+      ref.current.scrollTop = 0;
+    } else if (lastSearchTerm.rating === -1 && (lastSearchTerm.term !== '' || tagTerm !== null)){
+      ref.current.scrollTop = 0;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastSearchTerm.rating]);
+
+  useLayoutEffect(() => {
+    if (lastSearchTerm.price !== -1) {
+      ref.current.scrollTop = 0;
+    } else if (lastSearchTerm.price === -1 && (lastSearchTerm.term !== '' || tagTerm !== null)){
+      ref.current.scrollTop = 0;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastSearchTerm.price]);
+
+  const handleScroll = (e) => {
+    const target = e.target
+    if (allowScroll && ((target.scrollHeight - target.scrollTop - (target.scrollTop / 2) <= target.clientHeight) && productsData.moreData)){
+      setAllowScroll(false);
+      setPageData({...pageData, "page": pageData.page + 1, "loadMore": true});
+    }
+    else if (target.scrollHeight - target.scrollTop === target.clientHeight && !productsData.moreData){
+      setAllowScroll(false);
+      setPageData({ ...pageData, "loadMore": false });
+    }
+  }
 
 
   
@@ -171,14 +209,15 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
   }
 
   return (
-    <div className="feed__scroll-wrapper">
+    <div className={panelType === 'feed' ? "feed__scroll-wrapper" : "feed__scroll-wrapper cart-visible"}>
+      <div className="feed__scroll" ref={ref} onScroll={handleScroll}>
         { panelType === 'cart'
           ? <Cart setModalType={setModalType} setPanelType={setPanelType} modalChange={modalChange} handleRemoveItem={handleRemoveItem} itemHold={itemHold} setItemHold={setItemHold}/>
           : loading || (((promiseInProgress && !productsData.products) && !pageData.loadMore) || (!productsData.products && !pageData.loadMore))
             ? <div className="feed__loader" >
                 <LoadingIndicator/>
               </div>
-            : <div className="feed__scroll">
+            : <div className="feed__grid-wrapper">
                 { resultsForSearchTerm
                   ? <FeedFilter 
                     setPageData={setPageData} 
@@ -211,6 +250,7 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
                 }
               </div>
         }
+      </div>
       <Banner setPanelType={setPanelType} />
     </div>
   );

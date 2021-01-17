@@ -56,9 +56,6 @@ class User(db.Model):
     self.hashed_password = generate_password_hash(password)
 
   def check_password(self, password):
-    print(f'model self.password: {self.password}')
-    print(f'model arg password: {password}')
-    print(f'check_password_hash: {check_password_hash(self.password, password)}')
     return check_password_hash(self.password, password)
     
 

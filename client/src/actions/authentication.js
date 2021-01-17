@@ -79,13 +79,11 @@ export const signUp = (firstName, lastName, email, password, picture = "") => as
 }
 
 export const signIn = (email, password) => async dispatch => {
-  console.log("email, password", email, password);
   const response = await fetch(`${baseUrl}/signin`, {
     method: 'post',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   });
-  console.log("response", response);
   if (response.ok) {
     const { token, user } = await response.json();
     window.localStorage.setItem(TOKEN_KEY, token);
