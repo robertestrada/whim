@@ -55,6 +55,7 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
     } else {
       result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`));
     }
+
     if (result.ok) {
       const resultJSON = await result.json();
       if (pageData.loadMore) {
@@ -121,7 +122,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
       setResultsForSearchTerm(tagTerm);
       setFilterLoading(true);
       setPageData({ ...pageData, "page": 1, "loadMore": false });
-      fetchData();
     } else {
       setResultsForSearchTerm(lastSearchTerm.term);
       setFilterLoading(true);
@@ -130,6 +130,13 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tagTerm]);
+
+  useEffect(() => {
+    if (filterLoading){
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterLoading]);
 
   useEffect(() => {
     if (lastSearchTerm.rating !== -1 && lastSearchTerm.term !== ''){
@@ -169,6 +176,7 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
       </div>
     )
   }
+
 
   return (
     <div className="feed__scroll-wrapper">
