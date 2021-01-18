@@ -55,6 +55,7 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
     } else {
       result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`));
     }
+
     if (result.ok) {
       const resultJSON = await result.json();
       if (pageData.loadMore) {
@@ -112,8 +113,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
   useEffect(() => {
     if (pageData.page > 1){
       fetchData();
-    } else if (tagTerm !== null){
-      fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageData.page]);
@@ -131,6 +130,13 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tagTerm]);
+
+  useEffect(() => {
+    if (filterLoading){
+      fetchData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterLoading]);
 
   useEffect(() => {
     if (lastSearchTerm.rating !== -1 && lastSearchTerm.term !== ''){

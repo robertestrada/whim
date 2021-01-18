@@ -92,7 +92,6 @@
   flex-shrink: 1;
   flex-basis: auto;
   min-height: 0px;
-  /* margin-top: 48px; */
 }
 
 .feed__scroll {
@@ -108,7 +107,7 @@
   display: grid;
   grid-gap: 20px;
   justify-content: center;
-  grid-template-columns: repeat(auto-fill, minmax(210px, max-content));
+  grid-template-columns: repeat(auto-fit, minmax(210px, max-content));
   grid-template-rows: repeat(auto-fill, 268px);
   width: calc(100vw - 400px);
   max-width: 900px;

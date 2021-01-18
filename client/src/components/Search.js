@@ -11,7 +11,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
   const [submitError, setSubmitError] = useState(false);
   const [listTarget, setListTarget] = useState(null);
   const [allowListNavigation, setAllowListNavigation] = useState(true);
-  const [searchFilters, setSearchFilters] = useState({ "filters": null, "open": true });
+  const [searchFilters, setSearchFilters] = useState(null);
   const nodeSearchWrapper = useRef();
   const nodeSearchButton = useRef();
   const inputRef = useRef();
@@ -60,6 +60,18 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
   }, []);
 
   useEffect(() => {
+    if (searchTerm && searchTerm.length > 1) {
+      setSubmitError(false);
+    }
+    
+    if (autoInput && !autoInput.startsWith(searchTerm)) {
+      setAutoInput(null);
+    }
+
+    if (searchTerm && listTarget === 0) {
+      inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
+    }
+
     if(!delay){
       if (searchTerm){
         if (searchTerm.length === 1){
@@ -86,6 +98,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
           }
         }
       }, 250);
+
       return () => clearTimeout(timeout);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,6 +110,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ input }),
     });
+
     if (response.ok) {
       const responseJSON = await response.json();
       if (responseJSON.data.length !== 0) {
@@ -113,32 +127,22 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
   };
 
   useEffect(() => {
-    if (searchSuggestions !== null && searchTerm.split(' ').length === 1 && searchTerm.split(' ')[0] !== searchSuggestions[0]) {
-      setSearchFilters(searchSuggestions);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getOptions]);
-
-  useEffect(() => {
-    if (searchTerm && searchTerm.length > 1){
-      setSubmitError(false);
-    }
-    if (autoInput && !autoInput.startsWith(searchTerm)){
-      setAutoInput(null);
-    }
-    if (searchSuggestions !== null){
-      for (let i = 0; i < searchSuggestions.length; i++){
-        const searchResult = searchSuggestions[i][1];
-        if (searchResult.startsWith(searchTerm) && searchTerm.split(' ').length > 1){
-          const newSearchSuggestions = searchSuggestions.filter(result => result[1].startsWith(searchTerm));
-          setSearchSuggestions(newSearchSuggestions);
-          setAutoInput(searchResult);
-          return;
-        }
+    if (searchSuggestions !== null && searchTerm.split(' ').length >= 1) {
+      if (searchFilters !== null){
+        console.log("searchFilters: ", searchFilters);
+        console.log("searchSuggestions: ", searchSuggestions);
+        const oldUniqueSearchFilters = searchFilters.filter(searchFilter => !searchSuggestions.includes(searchFilter));
+        console.log("result: ", [...searchSuggestions, ...oldUniqueSearchFilters.slice(0, -searchSuggestions.length)]);
+        setSearchFilters([...searchSuggestions, ...oldUniqueSearchFilters.slice(0, -searchSuggestions.length)]);
+      } else {
+        console.log("NO searchFilters: ", searchFilters);
+        console.log("searchSuggestions: ", searchSuggestions);
+        console.log("result: ", searchSuggestions);
+        setSearchFilters(searchSuggestions);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchSuggestions]);
 
   const handleSearchSubmit = e => {
     e.preventDefault();
@@ -148,6 +152,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
       if (searchTerm.length === 1){
         setSubmitError(true);
       } else if (searchTerm.length > 1 && lastSearchTerm.term !== searchTerm){
+        e.preventDefault();
         setTagTerm(null);
         setSubmittedSearchFilters(searchFilters);
         setLastSearchTerm({ "term": searchTerm, 'rating': -1, 'price': -1 });
@@ -160,6 +165,7 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
       }
     }
   };
+
 
   const handleSearchSuggestionSubmit = suggestion => {
     if (lastSearchTerm.term !== suggestion){
@@ -174,12 +180,6 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
     }
   };
 
-  useEffect(() => {
-    if (searchTerm && listTarget === 0){
-      inputRef.current.setSelectionRange(inputRef.current.value.length, inputRef.current.value.length);
-    }
-  }, [searchTerm]);
-
   const handleTabOrEnterPress = e => {
     if ((e.keyCode === 9 || (e.keyCode === 39 && e.target.selectionEnd === e.target.value.length && window.getSelection().toString() !== searchTerm)) && autoInput !== null && autoInput.startsWith(searchTerm)){
       e.preventDefault();
@@ -188,7 +188,11 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
     }
     if (e.keyCode === 13) {
       e.preventDefault();
-      handleSearchSubmit(e);
+      if (listTarget !== null){
+        handleSearchSuggestionSubmit(searchSuggestions[listTarget][1]);
+      } else {
+        handleSearchSubmit(e);
+      }
     }
     if (allowListNavigation && searchSuggestions && showSearchSuggestions && e.keyCode === 38 && listTarget !== null && listTarget > 0){
       e.preventDefault();
