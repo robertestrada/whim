@@ -70,15 +70,48 @@ def search_options():
 @product_routes.route("/search/<int:page>", methods=['POST'])
 def search_products(page):
   requested = request.get_json()
+  search_term = requested['term'].lower()
+  search_length = len(search_term)
+  
+  data = []
+  i = 0
+  while data == [] and i > -search_length:
+    substring_raw = ''
+    if i < 0:
+      substring_raw = search_term[:i]
+    else:
+      substring_raw = search_term
+    substring_split = substring_raw.split(' ')
+
+    if all(char == '' for char in substring_split):
+      return {"data": [], "more_data": False, "final_term": substring_raw}, 200
+
+    substring = '%'.join(substring_split)
+    requestedF = "%{}%".format(substring)
+    base_query = or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))
+
+    results = Product.query.filter(base_query).order_by(Product.created_at).paginate(page, 24, False)
+    more_data = results.has_next
+    products = results.items
+    data = [product.feed_dict() for product in products]
+    print(f'!!!! s_length: {-search_length}, i: {i}, TERM: {substring_raw}, DATA: {len(data)}')
+    i -= 1
+  
+  return {"data": data, "more_data": more_data, "final_term": substring_raw}, 200
+
+
+@product_routes.route("/search/filter/<int:page>", methods=['POST'])
+def filter_products(page):
+  requested = request.get_json()
   rating = requested['rating']
   price = requested['price']
   substring_raw = requested['term'].lower()
   substring_split = substring_raw.split(' ')
-  if all(char == '' for char in substring_split):
-    return {"data": [], "more_data": False}, 200
+  
   substring = '%'.join(substring_split)
   requestedF = "%{}%".format(substring)
   base_query = or_(Product.name.ilike(requestedF), Product.category.ilike(requestedF), Product.description.ilike(requestedF))
+  
   filter_queries = []
   if rating != -1:
     filter_queries.append(Product.avg_rating >= rating)
@@ -86,8 +119,11 @@ def search_products(page):
   if price != -1:
     low, high = price_ranges[price]
     filter_queries.append(and_(low < Product.lowest_price, Product.lowest_price <= high)) 
+  
   results = Product.query.filter(and_(*filter_queries, base_query)).order_by(Product.created_at).paginate(page, 24, False)
   more_data = results.has_next
   products = results.items
   data = [product.feed_dict() for product in products]
+  print(f'***** TERM: {substring_raw}, DATA: {len(data)}')
+  
   return {"data": data, "more_data": more_data}, 200

@@ -129,15 +129,9 @@ const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwi
   useEffect(() => {
     if (searchSuggestions !== null && searchTerm.split(' ').length >= 1) {
       if (searchFilters !== null){
-        console.log("searchFilters: ", searchFilters);
-        console.log("searchSuggestions: ", searchSuggestions);
         const oldUniqueSearchFilters = searchFilters.filter(searchFilter => !searchSuggestions.includes(searchFilter));
-        console.log("result: ", [...searchSuggestions, ...oldUniqueSearchFilters.slice(0, -searchSuggestions.length)]);
         setSearchFilters([...searchSuggestions, ...oldUniqueSearchFilters.slice(0, -searchSuggestions.length)]);
       } else {
-        console.log("NO searchFilters: ", searchFilters);
-        console.log("searchSuggestions: ", searchSuggestions);
-        console.log("result: ", searchSuggestions);
         setSearchFilters(searchSuggestions);
       }
     }
