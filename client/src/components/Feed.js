@@ -53,11 +53,15 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
       const resultJSON = await result.json();
       if (pageData.loadMore) {
         setProductsData({ "products": [...productsData.products, ...resultJSON.data], "moreData": resultJSON.more_data});
-        setLastFilterTerm({...lastFilterTerm, "term": resultJSON.final_term} )
+        if (pageData.tab === "search") {
+          setLastFilterTerm({...lastFilterTerm, "term": resultJSON.final_term} )
+        }
       }
       else if (!pageData.loadMore) {
         setProductsData({ "products": [...resultJSON.data], "moreData": resultJSON.more_data });
-        setLastFilterTerm({ ...lastFilterTerm, "term": resultJSON.final_term })
+        if (pageData.tab === "search") {
+          setLastFilterTerm({ ...lastFilterTerm, "term": resultJSON.final_term })
+        }
         setLoading(false);
         setFilterLoading(false);
       }
@@ -111,7 +115,7 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
     } else if (pageData.tab === "search" && tagTerm !== null){
       setResultsForSearchTerm(tagTerm);
     } else if (pageData.tab === "search"){
-      setResultsForSearchTerm(lastFilterTerm.term.trim());
+      setResultsForSearchTerm(lastSearchTerm.term.trim());
     }
     setPanelType('feed');
     setAllowScroll(true);
@@ -141,50 +145,31 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
   useEffect(() => {
     if (tagTerm !== null) {
       setResultsForSearchTerm(tagTerm);
-      setFilterLoading(true);
-      setPageData({ ...pageData, "page": 1, "loadMore": false });
     } else {
       setResultsForSearchTerm(lastSearchTerm.term);
-      setFilterLoading(true);
-      setPageData({ ...pageData, "page": 1, "loadMore": false });
-      fetchData();
+      // fetchFilterData();
     }
+    setFilterLoading(true);
+    setPageData({ ...pageData, "page": 1, "loadMore": false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tagTerm]);
 
   useEffect(() => {
     if (filterLoading){
-      fetchData();
+      fetchFilterData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterLoading]);
 
   useEffect(() => {
-    if (lastSearchTerm.rating !== -1 && lastSearchTerm.term !== ''){
-      setFilterLoading(true);
-      fetchData();
-    } else if (lastSearchTerm.rating === -1 && lastSearchTerm.term !== ''){
-      setFilterLoading(true);
-      fetchData();
-    }
+    setFilterLoading(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastSearchTerm.rating]);
+  }, [lastFilterTerm.rating]);
 
   useEffect(() => {
-    if (lastSearchTerm.price !== -1 && lastSearchTerm.term !== '') {
-      setFilterLoading(true);
-      fetchData();
-    } else if (lastSearchTerm.price === -1 && lastSearchTerm.term !== '') {
-      setFilterLoading(true);
-      fetchData();
-    }
+    setFilterLoading(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastSearchTerm.price]);
-
-
-  
-  
-
+  }, [lastFilterTerm.price]);
 
   
   const LoadingIndicator = () => {
@@ -195,7 +180,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
       </div>
     )
   }
-
 
   return (
     <div className="feed__scroll-wrapper">
@@ -210,7 +194,8 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
                   ? <FeedFilter 
                     setPageData={setPageData} 
                     lastSearchTerm={lastSearchTerm} 
-                    setLastSearchTerm={setLastSearchTerm} 
+                    lastFilterTerm={lastFilterTerm} 
+                    setLastFilterTerm={setLastFilterTerm} 
                     tagTerm={tagTerm} 
                     setTagTerm={setTagTerm} 
                     submittedSearchFilters={submittedSearchFilters}/>

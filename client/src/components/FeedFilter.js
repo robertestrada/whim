@@ -4,7 +4,10 @@ import FeedFilterChoices from './FeedFilterChoices';
 import '../styles/feedFilter.css';
 
 
-const FeedFilter = ({ setPageData, setLastSearchTerm, lastSearchTerm, tagTerm, setTagTerm, submittedSearchFilters }) => {
+const FeedFilter = ({ setPageData, lastSearchTerm, 
+                      lastFilterTerm, setLastFilterTerm,
+                      tagTerm, setTagTerm, submittedSearchFilters 
+                    }) => {
   const [filterSize, setFilterSize] = useState(0);
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [showFilterChoices, setShowFilterChoices] = useState(false);
@@ -24,7 +27,7 @@ const FeedFilter = ({ setPageData, setLastSearchTerm, lastSearchTerm, tagTerm, s
     let totalTagsSize = 0;
     for (let i = 0; i < submittedSearchFilters.length; i++){
       const tagSize = (submittedSearchFilters[i][1].length * 8) + 24 + 16;
-      if ((totalTagsSize + tagSize) < (windowWidth - 250 - 115 - 140) && lastSearchTerm.term !== submittedSearchFilters[i][1]){
+      if ((totalTagsSize + tagSize) < (windowWidth - 250 - 115 - 140) && lastFilterTerm.term !== submittedSearchFilters[i][1]){
         totalTagsSize += tagSize;
         filterCount += 1;
       }
@@ -59,13 +62,13 @@ const FeedFilter = ({ setPageData, setLastSearchTerm, lastSearchTerm, tagTerm, s
   };
 
   const handleClearAll = () => {
-    setLastSearchTerm({ ...lastSearchTerm, 'rating': -1, 'price': -1 });
+    setLastFilterTerm({ ...lastFilterTerm, 'rating': -1, 'price': -1 });
   };
 
 
   return (
     <div className="filter__wrapper">
-      { tagTerm !== null && tagTerm !== lastSearchTerm.term
+      { tagTerm !== null && tagTerm !== lastFilterTerm.term
         ? <div className="filter__tag-path">
             {`${lastSearchTerm.term.trim()} / `}
             <div onClick={() => handleTagExit()} className="filter__tag tag-selected">
@@ -81,7 +84,7 @@ const FeedFilter = ({ setPageData, setLastSearchTerm, lastSearchTerm, tagTerm, s
           </div>
         : <div className="filter__tags">
             { filterSize > 0 
-              ? submittedSearchFilters.map((filter, idx) => filterSize > idx && filter[1] !== lastSearchTerm.term.trim() 
+              ? submittedSearchFilters.map((filter, idx) => filterSize > idx && filter[1] !== lastFilterTerm.term.trim() 
                                                             ? <div key={idx} onClick={() => handleTagClick(idx)} className="filter__tag">
                                                                 {filter[1]}
                                                               </div> 
@@ -90,12 +93,12 @@ const FeedFilter = ({ setPageData, setLastSearchTerm, lastSearchTerm, tagTerm, s
             }
           </div>
       }
-      <FeedFilterButton lastSearchTerm={lastSearchTerm} handleButtonOpen={handleButtonOpen} />
+      <FeedFilterButton lastFilterTerm={lastFilterTerm} handleButtonOpen={handleButtonOpen} />
       { hiddenFilterChoices 
         ? <FeedFilterChoices 
           setPageData={setPageData} 
-          lastSearchTerm={lastSearchTerm} 
-          setLastSearchTerm={setLastSearchTerm} 
+          lastFilterTerm={lastFilterTerm} 
+          setLastFilterTerm={setLastFilterTerm} 
           showFilterChoices={showFilterChoices} 
           setShowFilterChoices={setShowFilterChoices} 
           handleButtonClose={handleButtonClose} 

@@ -2,11 +2,11 @@ import React from 'react';
 import '../styles/feedFilter.css';
 
 
-const FeedFilterRatingClear = ({ setPageData, lastSearchTerm, setLastSearchTerm }) => {
+const FeedFilterRatingClear = ({ setPageData, lastFilterTerm, setLastFilterTerm }) => {
 
   const handleClearRatingClick = () => {
     setPageData({ "page": 1, "loadMore": false, "tab": "search" });
-    setLastSearchTerm({ ...lastSearchTerm, 'rating': -1 });
+    setLastFilterTerm({ ...lastFilterTerm, 'rating': -1 });
   };
 
 
