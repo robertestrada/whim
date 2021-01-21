@@ -2,11 +2,11 @@ import React from 'react';
 import '../styles/feedFilter.css';
 
 
-const FeedFilterPriceClear = ({ setPageData, lastSearchTerm, setLastSearchTerm }) => {
+const FeedFilterPriceClear = ({ setPageData, lastFilterTerm, setLastFilterTerm }) => {
 
   const handleClearPriceClick = () => {
     setPageData({ "page": 1, "loadMore": false, "tab": "search" });
-    setLastSearchTerm({ ...lastSearchTerm, 'price': -1 });
+    setLastFilterTerm({ ...lastFilterTerm, 'price': -1 });
   };
 
 

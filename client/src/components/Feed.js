@@ -8,7 +8,9 @@ import Cart from './Cart';
 import FeedFilter from './FeedFilter';
 import Banner from './Banner';
 
-const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm, setTagTerm, submittedSearchFilters, lastSearchTerm, setLastSearchTerm, 
+const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTerm,
+                submittedSearchFilters, lastSearchTerm, setLastSearchTerm, 
+                lastFilterTerm, setLastFilterTerm,
                 pageData, setPageData, allowSearch, setAllowSearch, setModalType, 
                 panelType, setPanelType, modalChange, viewSwitch, setViewSwitch, 
                 handleRemoveItem, itemHold, setItemHold 
@@ -17,7 +19,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
   
   const [loading, setLoading] = useState(false);
   const [filterLoading, setFilterLoading] = useState(false);
-
   
   const [resultsForSearchTerm, setResultsForSearchTerm] = useState(null);
   const categories = ["fashion", "gadgets", "home-decor", "household-supplies", "kitchen", "shoes", "tools", "watches"]
@@ -39,22 +40,45 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
                       };
     let result;
     if (pageData.tab === "search"){
-      if (tagTerm === null){
-        result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(lastSearchTerm),
-        }));
-      } else {
-        result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ "term": tagTerm, 'rating': lastSearchTerm.rating, 'price': lastSearchTerm.price }),
-        }));
-      }
+      result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(lastSearchTerm),
+      }));
     } else {
       result = await trackPromise(fetch(`${baseUrl}/product/${fetchPoint[pageData.tab]}`));
     }
+
+    if (result.ok) {
+      const resultJSON = await result.json();
+      if (pageData.loadMore) {
+        setProductsData({ "products": [...productsData.products, ...resultJSON.data], "moreData": resultJSON.more_data});
+        if (pageData.tab === "search") {
+          setLastFilterTerm({...lastFilterTerm, "term": resultJSON.final_term} )
+        }
+      }
+      else if (!pageData.loadMore) {
+        setProductsData({ "products": [...resultJSON.data], "moreData": resultJSON.more_data });
+        if (pageData.tab === "search") {
+          setLastFilterTerm({ ...lastFilterTerm, "term": resultJSON.final_term })
+        }
+        setLoading(false);
+        setFilterLoading(false);
+      }
+      setAllowScroll(true);
+    }
+  };
+
+  const fetchFilterData = async () => {
+    let result;
+    const bodyTerm =  tagTerm === null 
+                      ? lastFilterTerm 
+                      : { "term": tagTerm, 'rating': lastFilterTerm.rating, 'price': lastFilterTerm.price };
+    result = await trackPromise(fetch(`${baseUrl}/product/search/filter/${pageData.page}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bodyTerm),
+    }));
 
     if (result.ok) {
       const resultJSON = await result.json();
@@ -85,7 +109,8 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
   useEffect(() => {
     if (pageData.tab !== "search"){
       setResultsForSearchTerm(null);
-      setLastSearchTerm({ 'term': '', 'rating': -1, 'price': -1 });
+      setLastSearchTerm({ 'term': '' });
+      setLastFilterTerm({ 'term': '', 'rating': -1, 'price': -1 });
       setTagTerm(null);
     } else if (pageData.tab === "search" && tagTerm !== null){
       setResultsForSearchTerm(tagTerm);
@@ -120,52 +145,31 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
   useEffect(() => {
     if (tagTerm !== null) {
       setResultsForSearchTerm(tagTerm);
-      setFilterLoading(true);
-      setPageData({ ...pageData, "page": 1, "loadMore": false });
     } else {
       setResultsForSearchTerm(lastSearchTerm.term);
-      setFilterLoading(true);
-      setPageData({ ...pageData, "page": 1, "loadMore": false });
-      fetchData();
+      // fetchFilterData();
     }
+    setFilterLoading(true);
+    setPageData({ ...pageData, "page": 1, "loadMore": false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tagTerm]);
 
   useEffect(() => {
     if (filterLoading){
-      fetchData();
+      fetchFilterData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filterLoading]);
 
   useEffect(() => {
-    if (lastSearchTerm.rating !== -1 && lastSearchTerm.term !== ''){
-      setFilterLoading(true);
-      fetchData();
-    } else if (lastSearchTerm.rating === -1 && lastSearchTerm.term !== ''){
-      setFilterLoading(true);
-      fetchData();
-    }
+    setFilterLoading(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastSearchTerm.rating]);
+  }, [lastFilterTerm.rating]);
 
   useEffect(() => {
-    if (lastSearchTerm.price !== -1 && lastSearchTerm.term !== '') {
-      setFilterLoading(true);
-      fetchData();
-    } else if (lastSearchTerm.price === -1 && lastSearchTerm.term !== '') {
-      setFilterLoading(true);
-      fetchData();
-    }
+    setFilterLoading(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lastSearchTerm.price]);
-
-  useEffect(() => {
-    
-  }, [catShow]);
-  
-  
-
+  }, [lastFilterTerm.price]);
 
   
   const LoadingIndicator = () => {
@@ -176,7 +180,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
       </div>
     )
   }
-
 
   return (
     <div className="feed__scroll-wrapper">
@@ -191,7 +194,8 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, catShow, tagTerm,
                   ? <FeedFilter 
                     setPageData={setPageData} 
                     lastSearchTerm={lastSearchTerm} 
-                    setLastSearchTerm={setLastSearchTerm} 
+                    lastFilterTerm={lastFilterTerm} 
+                    setLastFilterTerm={setLastFilterTerm} 
                     tagTerm={tagTerm} 
                     setTagTerm={setTagTerm} 
                     submittedSearchFilters={submittedSearchFilters}/>
