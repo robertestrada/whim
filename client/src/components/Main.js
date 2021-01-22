@@ -1,8 +1,8 @@
 import React, { useState, useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import * as AuthActions from '../actions/authentication';
-import LandingPage from './LandingPage.js';
-import DashBoard from './DashBoard.js';
+import LandingPage from './landingPage/LandingPage.js';
+import DashBoard from './dashboard/DashBoard.js';
 import '../styles/main.css';
 
 
