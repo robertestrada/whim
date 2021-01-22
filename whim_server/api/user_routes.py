@@ -25,6 +25,7 @@ def sign_up():
                 first_name=data['firstName'],
                 last_name=data['lastName'],
                 email=data['email'],
+                country='US',
                 hashed_password=hash,
                 pic_url=data['picture'],
                 )
@@ -69,6 +70,7 @@ def sign_up_google():
         first_name=data['firstName'],
         last_name=data['lastName'],
         email=data['email'],
+        country='US',
         hashed_password=hash,
         pic_url=data['picture'],
     )

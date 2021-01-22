@@ -75,7 +75,7 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
     const bodyTerm =  tagTerm === null 
                       ? lastFilterTerm 
                       : { "term": tagTerm, 'rating': lastFilterTerm.rating, 'price': lastFilterTerm.price, 'shippingSpeed': lastFilterTerm.shippingSpeed };
-    console.log("bodyTerm: ", bodyTerm);
+
     result = await trackPromise(fetch(`${baseUrl}/product/search/filter/${pageData.page}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
