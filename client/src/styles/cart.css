@@ -5,6 +5,7 @@
   box-sizing: border-box;
   /* height: 100vh; */
   margin-top: 128px;
+  width: 100%;
 }
 
 .cart__main-wrapper {
