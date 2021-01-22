@@ -15,6 +15,7 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
                 panelType, setPanelType, modalChange, viewSwitch, setViewSwitch, 
                 handleRemoveItem, itemHold, setItemHold 
               }) => {
+
   const { promiseInProgress } = usePromiseTracker();
   
   const [loading, setLoading] = useState(false);

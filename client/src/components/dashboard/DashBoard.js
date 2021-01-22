@@ -70,6 +70,12 @@ const DashBoard = ({ panelType, setPanelType }) => {
     }, [tagTerm]);
 
     useEffect(() => {
+        if (panelType === 'cart') {
+            window.scrollTo(0, 0);
+        }
+    }, [panelType]);
+
+    useEffect(() => {
         if (lastSearchTerm.rating !== -1) {
             window.scrollTo(0, 0);
         } else if (lastSearchTerm.rating === -1 && (lastSearchTerm.term !== '' || tagTerm !== null)) {

@@ -27,9 +27,6 @@ const Banner = ({ setPanelType }) => {
     };
   }, [recentCartItem, dispatch]);
 
-  console.log("cartItems: ", cartItems);
-  console.log("recentCartItem: ", recentCartItem);
-  // console.log("recentCartItem.product_data: ", recentCartItem.product_data);
 
   return (
     <div className="banner__item-wrapper">
