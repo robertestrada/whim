@@ -94,7 +94,6 @@ def search_products(page):
     more_data = results.has_next
     products = results.items
     data = [product.feed_dict() for product in products]
-    print(f'!!!! s_length: {-search_length}, i: {i}, TERM: {substring_raw}, DATA: {len(data)}')
     i -= 1
   
   return {"data": data, "more_data": more_data, "final_term": substring_raw}, 200
@@ -105,6 +104,7 @@ def filter_products(page):
   requested = request.get_json()
   rating = requested['rating']
   price = requested['price']
+  shipping = requested['shippingSpeed']
   substring_raw = requested['term'].lower()
   substring_split = substring_raw.split(' ')
   
@@ -118,12 +118,13 @@ def filter_products(page):
   price_ranges = [(0, 5), (5, 10), (10, 20), (20, 50), (50, 100), (100, 1000000)]
   if price != -1:
     low, high = price_ranges[price]
-    filter_queries.append(and_(low < Product.lowest_price, Product.lowest_price <= high)) 
+    filter_queries.append(and_(low < Product.lowest_price, Product.lowest_price <= high))
+  if shipping != -1:
+    filter_queries.append(Product.shipping_speed == shipping)
   
   results = Product.query.filter(and_(*filter_queries, base_query)).order_by(Product.created_at).paginate(page, 24, False)
   more_data = results.has_next
   products = results.items
   data = [product.feed_dict() for product in products]
-  print(f'***** TERM: {substring_raw}, DATA: {len(data)}')
   
   return {"data": data, "more_data": more_data}, 200

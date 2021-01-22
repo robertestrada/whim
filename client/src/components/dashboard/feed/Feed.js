@@ -74,7 +74,8 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
     let result;
     const bodyTerm =  tagTerm === null 
                       ? lastFilterTerm 
-                      : { "term": tagTerm, 'rating': lastFilterTerm.rating, 'price': lastFilterTerm.price };
+                      : { "term": tagTerm, 'rating': lastFilterTerm.rating, 'price': lastFilterTerm.price, 'shippingSpeed': lastFilterTerm.shippingSpeed };
+    console.log("bodyTerm: ", bodyTerm);
     result = await trackPromise(fetch(`${baseUrl}/product/search/filter/${pageData.page}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -111,7 +112,7 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
     if (pageData.tab !== "search"){
       setResultsForSearchTerm(null);
       setLastSearchTerm({ 'term': '' });
-      setLastFilterTerm({ 'term': '', 'rating': -1, 'price': -1 });
+      setLastFilterTerm({ 'term': '', 'rating': -1, 'price': -1, 'shippingSpeed': -1 });
       setTagTerm(null);
     } else if (pageData.tab === "search" && tagTerm !== null){
       setResultsForSearchTerm(tagTerm);
@@ -148,19 +149,11 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
       setResultsForSearchTerm(tagTerm);
     } else {
       setResultsForSearchTerm(lastSearchTerm.term);
-      // fetchFilterData();
     }
     setFilterLoading(true);
     setPageData({ ...pageData, "page": 1, "loadMore": false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tagTerm]);
-
-  useEffect(() => {
-    if (filterLoading){
-      fetchFilterData();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filterLoading]);
 
   useEffect(() => {
     setFilterLoading(true);
@@ -171,6 +164,18 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
     setFilterLoading(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastFilterTerm.price]);
+
+  useEffect(() => {
+    setFilterLoading(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lastFilterTerm.shippingSpeed]);
+
+  useEffect(() => {
+    if (filterLoading && pageData.tab === "search") {
+      fetchFilterData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterLoading]);
 
   
   const LoadingIndicator = () => {
