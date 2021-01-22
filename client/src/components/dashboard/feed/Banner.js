@@ -10,7 +10,7 @@ const Banner = ({ setPanelType }) => {
 
   const recentCartItem = cartItems.length > 0 ? cartItems.reduce((acc, item) => {
     if (acc.updated_at < item.updated_at){
-      return acc = item.updated_at
+      return item
     } else {
       return acc;
     }
@@ -26,7 +26,8 @@ const Banner = ({ setPanelType }) => {
       return () => clearTimeout(notifyTimer)
     };
   }, [recentCartItem, dispatch]);
-  
+
+
   return (
     <div className="banner__item-wrapper">
       { recentCartItem !== null

@@ -62,7 +62,7 @@ const FeedFilter = ({ setPageData, lastSearchTerm,
   };
 
   const handleClearAll = () => {
-    setLastFilterTerm({ ...lastFilterTerm, 'rating': -1, 'price': -1 });
+    setLastFilterTerm({ ...lastFilterTerm, 'rating': -1, 'price': -1, 'shippingSpeed': -1 });
   };
 
 

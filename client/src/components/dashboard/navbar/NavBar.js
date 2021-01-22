@@ -5,7 +5,11 @@ import '../../../styles/navBar.css';
 import Search from './Search';
 import * as AuthActions from '../../../actions/authentication';
 
-const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, panelType, setPanelType, lastSearchTerm, setLastSearchTerm }) => {
+const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters, 
+                  setPageData, setViewSwitch, setAllowSearch, searchTerm, 
+                  setSearchTerm, panelType, setPanelType, lastSearchTerm, setLastSearchTerm 
+                }) => {
+
   const dispatch = useDispatch();
   const history = useHistory();
   const profilePicUrl = useSelector((state) => state.authentication.user.pic_url);
@@ -16,7 +20,11 @@ const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters, setPag
     e.preventDefault();
     await dispatch(AuthActions.logout());
     history.push('/')
-  }
+  };
+
+  const handleCartClick = () => {
+    setPanelType('cart');
+  };
 
   return (
     <div className="navbar">
@@ -35,7 +43,7 @@ const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters, setPag
             />
           </button>
         </div>
-        <div className="navbar__cart-wrapper" onClick={() => setPanelType('cart')}>
+        <div className="navbar__cart-wrapper" onClick={handleCartClick}>
           <svg className="navbar__cart-svg" viewBox="0 0 21 17" >
             <g fill="none" fillRule="evenodd">
               <g transform="translate(.56 .52)" fill="#192a32">

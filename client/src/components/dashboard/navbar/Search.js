@@ -2,7 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { baseUrl } from '../../../config';
 import '../../../styles/search.css';
 
-const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwitch, setAllowSearch, searchTerm, setSearchTerm, lastSearchTerm, setLastSearchTerm }) => {
+const Search = ({ setTagTerm, setSubmittedSearchFilters, setPageData, setViewSwitch, 
+                  setAllowSearch, searchTerm, setSearchTerm, lastSearchTerm, setLastSearchTerm 
+                }) => {
+
   const [delay, setDelay] = useState(false);
   const [loadedSuggestions, setLoadedSuggestions] = useState(null);
   const [autoInput, setAutoInput] = useState(null);

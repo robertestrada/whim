@@ -22,7 +22,7 @@ const DashBoard = ({ panelType, setPanelType }) => {
     const [allowScroll, setAllowScroll] = useState(false);
     const [tagTerm, setTagTerm] = useState(null);
     const [lastSearchTerm, setLastSearchTerm] = useState({ 'term': '' });
-    const [lastFilterTerm, setLastFilterTerm] = useState({ 'term': '', 'rating': -1, 'price': -1 });
+    const [lastFilterTerm, setLastFilterTerm] = useState({ 'term': '', 'rating': -1, 'price': -1, 'shippingSpeed': -1 });
     const initialPageData = { "page": 1, "loadMore": false, "tab": "popular" };
     const [pageData, setPageData] = useState(initialPageData);
     const [productsData, setProductsData] = useState({ "products": null, "moreData": false });
@@ -68,6 +68,12 @@ const DashBoard = ({ panelType, setPanelType }) => {
             window.scrollTo(0, 0);
         }
     }, [tagTerm]);
+
+    useEffect(() => {
+        if (panelType === 'cart') {
+            window.scrollTo(0, 0);
+        }
+    }, [panelType]);
 
     useEffect(() => {
         if (lastSearchTerm.rating !== -1) {
