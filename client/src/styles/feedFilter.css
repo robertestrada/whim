@@ -10,8 +10,6 @@
   z-index: 2;
   background-color: rgb(248, 250, 251);
   padding: 12px 0px;
-  /* overflow: hidden; */
-  /* max-width: 900px; */
 }
 
 .filter__tags {
