@@ -10,10 +10,9 @@ import Modal from './modal/Modal';
 import '../../styles/dashboard.css';
 
 
-const DashBoard = ({ panelType, setPanelType }) => {
+const DashBoard = ({ panelType, setPanelType, modalData, setModalData }) => {
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state.authentication.user);
-    const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
     const [modalType, setModalType] = useState('hidden');
     const [viewSwitchHold, setViewSwitchHold] = useState(null);
     const [viewSwitch, setViewSwitch] = useState(null);

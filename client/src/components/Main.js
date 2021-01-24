@@ -10,6 +10,7 @@ const Main = () => {
   const dispatch = useDispatch();
   const needSignIn = useSelector(state => !state.authentication.token);
   const [panelType, setPanelType] = useState('feed');
+  const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
 
   useEffect(() => {
     const getToken = async () => {
@@ -27,6 +28,14 @@ const Main = () => {
     }
   }, [panelType]);
 
+  useEffect(() => {
+    if (modalData.showModal) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+  }, [modalData.showModal]);
+
   return (
     <div>
       {needSignIn 
@@ -34,6 +43,8 @@ const Main = () => {
         : <DashBoard 
             panelType={panelType}
             setPanelType={setPanelType}
+            modalData={modalData}
+            setModalData={setModalData}
           />
       }
     </div>
