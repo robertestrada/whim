@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import '../../../styles/navBar.css';
 import Search from './Search';
-import * as AuthActions from '../../../actions/authentication';
+import ProfileDropdown from './ProfileDropdown';
 
 const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters, 
                   setPageData, setViewSwitch, setAllowSearch, searchTerm, 
@@ -15,17 +15,22 @@ const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters,
   const profilePicUrl = useSelector((state) => state.authentication.user.pic_url);
   const cartItems = useSelector(state => Object.values(state.cart.items));
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [showProfileDrop, setShowProfileDrop] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleProfileReveal = async (e) => {
     e.preventDefault();
-    await dispatch(AuthActions.logout());
-    history.push('/')
+    if (showProfileDrop){
+      setShowProfileDrop(false);
+    } else {
+      setShowProfileDrop(true);
+    }
   };
 
   const handleCartClick = () => {
     setPanelType('cart');
   };
 
+  console.log(showProfileDrop);
   return (
     <div className="navbar">
       <div className="navbar__logo-wrapper" onClick={() => handleTabChange('popular')}>
@@ -34,14 +39,19 @@ const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters,
       <div className={panelType === 'feed' ? "navbar__options" : "navbar__options navbar-hidden"}>
         <Search setTagTerm={setTagTerm} setSubmittedSearchFilters={setSubmittedSearchFilters} setPageData={setPageData} setViewSwitch={setViewSwitch} setAllowSearch={setAllowSearch} searchTerm={searchTerm} setSearchTerm={setSearchTerm} lastSearchTerm={lastSearchTerm} setLastSearchTerm={setLastSearchTerm}/>
         <div className="navbar__profile-wrapper">
-          <button className="navbar__logout" onClick={handleSubmit}>
+          <div className="navbar__logout" 
+            onMouseEnter={() => setShowProfileDrop(true)} 
+            onMouseLeave={() => setShowProfileDrop(false)} 
+            onClick={handleProfileReveal}
+          >
             <img
               src={profilePicUrl}
               alt={""}
               className={`smooth-image-profile image-${imageLoaded ? 'visible' : 'hidden'}`}
               onLoad={() => setImageLoaded(true)}
             />
-          </button>
+          </div>
+          <ProfileDropdown/>
         </div>
         <div className="navbar__cart-wrapper" onClick={handleCartClick}>
           <svg className="navbar__cart-svg" viewBox="0 0 21 17" >

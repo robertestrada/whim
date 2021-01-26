@@ -173,8 +173,18 @@ const DashBoard = ({ panelType, setPanelType, modalData, setModalData }) => {
                 setLastSearchTerm={setLastSearchTerm}
                 setTagTerm={setTagTerm}
             />
-            <FeedTabs pageData={pageData} handleTabChange={handleTabChange} setCatShow={setCatShow} handleCategoryClick={handleCategoryClick} />
-            <CategoryPanel catShow={catShow} mouseEnter={() => setCatShow(true)} mouseLeave={() => setCatShow(false)} categoryFetch={handleTabChange} />
+            <FeedTabs 
+                pageData={pageData} 
+                handleTabChange={handleTabChange} 
+                setCatShow={setCatShow} 
+                handleCategoryClick={handleCategoryClick}
+            />
+            <CategoryPanel 
+                catShow={catShow} 
+                mouseEnter={() => setCatShow(true)} 
+                mouseLeave={() => setCatShow(false)} 
+                categoryFetch={handleTabChange}
+            />
             <Feed 
                 setAllowScroll={setAllowScroll}
                 productsData={productsData} 
