@@ -1,30 +1,43 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import '../../../styles/navBar.css';
 import Search from './Search';
-import * as AuthActions from '../../../actions/authentication';
+import ProfileDropdown from './ProfileDropdown';
 
 const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters, 
                   setPageData, setViewSwitch, setAllowSearch, searchTerm, 
                   setSearchTerm, panelType, setPanelType, lastSearchTerm, setLastSearchTerm 
                 }) => {
 
-  const dispatch = useDispatch();
-  const history = useHistory();
   const profilePicUrl = useSelector((state) => state.authentication.user.pic_url);
   const cartItems = useSelector(state => Object.values(state.cart.items));
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [showProfileDrop, setShowProfileDrop] = useState(false);
+  const ref = useRef(null);
 
-  const handleSubmit = async (e) => {
+  useEffect(() => {
+    document.body.addEventListener("mouseover", e => {
+      if (ref.current.contains(e.target)) {
+        setShowProfileDrop(true);
+      } else if (!ref.current.contains(e.target)) {
+        setShowProfileDrop(false)
+      }
+    });
+  }, [])
+
+  const handleProfileReveal = async (e) => {
     e.preventDefault();
-    await dispatch(AuthActions.logout());
-    history.push('/')
+    if (showProfileDrop){
+      setShowProfileDrop(false);
+    } else {
+      setShowProfileDrop(true);
+    }
   };
 
   const handleCartClick = () => {
     setPanelType('cart');
   };
+
 
   return (
     <div className="navbar">
@@ -32,16 +45,29 @@ const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters,
         <img className="navbar__logo" src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg" alt="" />
       </div>
       <div className={panelType === 'feed' ? "navbar__options" : "navbar__options navbar-hidden"}>
-        <Search setTagTerm={setTagTerm} setSubmittedSearchFilters={setSubmittedSearchFilters} setPageData={setPageData} setViewSwitch={setViewSwitch} setAllowSearch={setAllowSearch} searchTerm={searchTerm} setSearchTerm={setSearchTerm} lastSearchTerm={lastSearchTerm} setLastSearchTerm={setLastSearchTerm}/>
-        <div className="navbar__profile-wrapper">
-          <button className="navbar__logout" onClick={handleSubmit}>
+        <Search setTagTerm={setTagTerm} 
+          setSubmittedSearchFilters={setSubmittedSearchFilters} 
+          setPageData={setPageData} 
+          setViewSwitch={setViewSwitch} 
+          setAllowSearch={setAllowSearch} 
+          searchTerm={searchTerm} 
+          setSearchTerm={setSearchTerm} 
+          lastSearchTerm={lastSearchTerm} 
+          setLastSearchTerm={setLastSearchTerm}
+        />
+        <div className="navbar__profile-wrapper"onClick={handleProfileReveal} ref={ref}>
+          <div className="navbar__profile">
             <img
               src={profilePicUrl}
               alt={""}
               className={`smooth-image-profile image-${imageLoaded ? 'visible' : 'hidden'}`}
               onLoad={() => setImageLoaded(true)}
             />
-          </button>
+          </div>
+          { showProfileDrop 
+            ? <ProfileDropdown setPanelType={setPanelType} setShowProfileDrop={setShowProfileDrop}/> 
+            : null 
+          }
         </div>
         <div className="navbar__cart-wrapper" onClick={handleCartClick}>
           <svg className="navbar__cart-svg" viewBox="0 0 21 17" >

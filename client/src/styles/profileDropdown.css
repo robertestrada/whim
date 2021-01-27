@@ -1,0 +1,205 @@
+.profile-dropdown__container {
+  width: 278px;
+  right: 195px;
+  position: absolute;
+  top: 52px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 3px 8px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(240, 245, 247);
+  border-radius: 2px;
+  display: block;
+  /* color: rgb(25, 42, 50); */
+}
+
+.profile-dropdown__dropdown-arrow-up-wrapper {
+  position: absolute;
+  top: -16px;
+  right: 51px;
+  overflow: hidden;
+}
+
+.profile-dropdown__dropdown-arrow-up-container {
+  display: flex;
+  justify-content: center;
+  height: 16.6066px;
+  width: 33.2132px;
+  overflow: hidden;
+}
+
+.profile-dropdown__dropdown-arrow-up {
+  background-color: rgb(255, 255, 255);
+  position: absolute;
+  top: 8px;
+  transform: rotate(45deg);
+  width: 15px;
+  height: 15px;
+  border: 1px solid rgb(240, 245, 247);
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 3px 8px;
+}
+
+.profile-dropdown__profile-link-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: rgb(25, 42, 50);
+  padding: 0px 24px;
+  height: 100px;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+}
+
+.profile-dropdown__profile-link-container:hover {
+  background-color: rgb(240, 245, 247);
+}
+
+.profile-dropdown__profile-image {
+  width: 60px;
+  height: 60px;
+  background-size: 60px;
+  border-radius: 100%;
+  background-color: rgba(47, 183, 236, 0.3);
+  text-align: center;
+  line-height: 60px;
+  font-size: 30px;
+  font-weight: bold;
+  color: rgb(47, 183, 236);
+  opacity: 1;
+  flex-shrink: 0;
+  border: 0px solid rgb(255, 255, 255);
+  margin: 0px 8px 0px 0px;
+}
+
+.profile-dropdown__profile-info-container {
+  flex: 1 1 0%;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 400;
+  margin-left: 9px;
+  letter-spacing: 0.3px;
+  color: rgb(126, 154, 166);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profile-dropdown__profile-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: rgb(25, 42, 50);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  letter-spacing: 0.3px;
+}
+
+.profile-dropdown__profile-right-arrow {
+  height: 10px;
+  width: 6px;
+}
+
+.profile-dropdown__wishlist-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: rgb(25, 42, 50);
+  padding: 0px 24px;
+  height: 42px;
+  letter-spacing: 0.4px;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.profile-dropdown__wishlist-wrapper:hover {
+  background-color: rgb(240, 245, 247);
+}
+
+.profile-dropdown__wishlist-svg {
+  width: 21px;
+  height: 18px;
+  color: rgb(25, 42, 50);
+  margin: 0px 16px 0px 0px;
+}
+
+.profile-dropdown__cart-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: rgb(25, 42, 50);
+  padding: 0px 24px;
+  height: 42px;
+  letter-spacing: 0.4px;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.profile-dropdown__cart-wrapper:hover {
+  background-color: rgb(240, 245, 247);
+}
+
+.profile-dropdown__cart-svg {
+  width: 20px;
+  height: 17px;
+  margin: 12px 16px 12px 0px;
+  color: rgb(25, 42, 50);
+}
+
+.profile-dropdown__order-history-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: rgb(25, 42, 50);
+  padding: 0px 24px;
+  height: 42px;
+  letter-spacing: 0.4px;
+  font-size: 16px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.profile-dropdown__order-history-wrapper:hover {
+  background-color: rgb(240, 245, 247);
+}
+
+.profile-dropdown__order-history-svg {
+  width: 20px;
+  height: 20px;
+  margin: 12px 16px 12px 0px;
+  color: rgb(25, 42, 50);
+}
+
+.profile-dropdown__hire-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: rgb(25, 42, 50);
+  padding: 0px 24px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.profile-dropdown__hire-wrapper:hover {
+  background-color: rgb(240, 245, 247);
+}
+
+.profile-dropdown__logout-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: rgb(25, 42, 50);
+  padding: 0px 24px;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  height: 30px;
+  cursor: pointer;
+}
+
+.profile-dropdown__logout-wrapper:hover {
+  background-color: rgb(240, 245, 247);
+}
