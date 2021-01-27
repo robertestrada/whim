@@ -63,16 +63,17 @@ z-index: 5;
   opacity: 0;
 }
 
-.navbar__logout {
+.navbar__profile {
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   background: none;
   border: none;
+  pointer-events: none;
 }
 
-.navbar__logout:focus {
+.navbar__profile:focus {
   outline: none;
 }
 
