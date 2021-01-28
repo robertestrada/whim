@@ -7,7 +7,7 @@ import string
 load_dotenv()
 
 from whim_server import app, db
-from whim_server.models import User, Merchant, Product, Option, Rating, Comment, Keyword
+from whim_server.models import User, Merchant, Product, Option, Review, Keyword
 
 with app.app_context():
   db.drop_all()
@@ -680,8 +680,7 @@ with app.app_context():
     "didnt last a day",
   ]
 
-  ratings_list = []
-  comments_list = []
+
   users_list = User.query.all()
   
   for user in users_list:
@@ -694,19 +693,18 @@ with app.app_context():
       product_comment = ''
       comment_searching = True
       while comment_searching:
-        if rating_type >= 3:
-          product_rating = randint(4, 5)
+        if rating_type > 3:
+          product_rating = randint(3, 5)
           product_comment = choice(positive_comments)
         else:
-          product_rating = randint(1, 3)
+          product_rating = randint(1, 2)
           product_comment = choice(negative_comments)
         if product_comment not in used_comments:
           comment_searching = False
       used_comments.add(product_comment)
-      new_rating = Rating(user_id=user.id, product_id=rated_product.id, rating=product_rating)
-      new_comment = Comment(user_id=user.id, product_id=rated_product.id, comment=product_comment)
-      db.session.add(new_rating)
-      db.session.add(new_comment)
+      new_review = Review(user_id=user.id, product_id=rated_product.id, rating=product_rating, comment=product_comment)
+      
+      db.session.add(new_review)
       db.session.commit()
 
       rated_product.set_average_rating(product_rating)
@@ -714,7 +712,19 @@ with app.app_context():
       
       
 
-  stopwords = {'shipping', 'shipped', 'express', 'delivery', 'ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than'}
+  stopwords = { 'shipping', 'shipped', 'express', 'delivery', 'ourselves', 'hers', 'between', 'yourself',
+                'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 
+                'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 
+                'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 
+                'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 
+                'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 
+                'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 
+                'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 
+                'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 
+                'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 
+                'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 
+                'it', 'how', 'further', 'was', 'here', 'than'}
+  
   comments_list = []
   az_nums = list(string.digits + string.ascii_lowercase)
 

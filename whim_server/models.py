@@ -23,7 +23,7 @@ class User(db.Model):
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   
   orders = db.relationship("Order", backref='user')
-  ratings = db.relationship("Rating", backref='user')
+  reviews = db.relationship("Review", backref='user')
   
   def to_dict(self):
     return {
@@ -136,7 +136,7 @@ class Product(db.Model):
   
   options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="joined")
   orders = db.relationship("Order", backref="product", cascade="all, delete-orphan", lazy="joined")
-  ratings = db.relationship("Rating", backref="product", cascade="all, delete-orphan", lazy="joined")
+  reviews = db.relationship("Review", backref="product", cascade="all, delete-orphan", lazy="joined")
   
   def set_lowest_price(self):
     self.lowest_price = min([option.price_ending for option in self.options])
@@ -181,38 +181,43 @@ class Product(db.Model):
     return options_list
   
   def feed_ratings(self):
-    ratings_list = [rating.rating for rating in self.ratings]
+    ratings_list = [review.rating for review in self.reviews]
     return mean(ratings_list)
 
   def set_average_rating(self, average_rating):
     if self.avg_rating:
-      ratings_list = [rating.rating for rating in self.ratings]
+      ratings_list = [review.rating for review in self.reviews]
       ratings_list.append(average_rating)
       self.avg_rating = mean(ratings_list)
     else:
       self.avg_rating = average_rating
-
+    
+  def top_reviews(self):
+    review_list = Review.query.filter(Review.product_id == self.id).order_by(Review.rating.desc()).limit(5).all()
+    return [review.to_dict() for review in review_list]
   
   def main_dict(self):
-    return {
-          "id": self.id,
-          "name": self.name,
-          "description": self.description,
-          "imgs_folder": self.imgs_folder,
-          "product_img_amt": self.product_imgs_amt,
-          "category": self.category,
-          "feed_pricing": self.feed_pricing(),
-          "options_data": self.main_options(),
-          "instant_buy": self.instant_buy,
-          "add_on": self.add_on,
-          "shipping_speed": self.shipping_speed,
-          "shipping_usa": self.shipping_usa,
-          "verified": self.verified,
-          "merchant": self.merchant.to_dict(),
-          "created_at": self.created_at,
-          "updated_at": self.updated_at,
-          "options": [option.to_dict() for option in self.options],
-        }
+    return  {
+              "id": self.id,
+              "name": self.name,
+              "description": self.description,
+              "imgs_folder": self.imgs_folder,
+              "product_img_amt": self.product_imgs_amt,
+              "category": self.category,
+              "feed_pricing": self.feed_pricing(),
+              "options_data": self.main_options(),
+              "instant_buy": self.instant_buy,
+              "add_on": self.add_on,
+              "shipping_speed": self.shipping_speed,
+              "shipping_usa": self.shipping_usa,
+              "verified": self.verified,
+              "merchant": self.merchant.to_dict(),
+              "created_at": self.created_at,
+              "updated_at": self.updated_at,
+              "options": [option.to_dict() for option in self.options],
+              "reviews": [review.to_dict() for review in self.reviews],
+              "top_reviews": self.top_reviews()
+            }
     
   def cart_dict(self):
     return {
@@ -297,32 +302,13 @@ class Option(db.Model):
         }
     
 
-class Rating(db.Model):
-  __tablename__ = 'ratings'
+class Review(db.Model):
+  __tablename__ = 'reviews'
 
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
   product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
   rating = db.Column(db.Integer, nullable=False)
-  created_at = db.Column(db.DateTime, default=datetime.now)
-  updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
-
-  def to_dict(self):
-    return {
-        "id": self.id,
-        "user_id": self.user_id,
-        "product_id": self.product_id,
-        "rating": self.rating,
-        "created_at": self.created_at,
-        "updated_at": self.updated_at,
-    }
-    
-class Comment(db.Model):
-  __tablename__ = 'comments'
-
-  id = db.Column(db.Integer, primary_key=True)
-  user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-  product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
   comment = db.Column(db.String(2000), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
@@ -332,12 +318,13 @@ class Comment(db.Model):
         "id": self.id,
         "user_id": self.user_id,
         "product_id": self.product_id,
+        "rating": self.rating,
         "comment": self.comment,
         "created_at": self.created_at,
         "updated_at": self.updated_at,
     }
-    
-    
+
+
 class Keyword(db.Model):
   __tablename__ = 'keywords'
 
