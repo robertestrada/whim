@@ -6,6 +6,7 @@ import ModalImages from './ModalImages';
 import ModalHeader from './ModalHeader';
 import ModalVerified from './ModalVerified';
 import ModalShipping from './ModalShipping';
+import ModalFeedback from './ModalFeedback';
 import ModalDescription from './ModalDescription';
 import ModalRefPrice from './ModalRefPrice';
 import ModalDetails from './modalDetails/ModalDetails';
@@ -74,6 +75,7 @@ const ModalProduct = ({ setModalType, productId, modalChange }) => {
                 />
                 <ModalVerified productData={productData} />
                 <ModalShipping productData={productData} />
+                <ModalFeedback productData={productData} />
                 <ModalDescription productData={productData} />
                 <ModalRefPrice productData={productData} />
                 <ModalMerchant productData={productData} />
