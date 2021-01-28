@@ -191,10 +191,10 @@ class Product(db.Model):
       self.avg_rating = mean(ratings_list)
     else:
       self.avg_rating = average_rating
-
-  # def top_comments(self):
-    # high_five_comments = [comment.to_dict() if comment. for comment in self.comments]
     
+  def top_reviews(self):
+    review_list = Review.query.filter(Review.product_id == self.id).order_by(Review.rating.desc()).limit(5).all()
+    return [review.to_dict() for review in review_list]
   
   def main_dict(self):
     return  {
@@ -216,6 +216,7 @@ class Product(db.Model):
               "updated_at": self.updated_at,
               "options": [option.to_dict() for option in self.options],
               "reviews": [review.to_dict() for review in self.reviews],
+              "top_reviews": self.top_reviews()
             }
     
   def cart_dict(self):

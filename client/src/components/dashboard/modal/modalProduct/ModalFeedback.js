@@ -3,7 +3,8 @@ import moment from 'moment';
 import '../../../../styles/modal.css';
 
 const ModalFeedback = ({ productData }) => {
-  console.log(productData.reviews);
+  console.log("Reviews: ", productData.reviews);
+  console.log("Top Reviews: ", productData.top_reviews);
   return (
     <div className="modal__feedback-wrapper">
       <div className="modal__feedback-header">
