@@ -33,6 +33,17 @@ class User(db.Model):
       "email": self.email,
       "pic_url": self.pic_url,
     }
+    
+  def to_review_dict(self):
+    return {
+      "id": self.id,
+      "first_name": self.first_name,
+      "last_name": self.last_name,
+      "country": self.country,
+      "pic_url": self.pic_url,
+      "joined": self.created_at,
+      "review_amount": len(self.reviews),
+    }
 
   @validates('email')
   def validate_email(self, key, email):
@@ -312,7 +323,7 @@ class Review(db.Model):
   comment = db.Column(db.String(2000), nullable=False)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
-
+  
   def to_dict(self):
     return {
         "id": self.id,
@@ -322,6 +333,7 @@ class Review(db.Model):
         "comment": self.comment,
         "created_at": self.created_at,
         "updated_at": self.updated_at,
+        "user_details": self.user.to_review_dict(),
     }
 
 
