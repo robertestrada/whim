@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import '../../../../styles/modal.css';
 
+
 const ModalShipping = ({ productData }) => {
 
   return (

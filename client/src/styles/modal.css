@@ -1057,10 +1057,18 @@ margin-bottom: 4px;
   margin: 0px 0px 0px 4px;
 }
 
+.modal__review-star.empty-star {
+  box-sizing: border-box;
+  height: 16px;
+  width: 16px;
+  cursor: auto;
+  margin: 0px 0px 0px 4px;
+}
+
 .modal__review-comment-subheader {
   display: flex;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 300;
   color: rgb(126, 154, 166);
   letter-spacing: 0.4px;
 }
@@ -1094,13 +1102,13 @@ margin-bottom: 4px;
   margin-top: 7px;
   overflow-wrap: break-word;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: 0.4px;
 }
 
 .modal__review-comment-time {
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 300;
   margin-top: 4px;
   color: rgb(126, 154, 166);
 }
