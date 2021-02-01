@@ -1057,10 +1057,18 @@ margin-bottom: 4px;
   margin: 0px 0px 0px 4px;
 }
 
+.modal__review-star.empty-star {
+  box-sizing: border-box;
+  height: 16px;
+  width: 16px;
+  cursor: auto;
+  margin: 0px 0px 0px 4px;
+}
+
 .modal__review-comment-subheader {
   display: flex;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 300;
   color: rgb(126, 154, 166);
   letter-spacing: 0.4px;
 }
@@ -1094,13 +1102,66 @@ margin-bottom: 4px;
   margin-top: 7px;
   overflow-wrap: break-word;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: 0.4px;
 }
 
 .modal__review-comment-time {
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 300;
   margin-top: 4px;
+  color: rgb(126, 154, 166);
+}
+
+.modal__fit-container {
+  box-sizing: border-box;
+  margin-top: 18px;
+  margin-right: 0px;
+  margin-bottom: 24px;
+  margin-left: 0px;
+}
+
+.modal__fit-bar-container {
+  margin-top: 21px;
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.modal__fit-bar-container.container-too-small {
+  margin-top: 0px;
+}
+
+.modal__fit-bar-name {
+  font-size: 16px;
+  font-weight: 300;
+  box-sizing: border-box;
+}
+
+.modal__fit-bar-background {
+  box-sizing: border-box;
+  display: flex;
+  border-radius: 5px;
+  align-items: flex-start;
+  width: 498px;
+  height: 10px;
+  background-color: rgb(240, 245, 247);
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.modal__fit-bar {
+  box-sizing: border-box;
+  height: 10px;
+  border-radius: 5px;
+  background-color: rgb(47, 183, 236);
+}
+
+.modal__fit-total-ratings {
+  box-sizing: border-box;
+  font-size: 14px;
+  font-weight: 300;
+  margin-top: 8px;
+  text-align: right;
   color: rgb(126, 154, 166);
 }
