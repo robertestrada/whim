@@ -1,8 +1,8 @@
-"""create whim db models
+"""create whim_db tables
 
-Revision ID: dda6cf88d4f0
+Revision ID: 8a306bc7ff3d
 Revises: 
-Create Date: 2021-01-27 14:06:10.791781
+Create Date: 2021-01-31 14:22:54.535629
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'dda6cf88d4f0'
+revision = '8a306bc7ff3d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -61,6 +61,9 @@ def upgrade():
     sa.Column('verified', sa.Boolean(), nullable=True),
     sa.Column('shipping_speed', sa.Integer(), nullable=False),
     sa.Column('avg_rating', sa.Float(), nullable=True),
+    sa.Column('amt_too_small', sa.Integer(), nullable=True),
+    sa.Column('amt_just_right', sa.Integer(), nullable=True),
+    sa.Column('amt_too_large', sa.Integer(), nullable=True),
     sa.Column('lowest_price', sa.Float(), nullable=True),
     sa.Column('shipping_usa', sa.Boolean(), nullable=False),
     sa.Column('merchant_id', sa.Integer(), nullable=False),
@@ -92,6 +95,7 @@ def upgrade():
     sa.Column('product_id', sa.Integer(), nullable=False),
     sa.Column('rating', sa.Integer(), nullable=False),
     sa.Column('comment', sa.String(length=2000), nullable=False),
+    sa.Column('fit', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.ForeignKeyConstraint(['product_id'], ['products.id'], ),

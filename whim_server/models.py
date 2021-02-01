@@ -139,6 +139,9 @@ class Product(db.Model):
   verified = db.Column(db.Boolean, default=False)
   shipping_speed = db.Column(db.Integer, nullable=False)
   avg_rating = db.Column(db.Float)
+  amt_too_small = db.Column(db.Integer, default=0)
+  amt_just_right = db.Column(db.Integer, default=0)
+  amt_too_large = db.Column(db.Integer, default=0)
   lowest_price = db.Column(db.Float)
   shipping_usa = db.Column(db.Boolean, nullable=False)
   merchant_id = db.Column(db.Integer, db.ForeignKey("merchants.id"), nullable=False)
@@ -190,21 +193,26 @@ class Product(db.Model):
                           "weight": option_full["weight"]
                           })
     return options_list
-  
-  def feed_ratings(self):
-    ratings_list = [review.rating for review in self.reviews]
-    return mean(ratings_list)
 
-  def set_average_rating(self, average_rating):
+  def set_average_rating(self, new_product_rating):
     if self.avg_rating:
       ratings_list = [review.rating for review in self.reviews]
-      ratings_list.append(average_rating)
+      ratings_list.append(new_product_rating)
       self.avg_rating = mean(ratings_list)
     else:
-      self.avg_rating = average_rating
+      self.avg_rating = new_product_rating
+      
+  def set_fit_amounts(self, new_fit):
+    if new_fit == 1:
+      self.amt_too_small += 1
+    elif new_fit == 2:
+      self.amt_just_right += 1
+    elif new_fit == 3:
+      self.amt_too_large += 1
     
   def top_reviews(self):
-    review_list = Review.query.filter(Review.product_id == self.id).order_by(Review.rating.desc()).limit(5).all()
+    review_list = Review.query.filter(Review.product_id == self.id).order_by(Review.created_at.desc()).limit(5).all()
+    # review_list = Review.query.filter(Review.product_id == self.id).order_by(Review.rating.desc()).limit(5).all()
     return [review.to_dict() for review in review_list]
   
   def main_dict(self):
@@ -226,8 +234,11 @@ class Product(db.Model):
               "created_at": self.created_at,
               "updated_at": self.updated_at,
               "options": [option.to_dict() for option in self.options],
-              "reviews": [review.to_dict() for review in self.reviews],
-              "top_reviews": self.top_reviews()
+              "top_reviews": self.top_reviews(),
+              "avg_rating": self.avg_rating,
+              "amt_too_small": self.amt_too_small,
+              "amt_just_right": self.amt_just_right,
+              "amt_too_large": self.amt_too_large,
             }
     
   def cart_dict(self):
@@ -262,7 +273,6 @@ class Product(db.Model):
       "shipping_usa": self.shipping_usa,
       "verified": self.verified,
       "feed_past_orders": self.feed_past_orders(),
-      "feed_ratings": self.feed_ratings(),
       "avg_rating": self.avg_rating,
       "lowest_price": self.lowest_price,
       "created_at": self.created_at,
@@ -321,6 +331,7 @@ class Review(db.Model):
   product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
   rating = db.Column(db.Integer, nullable=False)
   comment = db.Column(db.String(2000), nullable=False)
+  fit = db.Column(db.Integer)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
   
@@ -331,6 +342,7 @@ class Review(db.Model):
         "product_id": self.product_id,
         "rating": self.rating,
         "comment": self.comment,
+        "fit": self.fit,
         "created_at": self.created_at,
         "updated_at": self.updated_at,
         "user_details": self.user.to_review_dict(),
