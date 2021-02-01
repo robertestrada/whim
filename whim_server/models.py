@@ -150,7 +150,7 @@ class Product(db.Model):
   
   options = db.relationship("Option", backref="product", cascade="all, delete-orphan", lazy="joined")
   orders = db.relationship("Order", backref="product", cascade="all, delete-orphan", lazy="joined")
-  reviews = db.relationship("Review", backref="product", cascade="all, delete-orphan", lazy="joined")
+  reviews = db.relationship("Review", backref="product", cascade="all, delete-orphan", lazy="select")
   
   def set_lowest_price(self):
     self.lowest_price = min([option.price_ending for option in self.options])
@@ -212,7 +212,6 @@ class Product(db.Model):
     
   def top_reviews(self):
     review_list = Review.query.filter(Review.product_id == self.id).order_by(Review.created_at.desc()).limit(5).all()
-    # review_list = Review.query.filter(Review.product_id == self.id).order_by(Review.rating.desc()).limit(5).all()
     return [review.to_dict() for review in review_list]
   
   def main_dict(self):
@@ -321,7 +320,7 @@ class Option(db.Model):
           "created_at": self.created_at,
           "updated_at": self.updated_at,
         }
-    
+
 
 class Review(db.Model):
   __tablename__ = 'reviews'
