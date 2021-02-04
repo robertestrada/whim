@@ -4,7 +4,7 @@ from flask_cors import CORS
 from flask_wtf.csrf import CSRFProtect, generate_csrf, validate_csrf
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, jwt_required, get_raw_jwt
-
+from flask_talisman import Talisman
 
 
 from whim_server.models import db, User
@@ -15,6 +15,7 @@ from whim_server.api.order_routes import order_routes
 from whim_server.config import Config
 
 app = Flask(__name__, static_url_path='')
+Talisman(app, content_security_policy=None)
 
 app.config.from_object(Config)
 app.register_blueprint(user_routes)

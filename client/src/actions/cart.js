@@ -38,7 +38,7 @@ const removeCartItemAction = id => ({
   id,
 });
 
-const clearCartAction = () => ({
+export const clearCartAction = () => ({
   type: CLEAR_CART,
 });
 
