@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import '../../../styles/logIn.css';
 import { useDispatch, useSelector } from 'react-redux';
 import * as AuthActions from '../../../actions/authentication';
+import * as CartActions from '../../../actions/cart';
 import DemoButton from './DemoButton';
 import GoogleSignin from './GoogleSignin.js';
 
@@ -17,6 +18,7 @@ const LogIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await dispatch(AuthActions.removeAuth());
+    await dispatch(CartActions.clearCartAction());
     const storeReady = await dispatch(AuthActions.signIn(email, password));
     if (storeReady) {
       history.push('/')

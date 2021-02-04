@@ -21,3 +21,4 @@ mako==1.1.3
 pyjwt==1.7.1
 python-dateutil==2.8.1
 python-editor==1.0.4
+flask-talisman==0.7.0

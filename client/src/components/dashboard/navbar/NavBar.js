@@ -17,10 +17,12 @@ const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters,
 
   useEffect(() => {
     document.body.addEventListener("mouseover", e => {
-      if (ref.current.contains(e.target)) {
-        setShowProfileDrop(true);
-      } else if (!ref.current.contains(e.target)) {
-        setShowProfileDrop(false)
+      if (ref.current){
+        if (ref.current.contains(e.target)) {
+          setShowProfileDrop(true);
+        } else if (!ref.current.contains(e.target)) {
+          setShowProfileDrop(false)
+        }
       }
     });
   }, [])
