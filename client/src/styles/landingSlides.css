@@ -45,7 +45,6 @@
   }
 
   100% {
-    /* transform: translate3d(0, -102rem, 0); */
     transform: translate3d(0, calc((((100vw - 1rem - 1px - 500px) / 4) ) * -6), 0);
   }
 }

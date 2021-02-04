@@ -48,7 +48,7 @@ class User(db.Model):
   @validates('email')
   def validate_email(self, key, email):
     if User.query.filter(User.email==email).first():
-      raise AssertionError('Email already in use')
+      raise AssertionError('“Please login using your previously created email account.”')
 
     if not re.match("[^@]+@[^@]+\.[^@]+", email):
       raise AssertionError('Provided email is not an email address')
