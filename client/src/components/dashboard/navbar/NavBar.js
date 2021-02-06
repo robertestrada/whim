@@ -10,6 +10,7 @@ const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters,
                 }) => {
 
   const profilePicUrl = useSelector((state) => state.authentication.user.pic_url);
+  const availableProfilePicUrl = profilePicUrl ? profilePicUrl : "https://whim-bucket.s3-us-west-1.amazonaws.com/whim-profiles/fetch.jpeg";
   const cartItems = useSelector(state => Object.values(state.cart.items));
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showProfileDrop, setShowProfileDrop] = useState(false);
@@ -60,14 +61,14 @@ const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters,
         <div className="navbar__profile-wrapper"onClick={handleProfileReveal} ref={ref}>
           <div className="navbar__profile">
             <img
-              src={profilePicUrl}
+              src={availableProfilePicUrl}
               alt={""}
               className={`smooth-image-profile image-${imageLoaded ? 'visible' : 'hidden'}`}
               onLoad={() => setImageLoaded(true)}
             />
           </div>
           { showProfileDrop 
-            ? <ProfileDropdown setPanelType={setPanelType} setShowProfileDrop={setShowProfileDrop}/> 
+            ? <ProfileDropdown availableProfilePicUrl={availableProfilePicUrl} setPanelType={setPanelType}/> 
             : null 
           }
         </div>

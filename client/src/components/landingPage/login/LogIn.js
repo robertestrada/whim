@@ -1,29 +1,10 @@
-import React, { useState }from 'react';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 import '../../../styles/logIn.css';
-import { useDispatch, useSelector } from 'react-redux';
-import * as AuthActions from '../../../actions/authentication';
-import * as CartActions from '../../../actions/cart';
 import DemoButton from './DemoButton';
 import GoogleSignin from './GoogleSignin.js';
 
-const LogIn = () => {
-  const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
 
-  const history = useHistory();
-  const valErrors = useSelector(state => state.authentication.valErrors)
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await dispatch(AuthActions.removeAuth());
-    await dispatch(CartActions.clearCartAction());
-    const storeReady = await dispatch(AuthActions.signIn(email, password));
-    if (storeReady) {
-      history.push('/')
-    }
-  }
+const LogIn = ({ email, setEmail, password, setPassword, handleSubmit, valErrors }) => {
 
   return (
     <form className="login" style={{ animation: `fadeIn 0.5s` }} onSubmit={handleSubmit}>

@@ -15,6 +15,12 @@ def get_google_credentials():
   return {'client_id': client_id, 'api_key': api_key}, 200
 
 
+@user_routes.route("/recaptcha-site-key")
+def get_recaptcha_site_key():
+  rcSiteKey = current_app.config['RC_SITE_KEY']
+  return {'rcSiteKey': rcSiteKey}, 200
+
+
 @user_routes.route('/signup', methods=['POST'])
 def sign_up():
   data = request.get_json()
