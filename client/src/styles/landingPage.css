@@ -21,30 +21,30 @@
   padding-right: 1rem;
 }
 
-.landing__panel-right-wrapper {
-  display: flex;
-  justify-content: center;
-  width: 500px;
-}
-
 @media screen and (max-width: 750px) {
   .landing__panel-left { 
     display: none; 
   }
-
   .landing {
     justify-content: center;
   }
-
 }
 
-.landing__panel-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.landing__panel-right-wrapper {
   padding: 90px;
   width: 500px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  box-sizing: border-box;
+}
+
+.landing__panel-trust-logo-wrapper {
+  position: relative;
+  width: 100%;
   box-sizing: border-box;
 }
 
@@ -99,4 +99,103 @@ margin-top: 32px;
   border-bottom-width: 2px;
   border-bottom-style: solid;
   border-bottom-color: rgb(47, 183, 236);
+}
+
+.landing__trust-wrapper {
+  position: absolute;
+  padding-top: 24px;
+  padding-right: 0px;
+  padding-bottom: 24px;
+  padding-left: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.landing__trust-slogan-1 {
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(25, 42, 50);
+  position: absolute;
+  animation-duration: 9s;
+  animation-name: landing__trust-slogan-1;
+  animation-iteration-count: infinite;
+}
+
+.landing__trust-slogan-1-svg {
+  width: 15px;
+  height: 11px;
+  color: rgb(0, 152, 211);
+  margin-right: 8px;
+}
+
+@keyframes landing__trust-slogan-1 {
+  0% {opacity: 1;}
+  23% {opacity: 1;}
+  28% {opacity: 0;}
+  95% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+.landing__trust-slogan-2 {
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(25, 42, 50);
+  position: absolute;
+  animation-duration: 9s;
+  animation-name: landing__trust-slogan-2;
+  animation-iteration-count: infinite;
+}
+
+.landing__trust-slogan-2-svg {
+  width: 14px;
+  height: 15px;
+  margin-right: 8px;
+}
+
+@keyframes landing__trust-slogan-2 {
+  0% {opacity: 0;}
+  28% {opacity: 0;}
+  33% {opacity: 1;}
+  58% {opacity: 1;}
+  63% {opacity: 0;}
+  100% {opacity: 0;}
+}
+
+.landing__trust-slogan-3 {
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(25, 42, 50);
+  position: absolute;
+  animation-duration: 9s;
+  animation-name: landing__trust-slogan-3;
+  animation-iteration-count: infinite;
+}
+
+.landing__trust-slogan-3-svg {
+  width: 13px;
+  height: 14px;
+  margin-right: 8px;
+}
+
+@keyframes landing__trust-slogan-3 {
+  0% {opacity: 0;}
+  63% {opacity: 0;}
+  68% {opacity: 1;}
+  90% {opacity: 1;}
+  95% {opacity: 0;}
+  100% {opacity: 0;}
 }

@@ -10,3 +10,4 @@ class Config:
   JWT_BLACKLIST_ENABLED = True
   GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
   GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+  RC_SITE_KEY = os.environ.get('RC_SITE_KEY')

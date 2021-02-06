@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import '../../../styles/profileDropdown.css';
 import * as AuthActions from '../../../actions/authentication';
 
-const ProfileDropdown = ({ setPanelType, setShowProfileDrop }) => {
+const ProfileDropdown = ({ setPanelType, availableProfilePicUrl }) => {
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -31,7 +31,7 @@ const ProfileDropdown = ({ setPanelType, setShowProfileDrop }) => {
       <div className="profile-dropdown__profile-link-container">
         <img 
           alt={user.first_name} 
-          src={user.pic_url} 
+          src={availableProfilePicUrl} 
           className="profile-dropdown__profile-image"
         />
         <div className="profile-dropdown__profile-info-container">
