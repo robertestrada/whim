@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, render_template, request, redirect, url_for, current_app
+from flask import Blueprint, jsonify, render_template, request, redirect, url_for
 from whim_server.models import User, db
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_optional, create_access_token, get_jwt_identity, jwt_required, get_raw_jwt
@@ -6,19 +6,6 @@ from flask_wtf.csrf import CSRFProtect, generate_csrf, validate_csrf
 import random
 
 user_routes = Blueprint("user", __name__, "")
-
-
-@user_routes.route("/google-credentials")
-def get_google_credentials():
-  client_id = current_app.config['GOOGLE_CLIENT_ID']
-  api_key = current_app.config['GOOGLE_API_KEY']
-  return {'client_id': client_id, 'api_key': api_key}, 200
-
-
-@user_routes.route("/recaptcha-site-key")
-def get_recaptcha_site_key():
-  rcSiteKey = current_app.config['RC_SITE_KEY']
-  return {'rcSiteKey': rcSiteKey}, 200
 
 
 @user_routes.route('/signup', methods=['POST'])

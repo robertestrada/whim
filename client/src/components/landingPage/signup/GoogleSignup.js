@@ -1,8 +1,9 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import { baseUrl } from '../../../config';
-import { signUpGoogle } from '../../../actions/authentication'
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signUpGoogle } from '../../../actions/authentication';
+import { googleAPIKey, googleClientId } from '../../../config';
+import * as CartActions from '../../../actions/cart';
 import '../../../styles/logIn.css';
 
 const GoogleSignUp = () => {
@@ -11,14 +12,13 @@ const GoogleSignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const googleCredsFetch = await fetch(`${baseUrl}/google-credentials`);
-    const googleCreds = await googleCredsFetch.json();
+    await dispatch(CartActions.clearCartAction());
 
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({
-        clientId: `${googleCreds.client_id}`,
+        clientId: googleClientId,
         scope: 'email',
-        apiKey: `${googleCreds.api_key}`,
+        apiKey: googleAPIKey,
       }).then(() => {
         const authorized = window.gapi.auth2.getAuthInstance();
         try {

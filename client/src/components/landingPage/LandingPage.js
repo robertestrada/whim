@@ -22,12 +22,6 @@ const LandingPage = () => {
   const [button, setButton] = useState("login")
   const [showRecaptcha, setShowRecaptcha] = useState(false)
 
-  // const handleGetRecaptchaSiteKey = async () => {
-  //   const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
-  //   const recaptchaSiteKey = await recaptchaSiteKeyFetch.json();
-  //   return recaptchaSiteKey.rcSiteKey;
-  // };
-
   const handleClearErrors = async () => {
     await dispatch(AuthActions.removeValErrors());
   }
@@ -105,7 +99,6 @@ const LandingPage = () => {
         </div>
         {showRecaptcha
           ? <ReCAPTCHA
-            // ref={recaptchaRef}
             sitekey={rcSiteKey}
             onChange={handleSubmit}
             />
