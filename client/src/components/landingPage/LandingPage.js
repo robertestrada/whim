@@ -3,15 +3,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom';
 import * as AuthActions from '../../actions/authentication';
 import * as CartActions from '../../actions/cart';
+import { baseUrl } from '../../config';
 import '../../styles/landingPage.css';
 import LogIn from './login/LogIn.js'
 import SignUp from './signup/SignUp.js'
 import LandingSlides from './LandingSlides'
 import LandingTrustFeatures from './LandingTrustFeatures';
-import { rcSiteKey } from '../../config';
 import ReCAPTCHA from "react-google-recaptcha";
 
 const LandingPage = () => {
+  const [rcSiteKey, setRCSiteKey] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -22,9 +23,20 @@ const LandingPage = () => {
   const [button, setButton] = useState("login")
   const [showRecaptcha, setShowRecaptcha] = useState(false)
 
+  const handleGetRecaptchaSiteKey = async () => {
+    const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
+    const recaptchaSiteKey = await recaptchaSiteKeyFetch.json();
+    setRCSiteKey(recaptchaSiteKey.rcSiteKey);
+  };
+
   const handleClearErrors = async () => {
     await dispatch(AuthActions.removeValErrors());
   }
+
+  useEffect(() => {
+    handleGetRecaptchaSiteKey();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(()=>{
     handleClearErrors();
@@ -33,7 +45,6 @@ const LandingPage = () => {
     setEmail('');
     setPassword('');
     setShowRecaptcha(false);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [button]);
 
@@ -52,7 +63,7 @@ const LandingPage = () => {
       history.push('/')
     }
   }
-
+  
   
   return (
     <div className="landing">

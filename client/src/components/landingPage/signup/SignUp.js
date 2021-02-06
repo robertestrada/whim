@@ -3,7 +3,6 @@ import '../../../styles/signUp.css';
 import '../../../styles/logIn.css';
 import GoogleSignup from './GoogleSignup'
 
-
 const SignUp = ({ firstName, setFirstName, lastName, setLastName, email, setEmail, password, setPassword, setShowRecaptcha, valErrors }) => {
 
     return (
