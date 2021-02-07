@@ -9,7 +9,7 @@ import LogIn from './login/LogIn.js'
 import SignUp from './signup/SignUp.js'
 import LandingSlides from './LandingSlides'
 import LandingTrustFeatures from './LandingTrustFeatures';
-import ReCAPTCHA from "react-google-recaptcha";
+
 
 const LandingPage = () => {
   const [rcSiteKey, setRCSiteKey] = useState('');
@@ -21,7 +21,6 @@ const LandingPage = () => {
   const dispatch = useDispatch();
   const valErrors = useSelector(state => state.authentication.valErrors)
   const [button, setButton] = useState("login")
-  const [showRecaptcha, setShowRecaptcha] = useState(false)
 
   const handleGetRecaptchaSiteKey = async () => {
     const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
@@ -44,12 +43,10 @@ const LandingPage = () => {
     setLastName('');
     setEmail('');
     setPassword('');
-    setShowRecaptcha(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [button]);
 
   const handleSubmit = async () => {
-    setShowRecaptcha(false);
     await dispatch(AuthActions.removeAuth())
     await dispatch(CartActions.clearCartAction());
     let storeReady;
@@ -63,7 +60,7 @@ const LandingPage = () => {
       history.push('/')
     }
   }
-  
+
   
   return (
     <div className="landing">
@@ -103,18 +100,12 @@ const LandingPage = () => {
                 setEmail={setEmail}
                 password={password}
                 setPassword={setPassword}
-                setShowRecaptcha={setShowRecaptcha}
+                rcSiteKey={rcSiteKey}
+                handleSubmit={handleSubmit}
                 valErrors={valErrors}
               />
           }
         </div>
-        {showRecaptcha
-          ? <ReCAPTCHA
-            sitekey={rcSiteKey}
-            onChange={handleSubmit}
-            />
-          : null
-        }
       </div>
     </div>
   );
