@@ -1,13 +1,13 @@
 import React from 'react';
 import '../../../styles/logIn.css';
 
-export default function DemoButton ({ email, setEmail, password, setPassword }) {
+export default function DemoButton({ email, setEmail, password, setPassword }) {
 
   let i=0, k=0, spd = 25;
-  let txt = 'demo@whim.com'
-  let pwd = 'D3m0P4ssw0rd'
+  const txt = 'demo@whim.com'
+  const pwd = 'D3m0P4ssw0rd'
 
-  let handleClick = (e) => {
+  const handleClick = e => {
     e.preventDefault();
     setEmail('')
     setPassword('')
@@ -17,7 +17,7 @@ export default function DemoButton ({ email, setEmail, password, setPassword }) 
     setTimeout(typePassword, spd*txt.length)
   }
 
-  function typeEmail() {
+  const typeEmail = () => {
     if (i < txt.length) {
       setEmail(email += txt.charAt(i))
       i++
@@ -25,7 +25,7 @@ export default function DemoButton ({ email, setEmail, password, setPassword }) 
     }
   }
 
-  function typePassword() {
+  const typePassword = () => {
     if (k < pwd.length) {
       setPassword(password += pwd.charAt(k))
       k++;
@@ -34,7 +34,6 @@ export default function DemoButton ({ email, setEmail, password, setPassword }) 
       document.querySelector('.login__submit.login-button').click()
     }
   }
-
 
 
   return (

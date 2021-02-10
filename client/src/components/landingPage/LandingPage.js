@@ -49,19 +49,14 @@ const LandingPage = () => {
   const handleSubmit = async () => {
     await dispatch(AuthActions.removeAuth())
     await dispatch(CartActions.clearCartAction());
-    let storeReady;
     
     if (button === "login"){
-      storeReady = await dispatch(AuthActions.signIn(email, password));
+      await dispatch(AuthActions.signIn(email, password));
     } else if (button === "signup") {
-      storeReady = await dispatch(AuthActions.signUp(firstName, lastName, email, password));
-    }
-    if (storeReady) {
-      history.push('/')
+      await dispatch(AuthActions.signUp(firstName, lastName, email, password));
     }
   }
 
-  
   return (
     <div className="landing">
       <div className="landing__panel-left" style={{ animation: `fadeIn 0.5s` }}>

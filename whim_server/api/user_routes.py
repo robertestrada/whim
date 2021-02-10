@@ -42,28 +42,28 @@ def sign_up():
     access_token = create_access_token(identity=email)
     return {"token": access_token, "user": user.to_dict()}, 200
   except AssertionError as exception_message:
-    return jsonify(msg='Error: {}. '.format(exception_message)), 400
+    return jsonify(msg='{}'.format(exception_message)), 400
 
 
 @user_routes.route('/signin', methods=['POST'])
 def sign_in():
-    try:
-      if not request.is_json:
-        return jsonify({"msg": "Missing JSON in request"}), 400
+  try:
+    if not request.is_json:
+      return jsonify({"msg": "Missing JSON in request"}), 400
 
-      email = request.json.get('email', None)
-      password = request.json.get('password', None)
-      if not email or not password:
-        return jsonify({"msg": "Please fill out all fields"}), 400
+    email = request.json.get('email', None)
+    password = request.json.get('password', None)
+    if not email or not password:
+      return jsonify({"msg": "Please fill out all fields"}), 400
 
-      user = User.query.filter(User.email== email).one()
-      if (user.check_password(password)):
-        access_token = create_access_token(identity=email)
-        return {"token": access_token, "user": user.to_dict()}, 200
-      else:
-        return jsonify({"msg": "Email or Password is incorrect"}), 400
-    except:
+    user = User.query.filter(User.email== email).one()
+    if (user.check_password(password)):
+      access_token = create_access_token(identity=email)
+      return {"token": access_token, "user": user.to_dict()}, 200
+    else:
       return jsonify({"msg": "Email or Password is incorrect"}), 400
+  except:
+    return jsonify({"msg": "Email or Password is incorrect"}), 400
     
     
 @user_routes.route('/signup-google', methods=['POST'])

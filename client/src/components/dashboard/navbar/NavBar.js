@@ -66,11 +66,8 @@ const NavBar = ({ handleTabChange, setTagTerm, setSubmittedSearchFilters,
               className={`smooth-image-profile image-${imageLoaded ? 'visible' : 'hidden'}`}
               onLoad={() => setImageLoaded(true)}
             />
-          </div>
-          { showProfileDrop 
-            ? <ProfileDropdown availableProfilePicUrl={availableProfilePicUrl} setPanelType={setPanelType}/> 
-            : null 
-          }
+          </div> 
+          <ProfileDropdown showProfileDrop={showProfileDrop} availableProfilePicUrl={availableProfilePicUrl} setPanelType={setPanelType}/> 
         </div>
         <div className="navbar__cart-wrapper" onClick={handleCartClick}>
           <svg className="navbar__cart-svg" viewBox="0 0 21 17" >

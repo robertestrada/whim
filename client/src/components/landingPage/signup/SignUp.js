@@ -4,7 +4,10 @@ import '../../../styles/logIn.css';
 import GoogleSignup from './GoogleSignup';
 import ReCAPTCHA from "react-google-recaptcha";
 
-const SignUp = ({ firstName, setFirstName, lastName, setLastName, email, setEmail, password, setPassword, valErrors, rcSiteKey, handleSubmit }) => {
+const SignUp = ({ 
+                  firstName, setFirstName, lastName, setLastName, email, setEmail, 
+                  password, setPassword, valErrors, rcSiteKey, handleSubmit 
+                }) => {
 
   const recaptchaRef = useRef();
 
@@ -14,7 +17,7 @@ const SignUp = ({ firstName, setFirstName, lastName, setLastName, email, setEmai
   }
 
   return (
-    <form className="login" style={{ animation: `fadeIn 0.5s` }} onSubmit={handleFormSubmit}>
+    <div className="login" style={{ animation: `fadeIn 0.5s` }}>
       {valErrors &&
         <div className="login__error-wrapper">
           <p className="login__error">{valErrors.msg}</p>
@@ -55,22 +58,23 @@ const SignUp = ({ firstName, setFirstName, lastName, setLastName, email, setEmai
         ? <p className="signup_submit_disclaimer">Password must be at least 8 characters, have one number and one capital</p> 
         : null
       }
-      <button className="signup__submit" type="submit">Sign Up</button>
+      <div className="signup__submit" onClick={handleFormSubmit}>Sign Up</div>
       <div className="login__auth-divider-wrapper">
         <div className="login__auth-divider-line" />
         <div className="login__auth-divider-text">or</div>
       </div>
       <GoogleSignup/> 
       <div className="login__terms">
-        By clicking 'Sign Up' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. The Google Privacy Policy and Terms of Service apply.
+        By clicking 'Sign Up' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
       </div>
       <ReCAPTCHA
+        className="signup__recaptcha"
         ref={recaptchaRef}
         sitekey={rcSiteKey}
         size="invisible"
         onChange={handleSubmit}
       />
-    </form>
+    </div>
   );
 }
 export default SignUp;
