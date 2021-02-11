@@ -4,14 +4,21 @@ import DemoButton from './DemoButton';
 import GoogleSignin from './GoogleSignin.js';
 
 
-const LogIn = ({ email, setEmail, password, setPassword, handleSubmit, valErrors }) => {
+const LogIn = ({ 
+                email, setEmail, password, setPassword, 
+                handleSubmit, valErrors, loginValidationMsg 
+              }) => {
 
   return (
-    <form className="login" style={{ animation: `fadeIn 0.5s` }} onSubmit={handleSubmit}>
-      { valErrors &&
-        <div className="login__error-wrapper">
-          <p className="login__error">{valErrors.msg}</p>
-        </div> 
+    <div className="login" style={{ animation: `fadeIn 0.5s` }}>
+      { valErrors || loginValidationMsg 
+        ? <div className="login__error-wrapper">
+          { valErrors
+            ? <p className="login__error">{valErrors.msg}</p>
+            : <p className="login__error">{loginValidationMsg}</p>
+          }
+          </div>
+        : null 
       }
       <input
         className="login__input"
@@ -27,8 +34,8 @@ const LogIn = ({ email, setEmail, password, setPassword, handleSubmit, valErrors
         onChange={e => setPassword(e.target.value)}>
       </input>
       <div className="login__buttons">
-        <DemoButton email={email} setEmail={setEmail} password={password} setPassword={setPassword} />
-        <button className="login__submit login-button" type="submit">Log In</button>
+        <DemoButton email={email} setEmail={setEmail} password={password} setPassword={setPassword}/>
+        <button className="login__submit login-button" onClick={handleSubmit}>Log In</button>
       </div>
       <div className="login__auth-divider-wrapper">
         <div className="login__auth-divider-line"/>
@@ -36,9 +43,9 @@ const LogIn = ({ email, setEmail, password, setPassword, handleSubmit, valErrors
       </div>
       <GoogleSignin/> 
       <div className="login__terms">
-        By clicking 'Log In' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. The Google Privacy Policy and Terms of Service apply.
+        By clicking 'Log In' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
       </div>
-    </form>
+    </div>
   );
 }
 export default LogIn;

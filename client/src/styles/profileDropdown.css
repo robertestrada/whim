@@ -8,7 +8,11 @@
   border: 1px solid rgb(240, 245, 247);
   border-radius: 2px;
   display: block;
-  /* color: rgb(25, 42, 50); */
+  color: rgb(25, 42, 50);
+}
+
+.profile-dropdown__container.profile-dropdown-hide {
+  visibility: hidden;
 }
 
 .profile-dropdown__dropdown-arrow-up-wrapper {

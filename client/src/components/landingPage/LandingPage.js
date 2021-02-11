@@ -1,27 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import * as AuthActions from '../../actions/authentication';
 import * as CartActions from '../../actions/cart';
 import { baseUrl } from '../../config';
 import '../../styles/landingPage.css';
-import LogIn from './login/LogIn.js'
-import SignUp from './signup/SignUp.js'
-import LandingSlides from './LandingSlides'
+import LogIn from './login/LogIn.js';
+import SignUp from './signup/SignUp.js';
+import LandingSlides from './LandingSlides';
 import LandingTrustFeatures from './LandingTrustFeatures';
-import ReCAPTCHA from "react-google-recaptcha";
+
 
 const LandingPage = () => {
+  const dispatch = useDispatch();
   const [rcSiteKey, setRCSiteKey] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const history = useHistory();
-  const dispatch = useDispatch();
-  const valErrors = useSelector(state => state.authentication.valErrors)
   const [button, setButton] = useState("login")
-  const [showRecaptcha, setShowRecaptcha] = useState(false)
+  const valErrors = useSelector(state => state.authentication.valErrors)
+  const [loginValidationMsg, setLoginValidationMsg] = useState(null);
+  const [signupValidationMsgs, setSignupValidationMsgs] = useState({ 'names': '', 'email': '', 'password': '' });
+  const [allowSignup, setAllowSignup] = useState(false);
 
   const handleGetRecaptchaSiteKey = async () => {
     const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
@@ -44,27 +44,74 @@ const LandingPage = () => {
     setLastName('');
     setEmail('');
     setPassword('');
-    setShowRecaptcha(false);
+    setAllowSignup(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [button]);
 
+  useEffect(() => {
+    let signupValidationMsgsTemp = { ...signupValidationMsgs };
+    if (firstName !== '') {
+      if (lastName !== '') {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': '' };
+      } else {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your last name.' };
+      }
+    } else if (lastName !== '') {
+      signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your first name.' };
+    }
+    setSignupValidationMsgs({ ...signupValidationMsgsTemp })
+  }, [firstName, lastName]);
+
   const handleSubmit = async () => {
-    setShowRecaptcha(false);
     await dispatch(AuthActions.removeAuth())
     await dispatch(CartActions.clearCartAction());
-    let storeReady;
-    
+    // const emailRegEx = /^[a-z0-9][-_.+!#$%&'*/=?^`{|]{0,1}([a-z0-9][-_.+!#$%&'*/=?^`{|]{0,1})*[a-z0-9]@[a-z0-9][-.]{0,1}([a-z][-.]{0,1})*[a-z0-9].[a-z0-9]{1,}([.-]{0,1}[a-z]){0,}[a-z0-9]{0,}$/;
     if (button === "login"){
-      storeReady = await dispatch(AuthActions.signIn(email, password));
+      if (email === '' || password === '') {
+        setLoginValidationMsg('Please fill out all fields.');
+        return
+      }
+      await dispatch(AuthActions.signIn(email, password));
     } else if (button === "signup") {
-      storeReady = await dispatch(AuthActions.signUp(firstName, lastName, email, password));
-    }
-    if (storeReady) {
-      history.push('/')
+      let allowSignupTemp = true;
+      let signupValidationMsgsTemp = { ...signupValidationMsgs };
+      if (firstName === '') {
+        if (lastName === '') {
+          signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your first and last names.' };
+          allowSignupTemp = false;
+        } else {
+          signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your first name.' };
+          allowSignupTemp = false;
+        }
+      } else if (lastName === '') {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your last name.' };
+        allowSignupTemp = false;
+      }
+      // if (email === '') {
+      //   signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'email': 'Please enter an email address.' };
+      //   allowSignupTemp = false;
+      // } else if (!emailRegEx.test(email)) {
+      //   signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'email': 'Hmm, try double-checking your email.' };
+      //   allowSignupTemp = false;
+      // }
+      if (password === '') {
+        setSignupValidationMsgs({ ...signupValidationMsgs, 'password': 'Please enter a password.' });
+        allowSignupTemp = false;
+      }
+      setSignupValidationMsgs({ ...signupValidationMsgsTemp });
+      setAllowSignup(allowSignupTemp);
     }
   }
-  
-  
+
+  useEffect(() => {
+    if (allowSignup){
+      setAllowSignup(false);
+      dispatch(AuthActions.signUp(firstName, lastName, email, password));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowSignup]);
+  console.log(signupValidationMsgs);
+  console.log(allowSignup);
   return (
     <div className="landing">
       <div className="landing__panel-left" style={{ animation: `fadeIn 0.5s` }}>
@@ -93,6 +140,7 @@ const LandingPage = () => {
                 setPassword={setPassword}
                 handleSubmit={handleSubmit}
                 valErrors={valErrors}
+                loginValidationMsg={loginValidationMsg}
               />
             : <SignUp 
                 firstName={firstName}
@@ -103,18 +151,13 @@ const LandingPage = () => {
                 setEmail={setEmail}
                 password={password}
                 setPassword={setPassword}
-                setShowRecaptcha={setShowRecaptcha}
+                rcSiteKey={rcSiteKey}
+                handleSubmit={handleSubmit}
                 valErrors={valErrors}
+                signupValidationMsgs={signupValidationMsgs}
               />
           }
         </div>
-        {showRecaptcha
-          ? <ReCAPTCHA
-            sitekey={rcSiteKey}
-            onChange={handleSubmit}
-            />
-          : null
-        }
       </div>
     </div>
   );

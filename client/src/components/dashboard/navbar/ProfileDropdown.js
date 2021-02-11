@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 import '../../../styles/profileDropdown.css';
 import * as AuthActions from '../../../actions/authentication';
 
-const ProfileDropdown = ({ setPanelType, availableProfilePicUrl }) => {
+const ProfileDropdown = ({ showProfileDrop, setPanelType, availableProfilePicUrl }) => {
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -22,7 +22,7 @@ const ProfileDropdown = ({ setPanelType, availableProfilePicUrl }) => {
 
 
   return (
-    <div className="profile-dropdown__container">
+    <div className={ showProfileDrop ? "profile-dropdown__container" : "profile-dropdown__container profile-dropdown-hide"}>
       <div className="profile-dropdown__dropdown-arrow-up-wrapper">
         <div className="profile-dropdown__dropdown-arrow-up-container">
           <div className="profile-dropdown__dropdown-arrow-up"></div>

@@ -37,3 +37,7 @@
 .signup__submit:hover {
   background-color: rgb(0, 152, 211);
 }
+
+.signup__recaptcha {
+  visibility: hidden;
+}
