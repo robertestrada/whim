@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../../styles/logIn.css';
 
-export default function DemoButton({ email, setEmail, password, setPassword }) {
+const DemoButton = ({ email, setEmail, password, setPassword }) => {
 
   let i=0, k=0, spd = 25;
   const txt = 'demo@whim.com'
@@ -40,3 +40,5 @@ export default function DemoButton({ email, setEmail, password, setPassword }) {
     <button className="login__submit demo-button" onClick={handleClick}>Demo User</button>
   )
 }
+
+export default DemoButton;

@@ -4,14 +4,21 @@ import DemoButton from './DemoButton';
 import GoogleSignin from './GoogleSignin.js';
 
 
-const LogIn = ({ email, setEmail, password, setPassword, handleSubmit, valErrors }) => {
+const LogIn = ({ 
+                email, setEmail, password, setPassword, 
+                handleSubmit, valErrors, loginValidationMsg 
+              }) => {
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
-      { valErrors &&
-        <div className="login__error-wrapper">
-          <p className="login__error">{valErrors.msg}</p>
-        </div> 
+      { valErrors || loginValidationMsg 
+        ? <div className="login__error-wrapper">
+          { valErrors
+            ? <p className="login__error">{valErrors.msg}</p>
+            : <p className="login__error">{loginValidationMsg}</p>
+          }
+          </div>
+        : null 
       }
       <input
         className="login__input"

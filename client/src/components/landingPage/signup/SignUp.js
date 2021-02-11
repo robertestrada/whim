@@ -6,7 +6,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 
 const SignUp = ({ 
                   firstName, setFirstName, lastName, setLastName, email, setEmail, 
-                  password, setPassword, valErrors, rcSiteKey, handleSubmit 
+                  password, setPassword, valErrors, rcSiteKey, handleSubmit, signupValidationMsgs
                 }) => {
 
   const recaptchaRef = useRef();
@@ -16,12 +16,14 @@ const SignUp = ({
     await recaptchaRef.current.executeAsync();
   }
 
+
+  console.log(signupValidationMsgs);
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
-      {valErrors &&
-        <div className="login__error-wrapper">
-          <p className="login__error">{valErrors.msg}</p>
-        </div>
+      { valErrors
+        &&  <div className="login__error-wrapper">
+              <p className="login__error">{valErrors.msg}</p>
+            </div>
       }
       <div className="signup__names">
         <input
@@ -39,6 +41,7 @@ const SignUp = ({
           onChange={e => setLastName(e.target.value)}>
         </input>
       </div>
+      {signupValidationMsgs.names !== '' ? <div className="login__input-error">{signupValidationMsgs.names}</div> : null}
       <input
         required
         className="login__input"
