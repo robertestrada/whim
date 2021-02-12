@@ -14,15 +14,35 @@ const SignUp = ({
   
   useEffect(() => {
     if (firstNameSignup !== '') {
-      setSignupValidationMsgs({ ...signupValidationMsgs, 'names': "Please fill in your last name."});
+      if (lastNameSignup !== '') {
+        setSignupValidationMsgs({ ...signupValidationMsgs, 'names': '' });
+      } else if (signupValidationMsgs.names !== '') {
+        setSignupValidationMsgs({ ...signupValidationMsgs, 'names': 'Please fill in your last name.' });
+      }
     }
   }, [firstNameSignup]);
 
   useEffect(() => {
     if (lastNameSignup !== '') {
-      setSignupValidationMsgs({ ...signupValidationMsgs, 'names': "Please fill in your first name." });
+      if (firstNameSignup !== '') {
+        setSignupValidationMsgs({ ...signupValidationMsgs, 'names': '' });
+      } else if (signupValidationMsgs.names !== '') {
+        setSignupValidationMsgs({ ...signupValidationMsgs, 'names': 'Please fill in your first name.' });
+      }
     }
   }, [lastNameSignup]);
+
+  useEffect(() => {
+    if (emailSignup !== '') {
+      setSignupValidationMsgs({ ...signupValidationMsgs, 'email': '' });
+    }
+  }, [emailSignup]);
+
+  useEffect(() => {
+    if (passwordSignup !== '') {
+      setSignupValidationMsgs({ ...signupValidationMsgs, 'password': '' });
+    }
+  }, [passwordSignup]);
 
 
   const handleFormSubmit = async e => {
