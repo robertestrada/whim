@@ -41,3 +41,11 @@
 .signup__recaptcha {
   visibility: hidden;
 }
+
+.signup__input-error {
+  font-size: 14px;
+  font-weight: 300;
+  margin-bottom: 8px;
+  align-self: flex-start;
+  color: rgb(236, 47, 77);
+}

@@ -13,15 +13,16 @@ import LandingTrustFeatures from './LandingTrustFeatures';
 const LandingPage = () => {
   const dispatch = useDispatch();
   const [rcSiteKey, setRCSiteKey] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [emailLogin, setEmailLogin] = useState('');
+  const [passwordLogin, setPasswordLogin] = useState('');
+  const [emailSignup, setEmailSignup] = useState('');
+  const [passwordSignup, setPasswordSignup] = useState('');
+  const [firstNameSignup, setFirstNameSignup] = useState('');
+  const [lastNameSignup, setLastNameSignup] = useState('');
   const [button, setButton] = useState("login")
   const valErrors = useSelector(state => state.authentication.valErrors)
-  const [loginValidationMsg, setLoginValidationMsg] = useState(null);
+  const [loginValidationMsg, setLoginValidationMsg] = useState('');
   const [signupValidationMsgs, setSignupValidationMsgs] = useState({ 'names': '', 'email': '', 'password': '' });
-  const [allowSignup, setAllowSignup] = useState(false);
 
   const handleGetRecaptchaSiteKey = async () => {
     const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
@@ -38,80 +39,84 @@ const LandingPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(()=>{
-    handleClearErrors();
-    setFirstName('');
-    setLastName('');
-    setEmail('');
-    setPassword('');
-    setAllowSignup(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [button]);
-
-  useEffect(() => {
-    let signupValidationMsgsTemp = { ...signupValidationMsgs };
-    if (firstName !== '') {
-      if (lastName !== '') {
-        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': '' };
-      } else {
-        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your last name.' };
-      }
-    } else if (lastName !== '') {
-      signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your first name.' };
-    }
-    setSignupValidationMsgs({ ...signupValidationMsgsTemp })
-  }, [firstName, lastName]);
-
   const handleSubmit = async () => {
     await dispatch(AuthActions.removeAuth())
     await dispatch(CartActions.clearCartAction());
-    // const emailRegEx = /^[a-z0-9][-_.+!#$%&'*/=?^`{|]{0,1}([a-z0-9][-_.+!#$%&'*/=?^`{|]{0,1})*[a-z0-9]@[a-z0-9][-.]{0,1}([a-z][-.]{0,1})*[a-z0-9].[a-z0-9]{1,}([.-]{0,1}[a-z]){0,}[a-z0-9]{0,}$/;
+    
     if (button === "login"){
-      if (email === '' || password === '') {
-        setLoginValidationMsg('Please fill out all fields.');
-        return
-      }
-      await dispatch(AuthActions.signIn(email, password));
+      await dispatch(AuthActions.signIn(emailLogin, passwordLogin));
+
     } else if (button === "signup") {
-      let allowSignupTemp = true;
-      let signupValidationMsgsTemp = { ...signupValidationMsgs };
-      if (firstName === '') {
-        if (lastName === '') {
-          signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your first and last names.' };
-          allowSignupTemp = false;
-        } else {
-          signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your first name.' };
-          allowSignupTemp = false;
-        }
-      } else if (lastName === '') {
-        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your last name.' };
-        allowSignupTemp = false;
-      }
-      // if (email === '') {
-      //   signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'email': 'Please enter an email address.' };
-      //   allowSignupTemp = false;
-      // } else if (!emailRegEx.test(email)) {
-      //   signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'email': 'Hmm, try double-checking your email.' };
-      //   allowSignupTemp = false;
-      // }
-      if (password === '') {
-        setSignupValidationMsgs({ ...signupValidationMsgs, 'password': 'Please enter a password.' });
-        allowSignupTemp = false;
-      }
-      setSignupValidationMsgs({ ...signupValidationMsgsTemp });
-      setAllowSignup(allowSignupTemp);
+      await dispatch(AuthActions.signUp(firstNameSignup, lastNameSignup, emailSignup, passwordSignup));
     }
   }
 
-  useEffect(() => {
-    if (allowSignup){
-      setAllowSignup(false);
-      dispatch(AuthActions.signUp(firstName, lastName, email, password));
+  const handleValidate = () => {
+    const emailRegEx = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
+    const passwordRegExLowercase = /^(?=.*[a-z]).*$/;
+    const passwordRegExUppercase = /^(?=.*[A-Z]).*$/;
+    const passwordRegExNumber = /^(?=.*\d).*$/;
+    const passwordRegExSymbol = /^(?=.*[-+_!@#$%^&*.,?]).*$/;
+    handleClearErrors();
+
+    if (button === "login") {
+      if (emailLogin === '' || passwordLogin === '') {
+        setLoginValidationMsg('Please fill out all fields.');
+        return
+      }
+      setLoginValidationMsg('');
+      handleSubmit();
+
+    } else if (button === "signup") {
+
+      let signupValidationMsgsTemp = { ...signupValidationMsgs };
+
+      if (firstNameSignup === '') {
+        if (lastNameSignup === '') {
+          signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your first and last names.' };
+        } else {
+          signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your first name.' };
+        }
+      } else if (firstNameSignup !== '') {
+        if (lastNameSignup !== '') {
+          signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': '' };
+        } else {
+          signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'names': 'Please fill in your last name.' };
+        }
+      }
+
+      if (emailSignup === '') {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'email': 'Please enter an email address.' };
+      } else if (!emailRegEx.test(emailSignup)) {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'email': 'Hmm, try double-checking your email.' };
+      } else {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'email': '' };
+      }
+
+      if (passwordSignup === '') {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'password': 'Please enter a password.' };
+      } else if (!passwordRegExLowercase.test(passwordSignup)) {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'password': 'Password must contain a lowercase letter.' };
+      } else if (!passwordRegExUppercase.test(passwordSignup)) {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'password': 'Password must contain an uppercase letter.' };
+      } else if (!passwordRegExNumber.test(passwordSignup)) {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'password': 'Password must contain a number.' };
+      } else if (!passwordRegExSymbol.test(passwordSignup)) {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'password': 'Password must contain a symbol.' };
+      } else if (passwordSignup.length < 8 || passwordSignup.length > 50) {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'password': 'Password must be between 8 and 50 characters.' };
+      } else {
+        signupValidationMsgsTemp = { ...signupValidationMsgsTemp, 'password': '' };
+      }
+
+      setSignupValidationMsgs({ ...signupValidationMsgsTemp });
+      if (Object.values(signupValidationMsgsTemp).every(value => value === '')){
+        return true;
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allowSignup]);
-  console.log(signupValidationMsgs);
-  console.log(allowSignup);
+  }
+
+
   return (
     <div className="landing">
       <div className="landing__panel-left" style={{ animation: `fadeIn 0.5s` }}>
@@ -123,8 +128,7 @@ const LandingPage = () => {
             <img className="landing__logo" src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg" alt="whim-logo" />
           </div>
           { button === "signup" 
-            ? <LandingTrustFeatures button={button}/>
-            : null
+            && <LandingTrustFeatures button={button}/>
           }
         </div>
         <div className="landing__details">
@@ -134,27 +138,29 @@ const LandingPage = () => {
           </div>
           { button === "login"
             ? <LogIn 
-                email={email}
-                setEmail={setEmail}
-                password={password}
-                setPassword={setPassword}
-                handleSubmit={handleSubmit}
+                emailLogin={emailLogin}
+                setEmailLogin={setEmailLogin}
+                passwordLogin={passwordLogin}
+                setPasswordLogin={setPasswordLogin}
+                handleValidate={handleValidate}
                 valErrors={valErrors}
                 loginValidationMsg={loginValidationMsg}
               />
             : <SignUp 
-                firstName={firstName}
-                setFirstName={setFirstName}
-                lastName={lastName}
-                setLastName={setLastName}
-                email={email}
-                setEmail={setEmail}
-                password={password}
-                setPassword={setPassword}
+                firstNameSignup={firstNameSignup}
+                setFirstNameSignup={setFirstNameSignup}
+                lastNameSignup={lastNameSignup}
+                setLastNameSignup={setLastNameSignup}
+                emailSignup={emailSignup}
+                setEmailSignup={setEmailSignup}
+                passwordSignup={passwordSignup}
+                setPasswordSignup={setPasswordSignup}
                 rcSiteKey={rcSiteKey}
+                handleValidate={handleValidate}
                 handleSubmit={handleSubmit}
                 valErrors={valErrors}
                 signupValidationMsgs={signupValidationMsgs}
+                setSignupValidationMsgs={setSignupValidationMsgs}
               />
           }
         </div>

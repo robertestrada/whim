@@ -1,23 +1,38 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import '../../../styles/signUp.css';
 import '../../../styles/logIn.css';
 import GoogleSignup from './GoogleSignup';
 import ReCAPTCHA from "react-google-recaptcha";
 
 const SignUp = ({ 
-                  firstName, setFirstName, lastName, setLastName, email, setEmail, 
-                  password, setPassword, valErrors, rcSiteKey, handleSubmit, signupValidationMsgs
+                  firstNameSignup, setFirstNameSignup, lastNameSignup, setLastNameSignup, emailSignup, setEmailSignup, 
+                  passwordSignup, setPasswordSignup, valErrors, rcSiteKey, handleValidate, signupValidationMsgs,
+                  handleSubmit, setSignupValidationMsgs
                 }) => {
 
   const recaptchaRef = useRef();
+  
+  useEffect(() => {
+    if (firstNameSignup !== '') {
+      setSignupValidationMsgs({ ...signupValidationMsgs, 'names': "Please fill in your last name."});
+    }
+  }, [firstNameSignup]);
+
+  useEffect(() => {
+    if (lastNameSignup !== '') {
+      setSignupValidationMsgs({ ...signupValidationMsgs, 'names': "Please fill in your first name." });
+    }
+  }, [lastNameSignup]);
+
 
   const handleFormSubmit = async e => {
     e.preventDefault();
-    await recaptchaRef.current.executeAsync();
+    if (handleValidate()){
+      await recaptchaRef.current.executeAsync();
+    }
   }
 
 
-  console.log(signupValidationMsgs);
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
       { valErrors
@@ -27,43 +42,44 @@ const SignUp = ({
       }
       <div className="signup__names">
         <input
-          className="login__input first-name"
-          required
-          value={firstName}
+          className={ (signupValidationMsgs.names === 'Please fill in your first and last names.' || signupValidationMsgs.names === 'Please fill in your first name.') ? "login__input first-name input-error" : "login__input first-name" }
+          value={firstNameSignup}
           placeholder="First Name"
-          onChange={e => setFirstName(e.target.value)}>
+          onChange={e => setFirstNameSignup(e.target.value)}>
         </input>
         <input
-        className="login__input last-name"
-          required
-          value={lastName}
+          className={ (signupValidationMsgs.names === 'Please fill in your first and last names.' || signupValidationMsgs.names === 'Please fill in your last name.') ? "login__input last-name input-error" : "login__input last-name" }
+          value={lastNameSignup}
           placeholder="Last Name"
-          onChange={e => setLastName(e.target.value)}>
+          onChange={e => setLastNameSignup(e.target.value)}>
         </input>
       </div>
-      {signupValidationMsgs.names !== '' ? <div className="login__input-error">{signupValidationMsgs.names}</div> : null}
+      { signupValidationMsgs.names !== '' 
+        && <div className="signup__input-error">{signupValidationMsgs.names}</div>
+      }
       <input
-        required
-        className="login__input"
-        value={email}
+        className={ signupValidationMsgs.email !== ''  ? "login__input input-error" : "login__input" }
+        value={emailSignup}
         placeholder="Email Address"
-        onChange={e => setEmail(e.target.value)}>
+        onChange={e => setEmailSignup(e.target.value)}>
       </input>
+      { signupValidationMsgs.email !== ''
+        && <div className="signup__input-error">{signupValidationMsgs.email}</div>
+      }
       <input
         required
-        className="login__input"
+        className={ signupValidationMsgs.password !== ''  ? "login__input input-error" : "login__input" }
         type="password"
-        value={password}
+        value={passwordSignup}
         placeholder="Password"
-        onChange={e => setPassword(e.target.value)}>
+        onChange={e => setPasswordSignup(e.target.value)}>
       </input>
-      { password.length < 8 && password.length > 0 
-        ? <p className="signup_submit_disclaimer">Password must be at least 8 characters, have one number and one capital</p> 
-        : null
+      { signupValidationMsgs.password !== ''
+        && <div className="signup__input-error">{signupValidationMsgs.password}</div>
       }
       <div className="signup__submit" onClick={handleFormSubmit}>Sign Up</div>
       <div className="login__auth-divider-wrapper">
-        <div className="login__auth-divider-line" />
+        <div className="login__auth-divider-line"/>
         <div className="login__auth-divider-text">or</div>
       </div>
       <GoogleSignup/> 
