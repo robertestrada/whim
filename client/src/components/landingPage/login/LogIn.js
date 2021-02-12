@@ -5,37 +5,37 @@ import GoogleSignin from './GoogleSignin.js';
 
 
 const LogIn = ({ 
-                email, setEmail, password, setPassword, 
-                handleSubmit, valErrors, loginValidationMsg 
+                emailLogin, setEmailLogin, passwordLogin, setPasswordLogin, 
+                handleValidate, valErrors, loginValidationMsg 
               }) => {
+
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
-      { valErrors || loginValidationMsg 
-        ? <div className="login__error-wrapper">
-          { valErrors
+      { ((valErrors && valErrors.msg) || loginValidationMsg) 
+        && <div className="login__error-wrapper">
+        {(valErrors && valErrors.msg)
             ? <p className="login__error">{valErrors.msg}</p>
             : <p className="login__error">{loginValidationMsg}</p>
           }
-          </div>
-        : null 
+          </div> 
       }
       <input
         className="login__input"
-        value={email}
+        value={emailLogin}
         placeholder="Email Address"
-        onChange={e => setEmail(e.target.value)}>
+        onChange={e => setEmailLogin(e.target.value)}>
       </input>
       <input
         className="login__input"
         placeholder="Password"
         type="password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}>
+        value={passwordLogin}
+        onChange={e => setPasswordLogin(e.target.value)}>
       </input>
       <div className="login__buttons">
-        <DemoButton email={email} setEmail={setEmail} password={password} setPassword={setPassword}/>
-        <button className="login__submit login-button" onClick={handleSubmit}>Log In</button>
+        <DemoButton emailLogin={emailLogin} setEmailLogin={setEmailLogin} passwordLogin={passwordLogin} setPasswordLogin={setPasswordLogin}/>
+        <button className="login__submit login-button" onClick={handleValidate}>Log In</button>
       </div>
       <div className="login__auth-divider-wrapper">
         <div className="login__auth-divider-line"/>

@@ -62,6 +62,24 @@
   outline-offset: -2px;
 }
 
+.login__input.first-name.input-error{
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(236, 47, 77);
+}
+
+.login__input.last-name.input-error{
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(236, 47, 77);
+}
+
+.login__input.input-error{
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(236, 47, 77);
+}
+
 .login__buttons {
   display: flex;
   width: 100%;
