@@ -3,56 +3,60 @@ import '../../styles/landingSlides.css';
 
 const LandingSlides = () => {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [sliderOne, setSliderOne] = useState([]);
-  const [sliderTwo, setSliderTwo] = useState([]);
-  const [sliderThree, setSliderThree] = useState([]);
-  const [sliderFour, setSliderFour] = useState([]);
+  const [slideBulk, setSlideBulk] = useState([]);
+  const slideAmount = 6;
 
-  const sliderOneBuild = () => {
+  const slideBuild = () => {
     let slides = [];
-    for(let i = 1; i <= 6; i++){
-      slides.push(`https://whim-bucket.s3-us-west-1.amazonaws.com/whim-landing-images/${i}.jpg`);
+    for (let i = 0; i < slideAmount * 4; i++) {
+      if (i % slideAmount < slideAmount) {
+        slides.push(`https://whim-bucket.s3-us-west-1.amazonaws.com/whim-landing-images/${i + 1}.jpg`);
+        if (i % slideAmount === slideAmount - 1) {
+          slides = slides.concat(slides.slice(-slideAmount));
+        }
+      }
     }
-    setSliderOne([...slides, ...slides]);
+    setSlideBulk([...slides]);
   };
 
-  const sliderTwoBuild = () => {
-    let slides = [];
-    for (let i = 7; i <= 12; i++) {
-      slides.push(`https://whim-bucket.s3-us-west-1.amazonaws.com/whim-landing-images/${i}.jpg`);
-    }
-    setSliderTwo([...slides, ...slides]);
-  }
+  
+  useEffect(() => {
+    slideBuild();
+  }, []);
 
-  const sliderThreeBuild = () => {
-    const slides = [];
-    for (let i = 13; i <= 18; i++) {
-      slides.push(`https://whim-bucket.s3-us-west-1.amazonaws.com/whim-landing-images/${i}.jpg`);
-    }
-    setSliderThree([...slides, ...slides]);
-  }
-
-  const sliderFourBuild = () => {
-    const slides = [];
-    for (let i = 19; i <= 24; i++) {
-      slides.push(`https://whim-bucket.s3-us-west-1.amazonaws.com/whim-landing-images/${i}.jpg`);
-    }
-    setSliderFour([...slides, ...slides]);
-  };
+  const [slideCount, setSlideCount] = useState(0);
 
   useEffect(() => {
-    sliderOneBuild();
-    sliderTwoBuild();
-    sliderThreeBuild();
-    sliderFourBuild();
-  }, []);
+    let slideCounter = slideCount;
+    const slideInterval = setInterval(() => {
+      if (slideCounter>= slideBulk) {
+        clearInterval(slideInterval);
+      } else {
+        setSlideCount(c => c + 1);
+        slideCounter++;
+      }
+    }, 100);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slideBulk]);
+
+  const slideBulkLength = slideBulk.length;
+  const slideOneCount = slideCount >= slideAmount * 2 ? slideAmount * 2 : slideCount;
+
+  const slideTwoStart = slideBulkLength / 4;
+  const slideTwoCount = slideCount >= slideAmount * 4 ? slideAmount * 4 : slideCount;
+
+  const slideThreeStart = slideTwoStart + slideTwoStart;
+  const slideThreeCount = slideCount >= slideAmount * 6 ? slideAmount * 6 : slideCount;
+
+  const slideFourStart = slideThreeStart + slideTwoStart;
+  const slideFourCount = slideCount >= slideAmount * 8 ? slideAmount * 8 : slideCount;
 
 
   return (
     <>
       <div className="landing__sliders-wrapper-rev one">
         <div className="landing__slider-rev">
-          {sliderOne.map((url, idx) => <img 
+          { slideCount >= 0 && slideBulk.slice(0, slideOneCount).map((url, idx) => <img 
                                         key={`${url}${idx}`}
                                         src={url} 
                                         alt={""} 
@@ -64,7 +68,7 @@ const LandingSlides = () => {
       </div>
       <div className="landing__sliders-wrapper two">
         <div className="landing__slider">
-          {sliderTwo.map((url, idx) => <img
+          { slideCount >= slideTwoStart && slideBulk.slice(slideTwoStart, slideTwoCount).map((url, idx) => <img
             key={`${url}${idx}`}
             src={url}
             alt={""}
@@ -76,7 +80,7 @@ const LandingSlides = () => {
       </div>
       <div className="landing__sliders-wrapper-rev three">
         <div className="landing__slider-rev">
-          {sliderThree.map((url, idx) => <img
+          { slideCount >= slideThreeStart && slideBulk.slice(slideThreeStart, slideThreeCount).map((url, idx) => <img
             key={`${url}${idx}`}
             src={url}
             alt={""}
@@ -88,7 +92,7 @@ const LandingSlides = () => {
       </div>
       <div className="landing__sliders-wrapper four">
         <div className="landing__slider">
-          {sliderFour.map((url, idx) => <img
+          { slideCount >= slideFourStart && slideBulk.slice(slideFourStart, slideFourCount).map((url, idx) => <img
             key={`${url}${idx}`}
             src={url}
             alt={""}

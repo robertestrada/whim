@@ -30,8 +30,8 @@ const LandingPage = () => {
     setRCSiteKey(recaptchaSiteKey.rcSiteKey);
   };
 
-  const handleClearErrors = async () => {
-    await dispatch(AuthActions.removeValErrors());
+  const handleClearErrors = () => {
+    dispatch(AuthActions.removeValErrors());
   }
 
   useEffect(() => {
@@ -39,15 +39,15 @@ const LandingPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSubmit = async () => {
-    await dispatch(AuthActions.removeAuth())
-    await dispatch(CartActions.clearCartAction());
+  const handleSubmit = () => {
+    dispatch(AuthActions.removeAuth())
+    dispatch(CartActions.clearCartAction());
     
     if (button === "login"){
-      await dispatch(AuthActions.signIn(emailLogin, passwordLogin));
+      dispatch(AuthActions.signIn(emailLogin, passwordLogin));
 
     } else if (button === "signup") {
-      await dispatch(AuthActions.signUp(firstNameSignup, lastNameSignup, emailSignup, passwordSignup));
+      dispatch(AuthActions.signUp(firstNameSignup, lastNameSignup, emailSignup, passwordSignup));
     }
   }
 
@@ -158,7 +158,6 @@ const LandingPage = () => {
                 rcSiteKey={rcSiteKey}
                 handleValidate={handleValidate}
                 handleSubmit={handleSubmit}
-                valErrors={valErrors}
                 signupValidationMsgs={signupValidationMsgs}
                 setSignupValidationMsgs={setSignupValidationMsgs}
               />
