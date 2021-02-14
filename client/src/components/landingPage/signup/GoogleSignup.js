@@ -12,7 +12,7 @@ const GoogleSignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(CartActions.clearCartAction());
+    dispatch(CartActions.clearCartAction());
     const googleCredsFetch = await fetch(`${baseUrl}/google-credentials`);
     const googleCreds = await googleCredsFetch.json();
 

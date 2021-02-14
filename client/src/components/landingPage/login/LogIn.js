@@ -12,9 +12,9 @@ const LogIn = ({
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
-      { ((valErrors && valErrors.msg) || loginValidationMsg) 
+      { (((valErrors && (valErrors.msg !== "Please login using your previously created email account."))) || loginValidationMsg) 
         && <div className="login__error-wrapper">
-        {(valErrors && valErrors.msg)
+        {((valErrors && (valErrors.msg !== "Please login using your previously created email account.")))
             ? <p className="login__error">{valErrors.msg}</p>
             : <p className="login__error">{loginValidationMsg}</p>
           }
