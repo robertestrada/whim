@@ -26,7 +26,7 @@ const ModalProduct = ({ setModalType, productId, modalChange }) => {
       const resultJSON = await result.json();
       let imgs = [];
       for (let i = 1; i <= resultJSON.product_img_amt; i++) {
-        imgs.push(`https://whim-bucket.s3-us-west-1.amazonaws.com/whim-products/${resultJSON.category}/${resultJSON.imgs_folder}/${i}.jpeg`);
+        imgs.push(`https://whim-bucket.s3-us-west-1.amazonaws.com/whim-products/${resultJSON.category}/${resultJSON.imgs_folder}/${i}.jpg`);
       }
       setProductImgUrls([...imgs]);
       setProductData({ ...resultJSON });

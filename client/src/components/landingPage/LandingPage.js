@@ -6,7 +6,7 @@ import { baseUrl } from '../../config';
 import '../../styles/landingPage.css';
 import LogIn from './login/LogIn.js';
 import SignUp from './signup/SignUp.js';
-import LandingSlides from './LandingSlides';
+import LandingSliders from './LandingSliders';
 import LandingTrustFeatures from './LandingTrustFeatures';
 
 
@@ -119,9 +119,7 @@ const LandingPage = () => {
 
   return (
     <div className="landing">
-      <div className="landing__panel-left" style={{ animation: `fadeIn 0.5s` }}>
-        <LandingSlides/>
-      </div>
+      <LandingSliders/>
       <div className="landing__panel-right-wrapper">
         <div className="landing__panel-trust-logo-wrapper" style={{ animation: `fadeIn 0.5s` }}>
           <div className="landing__logo-wrapper">
