@@ -6,8 +6,9 @@ import { baseUrl } from '../../config';
 import '../../styles/landingPage.css';
 import LogIn from './login/LogIn.js';
 import SignUp from './signup/SignUp.js';
-import LandingSlides from './LandingSlides';
+import LandingSliders from './LandingSliders';
 import LandingTrustFeatures from './LandingTrustFeatures';
+import Loader from 'react-loader-spinner';
 
 
 const LandingPage = () => {
@@ -23,6 +24,7 @@ const LandingPage = () => {
   const valErrors = useSelector(state => state.authentication.valErrors)
   const [loginValidationMsg, setLoginValidationMsg] = useState('');
   const [signupValidationMsgs, setSignupValidationMsgs] = useState({ 'names': '', 'email': '', 'password': '' });
+  const [slidersNotLoaded, setSlidersNotLoaded] = useState(true);
 
   const handleGetRecaptchaSiteKey = async () => {
     const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
@@ -30,8 +32,8 @@ const LandingPage = () => {
     setRCSiteKey(recaptchaSiteKey.rcSiteKey);
   };
 
-  const handleClearErrors = async () => {
-    await dispatch(AuthActions.removeValErrors());
+  const handleClearErrors = () => {
+    dispatch(AuthActions.removeValErrors());
   }
 
   useEffect(() => {
@@ -39,15 +41,15 @@ const LandingPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSubmit = async () => {
-    await dispatch(AuthActions.removeAuth())
-    await dispatch(CartActions.clearCartAction());
+  const handleSubmit = () => {
+    dispatch(AuthActions.removeAuth())
+    dispatch(CartActions.clearCartAction());
     
     if (button === "login"){
-      await dispatch(AuthActions.signIn(emailLogin, passwordLogin));
+      dispatch(AuthActions.signIn(emailLogin, passwordLogin));
 
     } else if (button === "signup") {
-      await dispatch(AuthActions.signUp(firstNameSignup, lastNameSignup, emailSignup, passwordSignup));
+      dispatch(AuthActions.signUp(firstNameSignup, lastNameSignup, emailSignup, passwordSignup));
     }
   }
 
@@ -116,12 +118,19 @@ const LandingPage = () => {
     }
   }
 
+  const LoadingIndicator = () => {
+    return (
+      <div className="landing__loading-container">
+        <Loader type="ThreeDots" color="#00b9e9" height={40} width={40} />
+      </div>
+    )
+  }
 
+  
   return (
     <div className="landing">
-      <div className="landing__panel-left" style={{ animation: `fadeIn 0.5s` }}>
-        <LandingSlides/>
-      </div>
+      <LandingSliders slidersNotLoaded={slidersNotLoaded} setSlidersNotLoaded={setSlidersNotLoaded}/>
+      { slidersNotLoaded && <LoadingIndicator /> }
       <div className="landing__panel-right-wrapper">
         <div className="landing__panel-trust-logo-wrapper" style={{ animation: `fadeIn 0.5s` }}>
           <div className="landing__logo-wrapper">
@@ -158,7 +167,6 @@ const LandingPage = () => {
                 rcSiteKey={rcSiteKey}
                 handleValidate={handleValidate}
                 handleSubmit={handleSubmit}
-                valErrors={valErrors}
                 signupValidationMsgs={signupValidationMsgs}
                 setSignupValidationMsgs={setSignupValidationMsgs}
               />

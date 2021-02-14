@@ -20,6 +20,7 @@ const SignUp = ({
         setSignupValidationMsgs({ ...signupValidationMsgs, 'names': 'Please fill in your last name.' });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [firstNameSignup]);
 
   useEffect(() => {
@@ -30,18 +31,21 @@ const SignUp = ({
         setSignupValidationMsgs({ ...signupValidationMsgs, 'names': 'Please fill in your first name.' });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lastNameSignup]);
 
   useEffect(() => {
     if (emailSignup !== '') {
       setSignupValidationMsgs({ ...signupValidationMsgs, 'email': '' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emailSignup]);
 
   useEffect(() => {
     if (passwordSignup !== '') {
       setSignupValidationMsgs({ ...signupValidationMsgs, 'password': '' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passwordSignup]);
 
 
@@ -55,11 +59,6 @@ const SignUp = ({
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
-      { valErrors
-        &&  <div className="login__error-wrapper">
-              <p className="login__error">{valErrors.msg}</p>
-            </div>
-      }
       <div className="signup__names">
         <input
           className={ (signupValidationMsgs.names === 'Please fill in your first and last names.' || signupValidationMsgs.names === 'Please fill in your first name.') ? "login__input first-name input-error" : "login__input first-name" }
@@ -87,9 +86,8 @@ const SignUp = ({
         && <div className="signup__input-error">{signupValidationMsgs.email}</div>
       }
       <input
-        required
-        className={ signupValidationMsgs.password !== ''  ? "login__input input-error" : "login__input" }
-        type="password"
+        className={ signupValidationMsgs.password !== ''  ? "login__input login-password input-error" : "login__input login-password" }
+        type="text"
         value={passwordSignup}
         placeholder="Password"
         onChange={e => setPasswordSignup(e.target.value)}>

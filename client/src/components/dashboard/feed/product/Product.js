@@ -5,7 +5,7 @@ import moment from 'moment';
 import '../../../../styles/product.css';
 
 const Product = ({ product: { imgs_folder, id, category, feed_pricing, feed_almost_gone, advert, shipping_speed, shipping_usa, verified, feed_past_orders, created_at }, modalChange, setModalType }) => {
-  let product_img_url = `https://whim-bucket.s3-us-west-1.amazonaws.com/whim-products/${category}/${imgs_folder}/1.jpeg`
+  let product_img_url = `https://whim-bucket.s3-us-west-1.amazonaws.com/whim-products/${category}/${imgs_folder}/1.jpg`
 
   const tzOffset = { "h": moment().utcOffset() / 60, "m": moment().utcOffset() % 60 };
 

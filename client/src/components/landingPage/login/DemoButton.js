@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../../styles/logIn.css';
 
-const DemoButton = ({ email, setEmail, password, setPassword }) => {
+const DemoButton = ({ emailLogin, setEmailLogin, passwordLogin, setPasswordLogin }) => {
 
   let i=0, k=0, spd = 25;
   const txt = 'demo@whim.com'
@@ -9,17 +9,17 @@ const DemoButton = ({ email, setEmail, password, setPassword }) => {
 
   const handleClick = e => {
     e.preventDefault();
-    setEmail('')
-    setPassword('')
-    email = ''
-    password = ''
+    setEmailLogin('')
+    setPasswordLogin('')
+    emailLogin = ''
+    passwordLogin = ''
     typeEmail()
     setTimeout(typePassword, spd*txt.length)
   }
 
   const typeEmail = () => {
     if (i < txt.length) {
-      setEmail(email += txt.charAt(i))
+      setEmailLogin(emailLogin += txt.charAt(i))
       i++
       setTimeout(typeEmail, spd);
     }
@@ -27,7 +27,7 @@ const DemoButton = ({ email, setEmail, password, setPassword }) => {
 
   const typePassword = () => {
     if (k < pwd.length) {
-      setPassword(password += pwd.charAt(k))
+      setPasswordLogin(passwordLogin += pwd.charAt(k))
       k++;
       setTimeout(typePassword, spd);
     } else {
