@@ -62,7 +62,7 @@ const LandingSliders = ({ slidersNotLoaded, setSlidersNotLoaded }) => {
         setSlideBulkCount(c => c + 1);
         slideCounter++;
       }
-    }, 50);
+    }, 20);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideBulk]);
 
