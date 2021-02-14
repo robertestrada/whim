@@ -87,7 +87,7 @@ def sign_up_google():
     access_token = create_access_token(identity=email)
     return {"token": access_token, "user": user.to_dict()}, 200
   except AssertionError as exception_message:
-    return jsonify(msg='Error: {}. '.format(exception_message)), 400
+    return jsonify(msg='{}'.format(exception_message)), 400
 
 
 @user_routes.route('/signin-google', methods=['POST'])

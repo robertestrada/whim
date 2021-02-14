@@ -59,6 +59,12 @@ const SignUp = ({
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
+      { (valErrors && (valErrors.msg === "Please login using your previously created email account."))
+        ?  <div className="login__error-wrapper">
+              <p className="login__error">{valErrors.msg}</p>
+            </div>
+        : null
+      }
       <div className="signup__names">
         <input
           className={ (signupValidationMsgs.names === 'Please fill in your first and last names.' || signupValidationMsgs.names === 'Please fill in your first name.') ? "login__input first-name input-error" : "login__input first-name" }

@@ -176,6 +176,7 @@ const LandingPage = () => {
                 passwordSignup={passwordSignup}
                 setPasswordSignup={setPasswordSignup}
                 rcSiteKey={rcSiteKey}
+                valErrors={valErrors}
                 handleValidate={handleValidate}
                 handleSubmit={handleSubmit}
                 signupValidationMsgs={signupValidationMsgs}
