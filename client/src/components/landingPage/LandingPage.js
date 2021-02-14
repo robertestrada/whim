@@ -25,6 +25,7 @@ const LandingPage = () => {
   const [loginValidationMsg, setLoginValidationMsg] = useState('');
   const [signupValidationMsgs, setSignupValidationMsgs] = useState({ 'names': '', 'email': '', 'password': '' });
   const [slidersNotLoaded, setSlidersNotLoaded] = useState(true);
+  const [showLoader, setShowLoader] = useState(true);
 
   const handleGetRecaptchaSiteKey = async () => {
     const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
@@ -40,6 +41,16 @@ const LandingPage = () => {
     handleGetRecaptchaSiteKey();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!slidersNotLoaded) {
+      const timeout = setTimeout(() => {
+        setShowLoader(false);
+      }, 1000);
+      return () => clearTimeout(timeout);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slidersNotLoaded]);
 
   const handleSubmit = () => {
     dispatch(AuthActions.removeAuth())
@@ -118,9 +129,9 @@ const LandingPage = () => {
     }
   }
 
-  const LoadingIndicator = () => {
+  const LoadingIndicator = ({ slidersNotLoaded }) => {
     return (
-      <div className="landing__loading-container">
+      <div className={ slidersNotLoaded ? "landing__loading-container" : "landing__loading-container loading-hide"}>
         <Loader type="ThreeDots" color="#00b9e9" height={40} width={40} />
       </div>
     )
@@ -130,7 +141,7 @@ const LandingPage = () => {
   return (
     <div className="landing">
       <LandingSliders slidersNotLoaded={slidersNotLoaded} setSlidersNotLoaded={setSlidersNotLoaded}/>
-      { slidersNotLoaded && <LoadingIndicator /> }
+      { showLoader && <LoadingIndicator slidersNotLoaded={slidersNotLoaded} /> }
       <div className="landing__panel-right-wrapper">
         <div className="landing__panel-trust-logo-wrapper" style={{ animation: `fadeIn 0.5s` }}>
           <div className="landing__logo-wrapper">

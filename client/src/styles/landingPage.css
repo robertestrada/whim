@@ -26,6 +26,21 @@
   z-index: 1;
 }
 
+.landing__loading-container.loading-hide {
+  animation: fadeOut 1s ease; 
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .landing__panel-left {
   display: flex;
   flex: 1 1 0%;
