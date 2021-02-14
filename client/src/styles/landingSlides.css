@@ -16,6 +16,14 @@
   position: relative;
 }
 
+.slider-blur {
+  filter: blur(48px);
+  -webkit-filter: blur(48px);
+  -moz-filter: blur(48px);
+  -o-filter: blur(48px);
+  -ms-filter: blur(48px);
+}
+
 @media screen and (min-width: 0px) and (max-width: 1350px) {
   .landing__sliders-wrapper.three { 
     display: none; 

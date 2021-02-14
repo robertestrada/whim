@@ -86,8 +86,8 @@ const SignUp = ({
         && <div className="signup__input-error">{signupValidationMsgs.email}</div>
       }
       <input
-        className={ signupValidationMsgs.password !== ''  ? "login__input input-error" : "login__input" }
-        type="password"
+        className={ signupValidationMsgs.password !== ''  ? "login__input login-password input-error" : "login__input login-password" }
+        type="text"
         value={passwordSignup}
         placeholder="Password"
         onChange={e => setPasswordSignup(e.target.value)}>

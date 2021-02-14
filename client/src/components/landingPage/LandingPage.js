@@ -8,6 +8,7 @@ import LogIn from './login/LogIn.js';
 import SignUp from './signup/SignUp.js';
 import LandingSliders from './LandingSliders';
 import LandingTrustFeatures from './LandingTrustFeatures';
+import Loader from 'react-loader-spinner';
 
 
 const LandingPage = () => {
@@ -23,6 +24,7 @@ const LandingPage = () => {
   const valErrors = useSelector(state => state.authentication.valErrors)
   const [loginValidationMsg, setLoginValidationMsg] = useState('');
   const [signupValidationMsgs, setSignupValidationMsgs] = useState({ 'names': '', 'email': '', 'password': '' });
+  const [slidersNotLoaded, setSlidersNotLoaded] = useState(true);
 
   const handleGetRecaptchaSiteKey = async () => {
     const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
@@ -116,10 +118,19 @@ const LandingPage = () => {
     }
   }
 
+  const LoadingIndicator = () => {
+    return (
+      <div className="landing__loading-container">
+        <Loader type="ThreeDots" color="#00b9e9" height={40} width={40} />
+      </div>
+    )
+  }
 
+  
   return (
     <div className="landing">
-      <LandingSliders/>
+      <LandingSliders slidersNotLoaded={slidersNotLoaded} setSlidersNotLoaded={setSlidersNotLoaded}/>
+      { slidersNotLoaded && <LoadingIndicator /> }
       <div className="landing__panel-right-wrapper">
         <div className="landing__panel-trust-logo-wrapper" style={{ animation: `fadeIn 0.5s` }}>
           <div className="landing__logo-wrapper">

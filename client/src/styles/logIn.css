@@ -51,6 +51,10 @@
   display: inline-block;
 }
 
+.login__input.login-password {
+  -Webkit-text-security: disc;
+}
+
 .login__input::placeholder {
   color: rgb(153, 177, 185);
   font-weight: 200;

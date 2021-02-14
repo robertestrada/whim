@@ -3,8 +3,9 @@ import LandingSlider from './LandingSlider';
 import '../../styles/landingSlides.css';
 import '../../styles/landingPage.css';
 
-const LandingSliders = () => {
+const LandingSliders = ({ slidersNotLoaded, setSlidersNotLoaded }) => {
   const [slideBulk, setSlideBulk] = useState([]);
+  const [slideBulkCount, setSlideBulkCount] = useState(0);
   const slideAmount = 12;
 
   const slideBuild = () => {
@@ -33,17 +34,29 @@ const LandingSliders = () => {
     }
     setSlideBulk([...slides]);
   };
+
+  const slideStartsCountsBuild = () => {
+    const startsCounts = {};
+    for (let i = 0; i < 4; i++) {
+      const start = i * (slideAmount * 2);
+      const countMultiplier = 2 * (i + 1);
+      const count = slideBulkCount >= slideAmount * countMultiplier ? slideAmount * countMultiplier : slideBulkCount;
+
+      startsCounts[i] = { 'start': start, 'count': count };
+    }
+    return startsCounts;
+  };
+  const slideStartsCounts = slideStartsCountsBuild();
   
   useEffect(() => {
     slideBuild();
   }, []);
-
-  const [slideBulkCount, setSlideBulkCount] = useState(0);
+  
 
   useEffect(() => {
     let slideCounter = slideBulkCount;
     const slideInterval = setInterval(() => {
-      if (slideCounter>= slideBulk) {
+      if (slideCounter === slideBulk.length) {
         clearInterval(slideInterval);
       } else {
         setSlideBulkCount(c => c + 1);
@@ -54,18 +67,12 @@ const LandingSliders = () => {
   }, [slideBulk]);
 
 
-  const slideStartsCountsBuild = () => {
-    const startsCounts = {};
-    for (let i = 0; i < 4; i++){
-      const start = i * (slideAmount * 2);
-      const countMultiplier = 2 * (i + 1);
-      const count = slideBulkCount >= slideAmount * countMultiplier ? slideAmount * countMultiplier : slideBulkCount;
-
-      startsCounts[i] = {'start': start, 'count': count};
+  useEffect(() => {
+    if (slideAmount * 8 === slideBulkCount) {
+      setSlidersNotLoaded(false);
     }
-    return startsCounts;
-  };
-  const slideStartsCounts = slideStartsCountsBuild();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slideBulkCount]);
 
 
   return (
@@ -73,10 +80,11 @@ const LandingSliders = () => {
       { Array(4).fill().map((_, i) => 
           <LandingSlider 
             key={i} 
-            sliderIdx={i} 
+            sliderIdx={i}
             slideBulk={slideBulk} 
             slideBulkCount={slideBulkCount} 
             slideStartsCounts={slideStartsCounts}
+            slidersNotLoaded={slidersNotLoaded}
           />)
       }
     </div>
