@@ -8,10 +8,10 @@ import LogIn from './login/LogIn.js';
 import SignUp from './signup/SignUp.js';
 import LandingSliders from './LandingSliders';
 import LandingTrustFeatures from './LandingTrustFeatures';
-import Loader from 'react-loader-spinner';
+import LandingPageLoader from './LandingPageLoader';
 
 
-const LandingPage = () => {
+const LandingPage = ({ landingBlurSupported }) => {
   const dispatch = useDispatch();
   const [rcSiteKey, setRCSiteKey] = useState('');
   const [emailLogin, setEmailLogin] = useState('');
@@ -129,21 +129,17 @@ const LandingPage = () => {
     }
   }
 
-  const LoadingIndicator = ({ slidersNotLoaded }) => {
-    return (
-      <div className={ slidersNotLoaded ? "landing__loading-container" : "landing__loading-container loading-hide"}>
-        <Loader type="ThreeDots" color="#00b9e9" height={40} width={40} />
-      </div>
-    )
+  if (landingBlurSupported === null) {
+    return null;
   }
-
   
   return (
     <div className="landing">
-      <LandingSliders slidersNotLoaded={slidersNotLoaded} setSlidersNotLoaded={setSlidersNotLoaded}/>
-      { showLoader && <LoadingIndicator slidersNotLoaded={slidersNotLoaded} /> }
+      <LandingSliders landingBlurSupported={landingBlurSupported} slidersNotLoaded={slidersNotLoaded} setSlidersNotLoaded={setSlidersNotLoaded}/>
+      { showLoader && <div className="landing__overlay-loading-container"/>}
+      { showLoader && <LandingPageLoader landingBlurSupported={landingBlurSupported} slidersNotLoaded={slidersNotLoaded} /> }
       <div className="landing__panel-right-wrapper">
-        <div className="landing__panel-trust-logo-wrapper" style={{ animation: `fadeIn 0.5s` }}>
+        <div className="landing__panel-trust-logo-wrapper" style={{ animation: `fadeIn 1s` }}>
           <div className="landing__logo-wrapper">
             <img className="landing__logo" src="https://whim-bucket.s3-us-west-1.amazonaws.com/whim-assets/whim-logo.svg" alt="whim-logo" />
           </div>

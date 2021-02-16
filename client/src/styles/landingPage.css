@@ -24,12 +24,51 @@
   border-right-style: solid;
   border-right-color: rgb(212, 227, 235);
   z-index: 1;
+  animation: slidersLoadingFadeIn 1s ease; 
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
 }
 
-.landing__loading-container.loading-hide {
+.landing__overlay-loading-container {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  z-index: 2;
+  animation: overlayLoadingFadeIn 1s ease; 
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+.no-blur-support {
+  background-color: rgba(240, 245, 247, 1);
+}
+
+.loading-hide {
   animation: fadeOut 1s ease; 
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
+}
+
+@keyframes slidersLoadingFadeIn {
+  0% {
+    background-color: rgba(255, 255, 255, 1);
+    border-right-color: rgb(255, 255, 255);
+  }
+  100% {
+    background-color: rgba(240, 245, 247, 0.68);
+    border-right-color: rgb(212, 227, 235);
+  }
+}
+
+@keyframes overlayLoadingFadeIn {
+  0% {
+    background-color: rgba(255, 255, 255, 1);
+  }
+  100% {
+    background-color: rgba(255, 255, 255, 0);
+  }
 }
 
 @keyframes fadeOut {
@@ -51,6 +90,7 @@
   border-right-style: solid;
   border-right-color: rgb(212, 227, 235);
   padding-right: 1rem;
+  overflow: hidden;
 }
 
 @media screen and (max-width: 750px) {

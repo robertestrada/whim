@@ -11,11 +11,20 @@ const Main = () => {
   const needSignIn = useSelector(state => !state.authentication.token);
   const [panelType, setPanelType] = useState('feed');
   const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
+  const [landingBlurSupported, setLandingBlurSupported] = useState(null);
 
   useEffect(() => {
-    const getToken = async () => {
-        await dispatch(AuthActions.loadToken());
-        await dispatch(AuthActions.loadUser());
+    if (window.CSS.supports(`(filter: blur(48px)) or (-webkit-filter: blur(48px)) or (-moz-filter: blur(48px)) or (-o-filter: blur(48px)) or (-ms-filter: blur(48px))`)) {
+      setLandingBlurSupported(true);
+    } else {
+      setLandingBlurSupported(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const getToken = () => {
+        dispatch(AuthActions.loadToken());
+        dispatch(AuthActions.loadUser());
     }
     getToken();
   }, [dispatch]);
@@ -39,7 +48,7 @@ const Main = () => {
   return (
     <div>
       {needSignIn 
-        ? <LandingPage/> 
+        ? <LandingPage landingBlurSupported={landingBlurSupported}/> 
         : <DashBoard 
             panelType={panelType}
             setPanelType={setPanelType}

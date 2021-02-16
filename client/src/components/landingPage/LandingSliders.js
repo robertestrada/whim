@@ -3,10 +3,11 @@ import LandingSlider from './LandingSlider';
 import '../../styles/landingSlides.css';
 import '../../styles/landingPage.css';
 
-const LandingSliders = ({ slidersNotLoaded, setSlidersNotLoaded }) => {
+const LandingSliders = ({ landingBlurSupported, slidersNotLoaded, setSlidersNotLoaded }) => {
   const [slideBulk, setSlideBulk] = useState([]);
   const [slideBulkCount, setSlideBulkCount] = useState(0);
   const slideAmount = 12;
+  const [successfullImages, setSuccessfullImages] = useState(0);
 
   const slideBuild = () => {
     let slides = [];
@@ -68,11 +69,11 @@ const LandingSliders = ({ slidersNotLoaded, setSlidersNotLoaded }) => {
 
 
   useEffect(() => {
-    if (slideAmount * 8 === slideBulkCount) {
+    if (slideAmount * 8 === successfullImages) {
       setSlidersNotLoaded(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [slideBulkCount]);
+  }, [successfullImages]);
 
 
   return (
@@ -85,6 +86,9 @@ const LandingSliders = ({ slidersNotLoaded, setSlidersNotLoaded }) => {
             slideBulkCount={slideBulkCount} 
             slideStartsCounts={slideStartsCounts}
             slidersNotLoaded={slidersNotLoaded}
+            landingBlurSupported={landingBlurSupported}
+            successfullImages={successfullImages}
+            setSuccessfullImages={setSuccessfullImages}
           />)
       }
     </div>
