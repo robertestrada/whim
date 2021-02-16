@@ -5,6 +5,7 @@
   overflow: hidden;
   height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 
 .landing__sliders-wrapper-rev {
@@ -14,6 +15,7 @@
   overflow: hidden;
   height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 
 .slider-blur {
@@ -82,9 +84,19 @@
 
 .landing__slider-img {
   width: 100%;
+  align-self: center;
   margin-bottom: 1rem;
   margin-right: 0rem;
   transition: opacity 0.5s;
+}
+
+.landing__slider-svg {
+  width: 100%;
+  margin-bottom: 1rem;
+  margin-right: 0rem;
+  opacity: 0.5;
+  transition: opacity 0.5s;
+  transform: rotate(15deg) translate(-10%);
 }
 
 .image-visible {
