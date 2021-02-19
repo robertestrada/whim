@@ -30,7 +30,7 @@ const authReducer = (state = {}, action) => {
     }
 
     case REMOVE_VAL_ERRORS: {
-      nextState = { ...nextState, valErrors: {} }
+      nextState = { ...nextState, valErrors: { 'msg': null } }
       return nextState;
     }
 

@@ -59,7 +59,7 @@ const SignUp = ({
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
-      { (valErrors && (valErrors.msg === "Please login using your previously created email account."))
+      { (valErrors && (valErrors.msg === "Please log in using your previously created email account."))
         ?  <div className="login__error-wrapper">
               <p className="login__error">{valErrors.msg}</p>
             </div>
@@ -106,7 +106,7 @@ const SignUp = ({
         <div className="login__auth-divider-line"/>
         <div className="login__auth-divider-text">or</div>
       </div>
-      <GoogleSignup/> 
+      <GoogleSignup setSignupValidationMsgs={setSignupValidationMsgs} /> 
       <div className="login__terms">
         By clicking 'Sign Up' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
       </div>

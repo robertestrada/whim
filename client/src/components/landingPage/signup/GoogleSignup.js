@@ -2,16 +2,19 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { baseUrl } from '../../../config';
-import { signUpGoogle } from '../../../actions/authentication';
+import * as AuthActions from '../../../actions/authentication';
 import * as CartActions from '../../../actions/cart';
 import '../../../styles/logIn.css';
 
-const GoogleSignUp = () => {
+const GoogleSignUp = ({ setSignupValidationMsgs }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
+    setSignupValidationMsgs({ 'names': '', 'email': '', 'password': '' });
+    dispatch(AuthActions.removeValErrors());
+    dispatch(AuthActions.removeAuth())
     dispatch(CartActions.clearCartAction());
     const googleCredsFetch = await fetch(`${baseUrl}/google-credentials`);
     const googleCreds = await googleCredsFetch.json();
@@ -26,7 +29,7 @@ const GoogleSignUp = () => {
         try {
           authorized.signIn().then(() => {
             const profile = authorized.currentUser.get().getBasicProfile();
-            const storeReady = dispatch(signUpGoogle(profile.getGivenName(), profile.getFamilyName(), profile.getEmail(), profile.getImageUrl()));
+            const storeReady = dispatch(AuthActions.signUpGoogle(profile.getGivenName(), profile.getFamilyName(), profile.getEmail(), profile.getImageUrl()));
             storeReady.then((result) => {
               if (result === true) {
                 history.push('/');
@@ -35,7 +38,7 @@ const GoogleSignUp = () => {
           })
         }
         catch {
-          const storeReady = dispatch(signUpGoogle('CauseError', 'CauseError', 'CauseError', 'CauseError', 'CauseError'))
+          const storeReady = dispatch(AuthActions.signUpGoogle('CauseError', 'CauseError', 'CauseError', 'CauseError', 'CauseError'))
           if (storeReady) {
             history.push('/');
           }

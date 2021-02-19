@@ -9,12 +9,13 @@ const LogIn = ({
                 handleValidate, valErrors, loginValidationMsg 
               }) => {
 
+  console.log(loginValidationMsg);
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
-      { (((valErrors && (valErrors.msg !== "Please login using your previously created email account."))) || loginValidationMsg) 
+      { (((valErrors && (valErrors.msg !== "Please log in using your previously created email account."))) || loginValidationMsg) 
         && <div className="login__error-wrapper">
-        {((valErrors && (valErrors.msg !== "Please login using your previously created email account.")))
+        {((valErrors.msg !== null && valErrors.msg !== "Please log in using your previously created email account."))
             ? <p className="login__error">{valErrors.msg}</p>
             : <p className="login__error">{loginValidationMsg}</p>
           }
@@ -24,6 +25,7 @@ const LogIn = ({
         className="login__input"
         value={emailLogin}
         placeholder="Email Address"
+        type="text"
         onChange={e => setEmailLogin(e.target.value)}>
       </input>
       <input
