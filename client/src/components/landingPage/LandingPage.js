@@ -133,6 +133,9 @@ const LandingPage = ({ landingBlurSupported }) => {
     return null;
   }
   
+
+
+
   return (
     <div className="landing">
       <LandingSliders landingBlurSupported={landingBlurSupported} slidersNotLoaded={slidersNotLoaded} setSlidersNotLoaded={setSlidersNotLoaded}/>
