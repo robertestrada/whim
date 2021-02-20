@@ -19,6 +19,8 @@ class User(db.Model):
   country = db.Column(db.String(2), nullable = False)
   hashed_password = db.Column(db.String, nullable = False)
   pic_url = db.Column(db.String)
+  gender = db.Column(db.Integer)
+  age = db.Column(db.Integer)
   created_at = db.Column(db.DateTime, default=datetime.now)
   updated_at = db.Column(db.DateTime, onupdate=datetime.now)
   
@@ -50,7 +52,7 @@ class User(db.Model):
     if User.query.filter(User.email==email).first():
       raise AssertionError('Please log in using your previously created email account.')
 
-    if not re.match("[^@]+@[^@]+\.[^@]+", email):
+    if not re.match("^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$", email):
       raise AssertionError('Provided email is not an email address')
 
     return email
@@ -60,14 +62,26 @@ class User(db.Model):
     return self.hashed_password
 
   def set_password(self, password):
-    if not re.match('\d.*[A-Z]|[A-Z].*\d', password):
-      raise AssertionError('Password must contain 1 capital letter and 1 number')
+    if not re.match('^(?=.*[a-z]).*$', password):
+      raise AssertionError('Password must contain a lowercase letter.')
+    if not re.match('^(?=.*[A-Z]).*$', password):
+      raise AssertionError('Password must contain an uppercase letter.')
+    if not re.match('^(?=.*\d).*$', password):
+      raise AssertionError('Password must contain a number.')
+    if not re.match('^(?=.*[-+_!@#$%^&*.,?]).*$', password):
+      raise AssertionError('Password must contain a symbol.')
     if len(password) < 8 or len(password) > 50:
       raise AssertionError('Password must be between 8 and 50 characters')
     self.hashed_password = generate_password_hash(password)
 
   def check_password(self, password):
     return check_password_hash(self.password, password)
+  
+  def set_gender(self, gender):
+    self.gender = gender
+    
+  def set_age(self, age):
+    self.age = age
     
 
 class Merchant(db.Model):

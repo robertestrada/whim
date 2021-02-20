@@ -3,6 +3,7 @@ from whim_server.models import User, db
 from werkzeug.security import generate_password_hash
 from flask_jwt_extended import jwt_optional, create_access_token, get_jwt_identity, jwt_required, get_raw_jwt
 from flask_wtf.csrf import CSRFProtect, generate_csrf, validate_csrf
+from sqlalchemy import and_, or_, desc, update
 import random
 
 user_routes = Blueprint("user", __name__, "")
@@ -43,6 +44,14 @@ def sign_up():
     return {"token": access_token, "user": user.to_dict()}, 200
   except AssertionError as exception_message:
     return jsonify(msg='{}'.format(exception_message)), 400
+  
+  
+@user_routes.route('/user-survey', methods=['POST'])
+def user_survey():
+  data = request.get_json()
+  User.query.filter(User.email == data['email']).update({'gender': data['gender'], 'age': data['age']})
+  db.session.commit()
+  return {'msg': 'Updated user gender and age preferences successfully'}, 200
 
 
 @user_routes.route('/signin', methods=['POST'])
