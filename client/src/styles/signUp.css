@@ -49,3 +49,249 @@
   align-self: flex-start;
   color: rgb(236, 47, 77);
 }
+
+
+
+
+
+
+
+.signup-user-collect__panel-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.signup-user-collect__logo-wrapper {
+  padding-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.signup-user-collect__logo-svg {
+  width: 85px;
+  height: 30px;
+}
+
+.signup-user-collect__header {
+  box-sizing: border-box;
+  font-size: 24px;
+  font-weight: 700;
+  padding-bottom: 48px;
+}
+
+.signup-user-collect__survey-wrapper {
+  padding-bottom: 16px;
+  box-sizing: border-box;
+}
+
+.signup-user-collect__question {
+  padding-bottom: 16px;
+  line-height: 1;
+  color: rgb(25, 42, 50);
+}
+
+.signup-user-collect__gender-buttons {
+  display: inline-flex;
+  padding-bottom: 34px;
+  width: 100%;
+}
+
+.signup-user-collect__gender-button-wrapper {
+  margin-right: 10px;
+  width: 100%;
+}
+
+.last-button {
+  margin-right: 0px;
+}
+
+.signup-user-collect__gender-button {
+  box-sizing: border-box;
+  font-size: 16px;
+  font-weight: 700;
+  height: 48px;
+  background-color: transparent;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(47, 183, 236);
+  color: rgb(47, 183, 236);
+  position: relative;
+  border-radius: 4px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-right: 16px;
+  padding-left: 16px;
+  cursor: pointer;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+  transition-delay: initial;
+  transition-property: background-color;
+}
+
+.gender-button-pressed {
+  color: rgb(255, 255, 255);
+  background-color: rgb(47, 183, 236);
+  font-size: 16px;
+  font-weight: 700;
+  height: 48px;
+}
+
+.signup-user-collect__select-box {
+  margin-top: 0px;
+  box-sizing: border-box;
+  height: 48px;
+  color: rgb(25, 42, 50);
+  border-radius: 2px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(212, 227, 235);
+  background-color: rgb(248, 250, 251);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.signup-user-collect__select-box-text {
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 16px;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 400;
+  min-height: 42px;
+  width: calc(100% - 32px);
+  display: flex;
+  align-items: center;
+}
+
+.signup-user-collect__select-box-text::after {
+  display: block;
+  content: "";
+  min-height: inherit;
+  font-size: 0px;
+}
+
+.signup-user-collect__select-box-dropdown-arrow {
+  display: flex;
+  margin-top: 0px;
+  margin-right: 12px;
+  width: 8px;
+  transform: rotateZ(0deg);
+  transition-duration: 0.3s;
+  transition-timing-function: initial;
+  transition-delay: initial;
+  transition-property: all;
+}
+
+.signup-user-collect__select-box-svg {
+  transform: rotate(0deg);
+  transition: all 0.25s;
+  width: 8px;
+  height: 5px;
+}
+
+.signup-user-collect__select-box-dropdown {
+  box-sizing: border-box;
+  position: absolute;
+  height: 0px;
+  overflow-y: scroll;
+  top: 46px;
+  left: 0px;
+  background-color: rgb(255, 255, 255);
+  border-radius: 2px;
+  border-top-style: solid;
+  border-top-width: 0px;
+  border-top-color: rgb(212, 227, 235);
+  transition-duration: 0.3s;
+  transition-timing-function: initial;
+  transition-delay: initial;
+  transition-property: height;
+  animation-duration: 0.3s;
+  animation-timing-function: initial;
+  animation-delay: initial;
+  animation-iteration-count: initial;
+  animation-direction: initial;
+  animation-fill-mode: both;
+  animation-play-state: initial;
+  animation-name: JZdqL;
+  z-index: 2;
+  width: 100%;
+  cursor: pointer;
+  color: rgb(25, 42, 50);
+  line-height: 1;
+}
+
+.signup-user-collect__select-box-dropdown-item {
+  font-size: 16px;
+  font-weight: 400;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  padding-top: 0px;
+  padding-right: 16px;
+  justify-content: left;
+  flex-shrink: 0;
+}
+
+.signup-user-collect__button-finish {
+  box-sizing: border-box;
+  color: rgb(255, 255, 255);
+  background-color: rgb(47, 183, 236);
+  font-size: 16px;
+  font-weight: 700;
+  height: 40px;
+  position: relative;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-bottom-left-radius: 4px;
+  padding-top: 0px;
+  padding-right: 16px;
+  opacity: 0.6;
+  cursor: not-allowed;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition-duration: 0.2s;
+  transition-timing-function: ease;
+  transition-delay: initial;
+  transition-property: background-color;
+}
+
+.button-finish-pressed {
+  color: rgb(255, 255, 255);
+  background-color: rgb(47, 183, 236);
+  font-size: 16px;
+  font-weight: 700;
+  height: 40px;
+  cursor: pointer;
+  opacity: 1;
+}
+
+.signup-user-collect__trust-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 32px;
+}
+
+.signup-user-collect__trust-svg {
+  width: 36px;
+  height: 36px;
+  margin-right: 10px;
+}
+
+.signup-user-collect__trust-words {
+  color: rgb(47, 183, 236);
+}
