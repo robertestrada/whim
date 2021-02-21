@@ -5,7 +5,7 @@ const DemoButton = ({ emailLogin, setEmailLogin, passwordLogin, setPasswordLogin
 
   let i=0, k=0, spd = 25;
   const txt = 'demo@whim.com'
-  const pwd = 'D3m0P4ssw0rd'
+  const pwd = 'D3m0P4ssw0rd!'
 
   const handleClick = e => {
     e.preventDefault();

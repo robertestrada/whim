@@ -259,7 +259,7 @@ with app.app_context():
   
   for u in u_list:
     db.session.add(u)
-    u.set_password('D3m0P4ssw0rd')
+    u.set_password('D3m0P4ssw0rd!')
   db.session.commit()
 
   m_list = [
