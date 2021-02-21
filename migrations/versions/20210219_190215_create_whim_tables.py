@@ -1,8 +1,8 @@
-"""create whim_db tables
+"""Create whim tables
 
-Revision ID: 8a306bc7ff3d
+Revision ID: 57f684fa2ac5
 Revises: 
-Create Date: 2021-01-31 14:22:54.535629
+Create Date: 2021-02-19 19:02:15.567179
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8a306bc7ff3d'
+revision = '57f684fa2ac5'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -43,6 +43,8 @@ def upgrade():
     sa.Column('country', sa.String(length=2), nullable=False),
     sa.Column('hashed_password', sa.String(), nullable=False),
     sa.Column('pic_url', sa.String(), nullable=True),
+    sa.Column('gender', sa.Integer(), nullable=True),
+    sa.Column('age', sa.Integer(), nullable=True),
     sa.Column('created_at', sa.DateTime(), nullable=True),
     sa.Column('updated_at', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
