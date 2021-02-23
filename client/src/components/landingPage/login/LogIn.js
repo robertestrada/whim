@@ -6,10 +6,9 @@ import GoogleSignin from './GoogleSignin.js';
 
 const LogIn = ({ 
                 emailLogin, setEmailLogin, passwordLogin, setPasswordLogin, 
-                handleValidate, valErrors, loginValidationMsg 
+                handleValidate, valErrors, loginValidationMsg, googleCreds,
               }) => {
-
-  console.log(loginValidationMsg);
+                
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
@@ -43,7 +42,7 @@ const LogIn = ({
         <div className="login__auth-divider-line"/>
         <div className="login__auth-divider-text">or</div>
       </div>
-      <GoogleSignin/> 
+      <GoogleSignin googleCreds={googleCreds}/> 
       <div className="login__terms">
         By clicking 'Log In' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
       </div>

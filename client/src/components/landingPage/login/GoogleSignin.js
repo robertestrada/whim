@@ -6,7 +6,7 @@ import { signInGoogle, removeAuth } from '../../../actions/authentication';
 import * as CartActions from '../../../actions/cart';
 import '../../../styles/logIn.css';
 
-const GoogleSignin = () => {
+const GoogleSignin = ({ googleCreds }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -14,8 +14,6 @@ const GoogleSignin = () => {
     e.preventDefault();
     await dispatch(removeAuth());
     await dispatch(CartActions.clearCartAction());
-    const googleCredsFetch = await fetch(`${baseUrl}/google-credentials`);
-    const googleCreds = await googleCredsFetch.json();
 
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({

@@ -3,8 +3,6 @@ import '../../../../styles/modal.css';
 
 
 const ModalFit = ({ fitData: {tooSmall, justRight, tooLarge} }) => {
-  console.log("tooSmall: ", tooSmall, "justRight: ", justRight, "tooLarge: ", tooLarge);
-
   const fitRatingsTotal = tooSmall + justRight + tooLarge;
   const tooSmallPercent = `${(tooSmall / fitRatingsTotal) * 100}%`
   const justRightPercent = `${(justRight / fitRatingsTotal) * 100}%`

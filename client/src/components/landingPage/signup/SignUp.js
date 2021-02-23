@@ -7,7 +7,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 const SignUp = ({ 
                   firstNameSignup, setFirstNameSignup, lastNameSignup, setLastNameSignup, emailSignup, setEmailSignup, 
                   passwordSignup, setPasswordSignup, valErrors, rcSiteKey, handleValidate, signupValidationMsgs,
-                  handleSubmit, setSignupValidationMsgs
+                  handleSubmit, setSignupValidationMsgs, googleCreds
                 }) => {
 
   const recaptchaRef = useRef();
@@ -106,7 +106,7 @@ const SignUp = ({
         <div className="login__auth-divider-line"/>
         <div className="login__auth-divider-text">or</div>
       </div>
-      <GoogleSignup setSignupValidationMsgs={setSignupValidationMsgs} /> 
+      <GoogleSignup setSignupValidationMsgs={setSignupValidationMsgs} googleCreds={googleCreds}/> 
       <div className="login__terms">
         By clicking 'Sign Up' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
       </div>

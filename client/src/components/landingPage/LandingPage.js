@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import * as AuthActions from '../../actions/authentication';
 import * as CartActions from '../../actions/cart';
-import { baseUrl } from '../../config';
 import '../../styles/landingPage.css';
 import SignUpSurvey from './signup/SignUpSurvey.js';
 import LandingSliders from './LandingSliders';
@@ -10,9 +9,8 @@ import LandingPageLoader from './LandingPageLoader';
 import LandingPageEntry from './LandingPageEntry';
 
 
-const LandingPage = ({ landingBlurSupported }) => {
+const LandingPage = ({ googleCreds, rcSiteKey, showSurvey, landingBlurSupported }) => {
   const dispatch = useDispatch();
-  const [rcSiteKey, setRCSiteKey] = useState('');
   const [emailLogin, setEmailLogin] = useState('');
   const [passwordLogin, setPasswordLogin] = useState('');
   const [emailSignup, setEmailSignup] = useState('');
@@ -23,23 +21,13 @@ const LandingPage = ({ landingBlurSupported }) => {
   const valErrors = useSelector(state => state.authentication.valErrors)
   const [loginValidationMsg, setLoginValidationMsg] = useState('');
   const [signupValidationMsgs, setSignupValidationMsgs] = useState({ 'names': '', 'email': '', 'password': '' });
+  const [signupSurvey, setSignupSurvey] = useState({ 'email': '', 'gender': 0, 'age': 0 });
   const [slidersNotLoaded, setSlidersNotLoaded] = useState(true);
   const [showLoader, setShowLoader] = useState(true);
 
-  const handleGetRecaptchaSiteKey = async () => {
-    const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
-    const recaptchaSiteKey = await recaptchaSiteKeyFetch.json();
-    setRCSiteKey(recaptchaSiteKey.rcSiteKey);
-  };
-
   const handleClearErrors = () => {
     dispatch(AuthActions.removeValErrors());
-  }
-
-  useEffect(() => {
-    handleGetRecaptchaSiteKey();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }  
 
   useEffect(() => {
     if (!slidersNotLoaded) {
@@ -62,6 +50,7 @@ const LandingPage = ({ landingBlurSupported }) => {
       dispatch(AuthActions.signUp(firstNameSignup, lastNameSignup, emailSignup, passwordSignup));
     }
   }
+
 
   const handleValidate = () => {
     const emailRegEx = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/i;
@@ -144,9 +133,13 @@ const LandingPage = ({ landingBlurSupported }) => {
       />
       { showLoader && <div className="landing__overlay-loading-container"/>}
       { showLoader && <LandingPageLoader landingBlurSupported={landingBlurSupported} slidersNotLoaded={slidersNotLoaded} /> }
-      { true
-        ? <SignUpSurvey/>
+      { showSurvey
+        ? <SignUpSurvey 
+            signupSurvey={signupSurvey}
+            setSignupSurvey={setSignupSurvey}
+          />
         : <LandingPageEntry
+            googleCreds={googleCreds}
             button={button}
             setButton={setButton}
             emailLogin={emailLogin}

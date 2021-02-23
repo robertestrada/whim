@@ -1,10 +1,16 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import * as AuthActions from '../../../actions/authentication';
 import '../../../styles/signUp.css';
 import '../../../styles/logIn.css';
 
 
 const SignUpSurvey = () => {
+  const dispatch = useDispatch();
 
+  const handleFinishSurvey = () => {
+    dispatch(AuthActions.toggleShowSurvey());
+  }
 
   return (
     <div className="landing__panel-right-wrapper">
@@ -52,7 +58,7 @@ const SignUpSurvey = () => {
             </div>
           </div>
         </div>
-        <div className="signup-user-collect__button-finish button-finish-pressed">Finish</div>
+        <div className="signup-user-collect__button-finish button-finish-pressed" onClick={handleFinishSurvey}>Finish</div>
         <div className="signup-user-collect__trust-wrapper">
           <svg className="signup-user-collect__trust-svg" viewBox="0 0 36 36" fill="none">
             <path fillRule="evenodd" clipRule="evenodd" d="M9.3999 13.7866C11.2935 12.6455 14.0428 11.062 17.3187 9.90259C19.8352 10.9126 22.3144 11.9481 25.3488 13.7866C24.6554 23.2856 17.3743 27.3173 17.3743 27.3173C17.3743 27.3173 9.54144 22.0155 9.3999 13.7866Z" fill="#2fb7ec"></path>

@@ -4,6 +4,7 @@ import {
   REMOVE_AUTH,
   VAL_ERRORS,
   REMOVE_VAL_ERRORS,
+  TOGGLE_SHOW_SURVEY,
 } from '../actions/authentication';
 
 const authReducer = (state = {}, action) => {
@@ -24,6 +25,7 @@ const authReducer = (state = {}, action) => {
       nextState = {};
       return nextState;
     }
+
     case VAL_ERRORS: {
       nextState = {...nextState, valErrors: action.valErrors}
       return nextState;
@@ -31,6 +33,11 @@ const authReducer = (state = {}, action) => {
 
     case REMOVE_VAL_ERRORS: {
       nextState = { ...nextState, valErrors: { 'msg': null } }
+      return nextState;
+    }
+
+    case TOGGLE_SHOW_SURVEY: {
+      nextState = { ...nextState, showSurvey: !nextState.showSurvey }
       return nextState;
     }
 
