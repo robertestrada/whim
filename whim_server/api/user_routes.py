@@ -44,6 +44,30 @@ def sign_up():
     return {"token": access_token, "user": user.to_dict()}, 200
   except AssertionError as exception_message:
     return jsonify(msg='{}'.format(exception_message)), 400
+
+
+@user_routes.route('/signup-google', methods=['POST'])
+def sign_up_google():
+  data = request.get_json()
+  hash = generate_password_hash(data['email'])
+
+  try:
+    user = User(
+        first_name=data['firstName'],
+        last_name=data['lastName'],
+        email=data['email'],
+        country='US',
+        hashed_password=hash,
+        pic_url=data['picture'],
+    )
+
+    db.session.add(user)
+    db.session.commit()
+    email = user.email
+    access_token = create_access_token(identity=email)
+    return {"token": access_token, "user": user.to_dict()}, 200
+  except AssertionError as exception_message:
+    return jsonify(msg='{}'.format(exception_message)), 400
   
   
 @user_routes.route('/user-survey', methods=['POST'])
@@ -73,30 +97,6 @@ def sign_in():
       return jsonify({"msg": "Email or Password is incorrect"}), 400
   except:
     return jsonify({"msg": "Email or Password is incorrect"}), 400
-    
-    
-@user_routes.route('/signup-google', methods=['POST'])
-def sign_up_google():
-  data = request.get_json()
-  hash = generate_password_hash(data['email'])
-
-  try:
-    user = User(
-        first_name=data['firstName'],
-        last_name=data['lastName'],
-        email=data['email'],
-        country='US',
-        hashed_password=hash,
-        pic_url=data['picture'],
-    )
-
-    db.session.add(user)
-    db.session.commit()
-    email = user.email
-    access_token = create_access_token(identity=email)
-    return {"token": access_token, "user": user.to_dict()}, 200
-  except AssertionError as exception_message:
-    return jsonify(msg='{}'.format(exception_message)), 400
 
 
 @user_routes.route('/signin-google', methods=['POST'])

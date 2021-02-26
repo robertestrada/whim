@@ -6,7 +6,7 @@ import * as AuthActions from '../../../actions/authentication';
 import * as CartActions from '../../../actions/cart';
 import '../../../styles/logIn.css';
 
-const GoogleSignUp = ({ setSignupValidationMsgs }) => {
+const GoogleSignUp = ({ googleCreds, setSignupValidationMsgs }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -16,8 +16,6 @@ const GoogleSignUp = ({ setSignupValidationMsgs }) => {
     dispatch(AuthActions.removeValErrors());
     dispatch(AuthActions.removeAuth())
     dispatch(CartActions.clearCartAction());
-    const googleCredsFetch = await fetch(`${baseUrl}/google-credentials`);
-    const googleCreds = await googleCredsFetch.json();
 
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({

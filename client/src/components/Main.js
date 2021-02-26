@@ -1,6 +1,7 @@
 import React, { useState, useEffect} from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import * as AuthActions from '../actions/authentication';
+import { baseUrl } from '../config';
 import LandingPage from './landingPage/LandingPage.js';
 import DashBoard from './dashboard/DashBoard.js';
 import '../styles/main.css';
@@ -9,9 +10,27 @@ import '../styles/main.css';
 const Main = () => {
   const dispatch = useDispatch();
   const needSignIn = useSelector(state => !state.authentication.token);
+  const showSurvey = useSelector(state => state.authentication.showSurvey);
   const [panelType, setPanelType] = useState('feed');
   const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
   const [landingBlurSupported, setLandingBlurSupported] = useState(null);
+  const [rcSiteKey, setRCSiteKey] = useState('');
+  const [googleCreds, setGoogleCreds] = useState('');
+
+  const handleGetSecretKeys = async () => {
+    const googleCredsFetch = await fetch(`${baseUrl}/google-credentials`);
+    const googleCredsJSON = await googleCredsFetch.json();
+    setGoogleCreds(googleCredsJSON);
+    const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
+    const recaptchaSiteKey = await recaptchaSiteKeyFetch.json();
+    setRCSiteKey(recaptchaSiteKey.rcSiteKey);
+  };
+
+  useEffect(() => {
+    handleGetSecretKeys();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
 
   useEffect(() => {
     if (window.CSS.supports(`(filter: blur(48px)) or (-webkit-filter: blur(48px)) or (-moz-filter: blur(48px)) or (-o-filter: blur(48px)) or (-ms-filter: blur(48px))`)) {
@@ -45,16 +64,22 @@ const Main = () => {
     }
   }, [modalData.showModal]);
 
+  
   return (
     <div>
-      {needSignIn 
-        ? <LandingPage landingBlurSupported={landingBlurSupported}/> 
+      { needSignIn || showSurvey
+        ? <LandingPage 
+            googleCreds={googleCreds}
+            rcSiteKey={rcSiteKey}
+            showSurvey={showSurvey} 
+            landingBlurSupported={landingBlurSupported}
+          /> 
         : <DashBoard 
-            panelType={panelType}
-            setPanelType={setPanelType}
-            modalData={modalData}
-            setModalData={setModalData}
-          />
+              panelType={panelType}
+              setPanelType={setPanelType}
+              modalData={modalData}
+              setModalData={setModalData}
+            />
       }
     </div>
   );

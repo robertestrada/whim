@@ -21,7 +21,7 @@ const LandingSlider = ({
         <div className={`${sliderIdx % 2 === 0 ? "landing__slider-rev" : "landing__slider"}`}>
           { slideBulkCount >= slideStart
             && slideBulk.slice(slideStart, slideCount).map((url, idx) => <LandingSlide key={`${url}${idx}`} url={url} successfullImages={successfullImages} setSuccessfullImages={setSuccessfullImages} />)
-        }
+          }
         </div>
       </div>
   );

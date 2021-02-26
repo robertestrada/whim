@@ -1,10 +1,25 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import * as AuthActions from '../../../actions/authentication';
 import '../../../styles/signUp.css';
 import '../../../styles/logIn.css';
 
 
 const SignUpSurvey = () => {
+  const dispatch = useDispatch();
+  const [survey, setSurvey] = useState({'gender': 0, 'age': 0});
 
+  const handleGenderSelect = gender => {
+    setSurvey({ ...survey, 'gender': gender });
+  }
+
+  const handleAgeSelect = age => {
+    setSurvey({ ...survey, 'age': age });
+  }
+
+  const handleFinishSurvey = () => {
+    dispatch(AuthActions.toggleShowSurvey());
+  }
 
   return (
     <div className="landing__panel-right-wrapper">
@@ -20,11 +35,11 @@ const SignUpSurvey = () => {
         <div className="signup-user-collect__survey-wrapper">
           <div className="signup-user-collect__question">Who do you shop for?</div>
           <div className="signup-user-collect__gender-buttons">
-            <div className="signup-user-collect__gender-button-wrapper">
-              <div className="signup-user-collect__gender-button">Women</div>
+            <div className="signup-user-collect__gender-button-wrapper" onClick={handleGenderSelect(1)}>
+              <div className={ survey.gender === 1 ? "signup-user-collect__gender-button gender-button-pressed" : "signup-user-collect__gender-button"}>Women</div>
             </div>
-            <div className="signup-user-collect__gender-button-wrapper last-button">
-              <div className="signup-user-collect__gender-button gender-button-pressed">Men</div>
+            <div className="signup-user-collect__gender-button-wrapper last-button" onClick={handleGenderSelect(2)}>
+              <div className={ survey.gender === 2 ? "signup-user-collect__gender-button gender-button-pressed" : "signup-user-collect__gender-button"}>Men</div>
             </div>
           </div>
           <div className="signup-user-collect__question">How old are you?</div>
@@ -52,7 +67,7 @@ const SignUpSurvey = () => {
             </div>
           </div>
         </div>
-        <div className="signup-user-collect__button-finish button-finish-pressed">Finish</div>
+        <div className="signup-user-collect__button-finish button-finish-pressed" onClick={handleFinishSurvey}>Finish</div>
         <div className="signup-user-collect__trust-wrapper">
           <svg className="signup-user-collect__trust-svg" viewBox="0 0 36 36" fill="none">
             <path fillRule="evenodd" clipRule="evenodd" d="M9.3999 13.7866C11.2935 12.6455 14.0428 11.062 17.3187 9.90259C19.8352 10.9126 22.3144 11.9481 25.3488 13.7866C24.6554 23.2856 17.3743 27.3173 17.3743 27.3173C17.3743 27.3173 9.54144 22.0155 9.3999 13.7866Z" fill="#2fb7ec"></path>

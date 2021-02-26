@@ -8,6 +8,8 @@ export const SET_USER = 'SET_USER';
 export const REMOVE_AUTH = 'REMOVE_AUTH';
 export const VAL_ERRORS = 'VAL_ERRORS';
 export const REMOVE_VAL_ERRORS = 'REMOVE_VAL_ERRORS';
+export const TOGGLE_SHOW_SURVEY = 'TOGGLE_SHOW_SURVEY';
+
 
 
 export const setToken = token => ({
@@ -24,7 +26,7 @@ export const removeAuth = () => ({
   type: REMOVE_AUTH,
 });
 
-export const setValErrors = (valErrors) => ({
+export const setValErrors = valErrors => ({
   type: VAL_ERRORS,
   valErrors
 })
@@ -32,6 +34,14 @@ export const setValErrors = (valErrors) => ({
 export const removeValErrors = () => ({
   type: REMOVE_VAL_ERRORS,
 })
+
+export const setShowSurvey = () => ({
+  type: TOGGLE_SHOW_SURVEY,
+})
+
+export const toggleShowSurvey = () => async dispatch => {
+  await dispatch(setShowSurvey());
+}
 
 export const loadToken = () => async dispatch => {
   const token = window.localStorage.getItem(TOKEN_KEY);
@@ -67,8 +77,9 @@ export const signUp = (firstName, lastName, email, password, picture = "") => as
       const { token, user } = await response.json();
       window.localStorage.setItem(TOKEN_KEY, token);
       window.localStorage.setItem(CURRENT_USER, JSON.stringify(user));
-      dispatch(setToken(token));
-      dispatch(setUser(user))
+      await dispatch(setShowSurvey());
+      await dispatch(setToken(token));
+      await dispatch(setUser(user));
       return true
     }
 
@@ -88,8 +99,8 @@ export const signIn = (email, password) => async dispatch => {
     const { token, user } = await response.json();
     window.localStorage.setItem(TOKEN_KEY, token);
     window.localStorage.setItem(CURRENT_USER, JSON.stringify(user));
-    dispatch(setToken(token));
-    dispatch(setUser(user));
+    await dispatch(setToken(token));
+    await dispatch(setUser(user));
     return true;
   } else {
     const valErrors = await response.json();
@@ -115,8 +126,9 @@ export const signUpGoogle = (firstName, lastName, email, picture = "") => async 
       const { token, user } = await response.json();
       window.localStorage.setItem(TOKEN_KEY, token);
       window.localStorage.setItem(CURRENT_USER, JSON.stringify(user));
-      dispatch(setToken(token));
-      dispatch(setUser(user))
+      await dispatch(setShowSurvey());
+      await dispatch(setToken(token));
+      await dispatch(setUser(user));
       return true
     }
 
