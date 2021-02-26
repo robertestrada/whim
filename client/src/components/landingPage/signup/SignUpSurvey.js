@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../../../actions/authentication';
 import '../../../styles/signUp.css';
@@ -7,6 +7,15 @@ import '../../../styles/logIn.css';
 
 const SignUpSurvey = () => {
   const dispatch = useDispatch();
+  const [survey, setSurvey] = useState({'gender': 0, 'age': 0});
+
+  const handleGenderSelect = gender => {
+    setSurvey({ ...survey, 'gender': gender });
+  }
+
+  const handleAgeSelect = age => {
+    setSurvey({ ...survey, 'age': age });
+  }
 
   const handleFinishSurvey = () => {
     dispatch(AuthActions.toggleShowSurvey());
@@ -26,11 +35,11 @@ const SignUpSurvey = () => {
         <div className="signup-user-collect__survey-wrapper">
           <div className="signup-user-collect__question">Who do you shop for?</div>
           <div className="signup-user-collect__gender-buttons">
-            <div className="signup-user-collect__gender-button-wrapper">
-              <div className="signup-user-collect__gender-button">Women</div>
+            <div className="signup-user-collect__gender-button-wrapper" onClick={handleGenderSelect(1)}>
+              <div className={ survey.gender === 1 ? "signup-user-collect__gender-button gender-button-pressed" : "signup-user-collect__gender-button"}>Women</div>
             </div>
-            <div className="signup-user-collect__gender-button-wrapper last-button">
-              <div className="signup-user-collect__gender-button gender-button-pressed">Men</div>
+            <div className="signup-user-collect__gender-button-wrapper last-button" onClick={handleGenderSelect(2)}>
+              <div className={ survey.gender === 2 ? "signup-user-collect__gender-button gender-button-pressed" : "signup-user-collect__gender-button"}>Men</div>
             </div>
           </div>
           <div className="signup-user-collect__question">How old are you?</div>
