@@ -1,25 +1,75 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../../../actions/authentication';
+import { baseUrl } from '../../../config';
 import '../../../styles/signUp.css';
 import '../../../styles/logIn.css';
 
 
-const SignUpSurvey = () => {
+const SignUpSurvey = ({ emailSignup }) => {
   const dispatch = useDispatch();
-  const [survey, setSurvey] = useState({'gender': 0, 'age': 0});
+  const [gender, setGender] = useState(0);
+  const [ageShow, setAgeShow] = useState(false);
+  const [age, setAge] = useState(0);
+  const ageOptions = ["13 - 17", "18 - 24", "25 - 29", "30 - 34", "35 - 39", "40 - 44", "45 - 49", "50 - 54", "55 - 64", "65+"]
 
-  const handleGenderSelect = gender => {
-    setSurvey({ ...survey, 'gender': gender });
+  const node = useRef();
+
+  const handleClick = e => {
+    if (node.current.contains(e.target)) {
+      return;
+    }
+    setAgeShow(false);
   }
 
-  const handleAgeSelect = age => {
-    setSurvey({ ...survey, 'age': age });
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClick);
+    return () => {
+      document.removeEventListener("mousedown", handleClick)
+    }
+  }, []);
+
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+    } else {
+      updateUser();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gender, age]);
+
+  const updateUser = async () => {
+    setAgeShow(false);
+    await fetch(`${baseUrl}/user-survey`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ gender, age, 'email': emailSignup }),
+    })
   }
+
+  const handleGender = gender => {
+    setGender(gender);
+  }
+
+  const handleAge = age => {
+    setAge(age);
+  }
+
+  const handleAgeShow = () => {
+    if (ageShow) {
+      setAgeShow(false);
+    } else {
+      setAgeShow(true);
+    }
+  }
+
 
   const handleFinishSurvey = () => {
     dispatch(AuthActions.toggleShowSurvey());
   }
+
 
   return (
     <div className="landing__panel-right-wrapper">
@@ -35,17 +85,17 @@ const SignUpSurvey = () => {
         <div className="signup-user-collect__survey-wrapper">
           <div className="signup-user-collect__question">Who do you shop for?</div>
           <div className="signup-user-collect__gender-buttons">
-            <div className="signup-user-collect__gender-button-wrapper" onClick={handleGenderSelect(1)}>
-              <div className={ survey.gender === 1 ? "signup-user-collect__gender-button gender-button-pressed" : "signup-user-collect__gender-button"}>Women</div>
+            <div className="signup-user-collect__gender-button-wrapper" onClick={() => handleGender(1)}>
+              <div className={ gender === 1 ? "signup-user-collect__gender-button gender-button-pressed" : "signup-user-collect__gender-button"}>Women</div>
             </div>
-            <div className="signup-user-collect__gender-button-wrapper last-button" onClick={handleGenderSelect(2)}>
-              <div className={ survey.gender === 2 ? "signup-user-collect__gender-button gender-button-pressed" : "signup-user-collect__gender-button"}>Men</div>
+            <div className="signup-user-collect__gender-button-wrapper last-button" onClick={() => handleGender(2)}>
+              <div className={ gender === 2 ? "signup-user-collect__gender-button gender-button-pressed" : "signup-user-collect__gender-button"}>Men</div>
             </div>
           </div>
           <div className="signup-user-collect__question">How old are you?</div>
-          <div height="48px" className="signup-user-collect__select-box">
-            <div className="signup-user-collect__select-box-text">Select ...</div>
-            <div className="signup-user-collect__select-box-dropdown-arrow">
+          <div height="48px" className="signup-user-collect__select-box" onClick={() => handleAgeShow()} ref={node}>
+            <div className="signup-user-collect__select-box-text">{ age !== 0 ? `${ageOptions[age - 1]}`: "Select ..."}</div>
+            <div className={ ageShow ? "signup-user-collect__select-box-dropdown-arrow age-open" : "signup-user-collect__select-box-dropdown-arrow"}>
               <svg className="signup-user-collect__select-box-svg" viewBox="0 0 8 5">
                 <g fill="none" fillRule="evenodd">
                   <path d="M-4-6h16v16H-4z"></path>
@@ -53,17 +103,15 @@ const SignUpSurvey = () => {
                 </g>
               </svg>
             </div>
-            <div className="signup-user-collect__select-box-dropdown">
-              <div className="signup-user-collect__select-box-dropdown-item">13 - 17</div>
-              <div className="signup-user-collect__select-box-dropdown-item">18 - 24</div>
-              <div className="signup-user-collect__select-box-dropdown-item">25 - 29</div>
-              <div className="signup-user-collect__select-box-dropdown-item">30 - 34</div>
-              <div className="signup-user-collect__select-box-dropdown-item">35 - 39</div>
-              <div className="signup-user-collect__select-box-dropdown-item">40 - 44</div>
-              <div className="signup-user-collect__select-box-dropdown-item">45 - 49</div>
-              <div className="signup-user-collect__select-box-dropdown-item">50 - 54</div>
-              <div className="signup-user-collect__select-box-dropdown-item">55 - 64</div>
-              <div className="signup-user-collect__select-box-dropdown-item">65+</div>
+            <div className={ageShow ? "signup-user-collect__select-box-dropdown" : "signup-user-collect__select-box-dropdown hide-ages"}>
+              { ageOptions.map((option, i) => <div 
+                                                key={i}
+                                                className="signup-user-collect__select-box-dropdown-item" 
+                                                onClick={() => handleAge(i + 1)}
+                                              >
+                                              { option }
+                                              </div>)
+              }
             </div>
           </div>
         </div>

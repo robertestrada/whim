@@ -72,10 +72,11 @@ def sign_up_google():
   
 @user_routes.route('/user-survey', methods=['POST'])
 def user_survey():
+  print(f'HIT')
   data = request.get_json()
   User.query.filter(User.email == data['email']).update({'gender': data['gender'], 'age': data['age']})
   db.session.commit()
-  return {'msg': 'Updated user gender and age preferences successfully'}, 200
+  return jsonify({'msg': 'Updated user gender and age preferences successfully'}), 200
 
 
 @user_routes.route('/signin', methods=['POST'])

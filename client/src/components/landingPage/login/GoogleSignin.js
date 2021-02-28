@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { baseUrl } from '../../../config';
 import { signInGoogle, removeAuth } from '../../../actions/authentication';
 import * as CartActions from '../../../actions/cart';
 import '../../../styles/logIn.css';
@@ -12,8 +11,8 @@ const GoogleSignin = ({ googleCreds }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await dispatch(removeAuth());
-    await dispatch(CartActions.clearCartAction());
+    dispatch(removeAuth());
+    dispatch(CartActions.clearCartAction());
 
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({

@@ -76,7 +76,7 @@
 .signup-user-collect__header {
   box-sizing: border-box;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 500;
   padding-bottom: 48px;
 }
 
@@ -109,7 +109,7 @@
 .signup-user-collect__gender-button {
   box-sizing: border-box;
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 500;
   height: 48px;
   background-color: transparent;
   border-width: 1px;
@@ -182,14 +182,14 @@
 
 .signup-user-collect__select-box-dropdown-arrow {
   display: flex;
-  margin-top: 0px;
-  margin-right: 12px;
+  margin: 0px 12px;
   width: 8px;
   transform: rotateZ(0deg);
-  transition-duration: 0.3s;
-  transition-timing-function: initial;
-  transition-delay: initial;
-  transition-property: all;
+  transition: all 0.3s ease 0s;
+}
+
+.signup-user-collect__select-box-dropdown-arrow.age-open {
+  transform: rotateZ(-180deg);
 }
 
 .signup-user-collect__select-box-svg {
@@ -202,44 +202,51 @@
 .signup-user-collect__select-box-dropdown {
   box-sizing: border-box;
   position: absolute;
-  height: 0px;
+  height: 252px;
   overflow-y: scroll;
   top: 46px;
   left: 0px;
   background-color: rgb(255, 255, 255);
   border-radius: 2px;
-  border-top-style: solid;
-  border-top-width: 0px;
-  border-top-color: rgb(212, 227, 235);
-  transition-duration: 0.3s;
-  transition-timing-function: initial;
-  transition-delay: initial;
-  transition-property: height;
-  animation-duration: 0.3s;
-  animation-timing-function: initial;
-  animation-delay: initial;
-  animation-iteration-count: initial;
-  animation-direction: initial;
-  animation-fill-mode: both;
-  animation-play-state: initial;
-  animation-name: JZdqL;
+  border: none;
+  transition: height 0.3s ease 0s;
   z-index: 2;
   width: 100%;
-  cursor: pointer;
-  color: rgb(25, 42, 50);
-  line-height: 1;
+}
+
+.signup-user-collect__select-box-dropdown:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  border-radius: 2px;
+  border: 1px solid rgb(212, 227, 235);
+  pointer-events: none;
+}
+
+.signup-user-collect__select-box-dropdown.hide-ages {
+  height: 0;
 }
 
 .signup-user-collect__select-box-dropdown-item {
+  box-sizing: border-box;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 300;
   min-height: 42px;
   display: flex;
   align-items: center;
   padding-top: 0px;
+  padding-bottom: 0px;
   padding-right: 16px;
+  padding-left: 16px;
   justify-content: left;
   flex-shrink: 0;
+  color: rgb(25, 42, 50);
+  cursor: pointer;
+  line-height: 1;
 }
 
 .signup-user-collect__button-finish {
