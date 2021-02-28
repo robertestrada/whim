@@ -1,7 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { baseUrl } from '../../../config';
 import * as AuthActions from '../../../actions/authentication';
 import * as CartActions from '../../../actions/cart';
 import '../../../styles/logIn.css';

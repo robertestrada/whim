@@ -18,12 +18,10 @@ const Main = () => {
   const [googleCreds, setGoogleCreds] = useState('');
 
   const handleGetSecretKeys = async () => {
-    const googleCredsFetch = await fetch(`${baseUrl}/google-credentials`);
-    const googleCredsJSON = await googleCredsFetch.json();
-    setGoogleCreds(googleCredsJSON);
-    const recaptchaSiteKeyFetch = await fetch(`${baseUrl}/recaptcha-site-key`);
-    const recaptchaSiteKey = await recaptchaSiteKeyFetch.json();
-    setRCSiteKey(recaptchaSiteKey.rcSiteKey);
+    const secretsFetch = await fetch(`${baseUrl}/backend-keys`);
+    const secretsJSON = await secretsFetch.json();
+    setGoogleCreds({ 'client_id': secretsJSON.client_id, 'api_key': secretsJSON.api_key});
+    setRCSiteKey(secretsJSON.rcSiteKey);
   };
 
   useEffect(() => {

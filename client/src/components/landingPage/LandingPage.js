@@ -135,6 +135,7 @@ const LandingPage = ({ googleCreds, rcSiteKey, showSurvey, landingBlurSupported 
       { showLoader && <LandingPageLoader landingBlurSupported={landingBlurSupported} slidersNotLoaded={slidersNotLoaded} /> }
       { showSurvey
         ? <SignUpSurvey 
+            emailSignup={emailSignup}
             signupSurvey={signupSurvey}
             setSignupSurvey={setSignupSurvey}
           />
