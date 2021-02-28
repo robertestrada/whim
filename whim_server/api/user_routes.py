@@ -9,17 +9,12 @@ import random
 user_routes = Blueprint("user", __name__, "")
 
 
-@user_routes.route("/google-credentials")
+@user_routes.route("/backend-keys")
 def get_google_credentials():
   client_id = current_app.config['GOOGLE_CLIENT_ID']
   api_key = current_app.config['GOOGLE_API_KEY']
-  return {'client_id': client_id, 'api_key': api_key}, 200
-
-
-@user_routes.route("/recaptcha-site-key")
-def get_recaptcha_site_key():
   rcSiteKey = current_app.config['RC_SITE_KEY']
-  return {'rcSiteKey': rcSiteKey}, 200
+  return {'client_id': client_id, 'api_key': api_key, 'rcSiteKey': rcSiteKey}, 200
 
 
 @user_routes.route('/signup', methods=['POST'])
