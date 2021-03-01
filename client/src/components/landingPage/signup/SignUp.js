@@ -56,6 +56,13 @@ const SignUp = ({
     }
   }
 
+  const handleEnterPress = e => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      handleFormSubmit(e);
+    }
+  }
+
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
@@ -70,13 +77,17 @@ const SignUp = ({
           className={ (signupValidationMsgs.names === 'Please fill in your first and last names.' || signupValidationMsgs.names === 'Please fill in your first name.') ? "login__input first-name input-error" : "login__input first-name" }
           value={firstNameSignup}
           placeholder="First Name"
-          onChange={e => setFirstNameSignup(e.target.value)}>
+          onChange={e => setFirstNameSignup(e.target.value)}
+          onKeyDown={e => handleEnterPress(e)}
+        >
         </input>
         <input
           className={ (signupValidationMsgs.names === 'Please fill in your first and last names.' || signupValidationMsgs.names === 'Please fill in your last name.') ? "login__input last-name input-error" : "login__input last-name" }
           value={lastNameSignup}
           placeholder="Last Name"
-          onChange={e => setLastNameSignup(e.target.value)}>
+          onChange={e => setLastNameSignup(e.target.value)}
+          onKeyDown={e => handleEnterPress(e)}
+        >
         </input>
       </div>
       { signupValidationMsgs.names !== '' 
@@ -86,7 +97,9 @@ const SignUp = ({
         className={ signupValidationMsgs.email !== ''  ? "login__input input-error" : "login__input" }
         value={emailSignup}
         placeholder="Email Address"
-        onChange={e => setEmailSignup(e.target.value)}>
+        onChange={e => setEmailSignup(e.target.value)}
+        onKeyDown={e => handleEnterPress(e)}
+      >
       </input>
       { signupValidationMsgs.email !== ''
         && <div className="signup__input-error">{signupValidationMsgs.email}</div>
@@ -96,7 +109,9 @@ const SignUp = ({
         type="text"
         value={passwordSignup}
         placeholder="Password"
-        onChange={e => setPasswordSignup(e.target.value)}>
+        onChange={e => setPasswordSignup(e.target.value)}
+        onKeyDown={e => handleEnterPress(e)}
+      >
       </input>
       { signupValidationMsgs.password !== ''
         && <div className="signup__input-error">{signupValidationMsgs.password}</div>
