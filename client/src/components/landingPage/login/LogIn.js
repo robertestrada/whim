@@ -8,7 +8,13 @@ const LogIn = ({
                 emailLogin, setEmailLogin, passwordLogin, setPasswordLogin, 
                 handleValidate, valErrors, loginValidationMsg, googleCreds,
               }) => {
-                
+  
+  const handleEnterPress = e => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      handleValidate();
+    }
+  }
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
@@ -25,14 +31,18 @@ const LogIn = ({
         value={emailLogin}
         placeholder="Email Address"
         type="text"
-        onChange={e => setEmailLogin(e.target.value)}>
+        onChange={e => setEmailLogin(e.target.value)}
+        onKeyDown={e => handleEnterPress(e)}
+      >
       </input>
       <input
         className="login__input login-password"
         placeholder="Password"
         type="text"
         value={passwordLogin}
-        onChange={e => setPasswordLogin(e.target.value)}>
+        onChange={e => setPasswordLogin(e.target.value)}
+        onKeyDown={e => handleEnterPress(e)}
+        >
       </input>
       <div className="login__buttons">
         <DemoButton emailLogin={emailLogin} setEmailLogin={setEmailLogin} passwordLogin={passwordLogin} setPasswordLogin={setPasswordLogin}/>
