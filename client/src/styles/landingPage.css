@@ -27,6 +27,7 @@
   animation: slidersLoadingFadeIn 1s ease; 
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
+  pointer-events: none;
 }
 
 .landing__overlay-loading-container {
@@ -39,6 +40,7 @@
   animation: overlayLoadingFadeIn 1s ease; 
   animation-iteration-count: 1;
   animation-fill-mode: forwards;
+  pointer-events: none;
 }
 
 .no-blur-support {
