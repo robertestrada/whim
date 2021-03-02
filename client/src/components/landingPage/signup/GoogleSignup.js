@@ -1,19 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../../../actions/authentication';
 import * as CartActions from '../../../actions/cart';
+import Loader from 'react-loader-spinner';
 import '../../../styles/logIn.css';
 
-const GoogleSignUp = ({ googleCreds, setSignupValidationMsgs }) => {
+const GoogleSignUp = ({ googleCreds, setSignupValidationMsgs, valErrors }) => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const [showGoogleSignUpLoader, setShowGoogleSignUpLoader] = useState(false);
+
+  useEffect(() => {
+    if (valErrors && valErrors.msg) {
+      setShowGoogleSignUpLoader(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [valErrors]);
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setShowGoogleSignUpLoader(true);
     setSignupValidationMsgs({ 'names': '', 'email': '', 'password': '' });
     dispatch(AuthActions.removeValErrors());
-    dispatch(AuthActions.removeAuth())
+    dispatch(AuthActions.removeAuth());
     dispatch(CartActions.clearCartAction());
 
     window.gapi.load('client:auth2', () => {
@@ -76,9 +86,12 @@ const GoogleSignUp = ({ googleCreds, setSignupValidationMsgs }) => {
           <path d="M14 14h18v18H14V14z"></path>
         </g>
       </svg>
-      <div className="login__google-text">
-        Google
-      </div>
+      { showGoogleSignUpLoader
+        ? <Loader className="signup__submit-loader" type="ThreeDots" color="#aaa" height={40} width={40} />
+        : <div className="login__google-text">
+            Google
+          </div>
+      }
     </button>
   );
 }
