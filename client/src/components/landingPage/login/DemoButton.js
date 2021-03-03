@@ -1,7 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import Loader from 'react-loader-spinner';
 import '../../../styles/logIn.css';
 
-const DemoButton = ({ emailLogin, setEmailLogin, passwordLogin, setPasswordLogin }) => {
+
+const DemoButton = ({ emailLogin, setEmailLogin, passwordLogin, setPasswordLogin,
+                      showDemoLoginLoader, setShowDemoLoginLoader, handleValidate
+                    }) => {
+
 
   let i=0, k=0, spd = 25;
   const txt = 'demo@whim.com'
@@ -31,13 +36,25 @@ const DemoButton = ({ emailLogin, setEmailLogin, passwordLogin, setPasswordLogin
       k++;
       setTimeout(typePassword, spd);
     } else {
-      document.querySelector('.login__submit.login-button').click()
+      setShowDemoLoginLoader(true);
     }
   }
 
+  useEffect(() => {
+    if (showDemoLoginLoader) {
+      handleValidate();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showDemoLoginLoader]);
+
 
   return (
-    <button className="login__submit demo-button" onClick={handleClick}>Demo User</button>
+    <button className="login__submit demo-button" onClick={handleClick}>
+      { showDemoLoginLoader
+        ? <Loader className="signup__submit-loader" type="ThreeDots" color="#ffffff" height={40} width={40} />
+        : "Demo User"
+      }
+    </button>
   )
 }
 

@@ -17,17 +17,20 @@ const LandingPage = ({ googleCreds, rcSiteKey, showSurvey, landingBlurSupported 
   const [passwordSignup, setPasswordSignup] = useState('');
   const [firstNameSignup, setFirstNameSignup] = useState('');
   const [lastNameSignup, setLastNameSignup] = useState('');
-  const [button, setButton] = useState("login")
-  const valErrors = useSelector(state => state.authentication.valErrors)
+  const [button, setButton] = useState("login");
+  const valErrors = useSelector(state => state.authentication.valErrors);
   const [loginValidationMsg, setLoginValidationMsg] = useState('');
   const [signupValidationMsgs, setSignupValidationMsgs] = useState({ 'names': '', 'email': '', 'password': '' });
   const [signupSurvey, setSignupSurvey] = useState({ 'email': '', 'gender': 0, 'age': 0 });
   const [slidersNotLoaded, setSlidersNotLoaded] = useState(true);
   const [showLoader, setShowLoader] = useState(true);
+  const [showSignUpLoader, setShowSignUpLoader] = useState(false);
+  const [showLoginLoader, setShowLoginLoader] = useState(false);
+  const [showDemoLoginLoader, setShowDemoLoginLoader] = useState(false);
 
   const handleClearErrors = () => {
     dispatch(AuthActions.removeValErrors());
-  }  
+  }
 
   useEffect(() => {
     if (!slidersNotLoaded) {
@@ -120,8 +123,6 @@ const LandingPage = ({ googleCreds, rcSiteKey, showSurvey, landingBlurSupported 
   if (landingBlurSupported === null) {
     return null;
   }
-  
-
 
 
   return (
@@ -162,6 +163,12 @@ const LandingPage = ({ googleCreds, rcSiteKey, showSurvey, landingBlurSupported 
             handleSubmit={handleSubmit}
             signupValidationMsgs={signupValidationMsgs}
             setSignupValidationMsgs={setSignupValidationMsgs}
+            showLoginLoader={showLoginLoader}
+            setShowLoginLoader={setShowLoginLoader}
+            showDemoLoginLoader={showDemoLoginLoader}
+            setShowDemoLoginLoader={setShowDemoLoginLoader}
+            showSignUpLoader={showSignUpLoader}
+            setShowSignUpLoader={setShowSignUpLoader}
           />
       }
     </div>

@@ -3,11 +3,12 @@ import '../../../styles/signUp.css';
 import '../../../styles/logIn.css';
 import GoogleSignup from './GoogleSignup';
 import ReCAPTCHA from "react-google-recaptcha";
+import Loader from 'react-loader-spinner';
 
 const SignUp = ({ 
                   firstNameSignup, setFirstNameSignup, lastNameSignup, setLastNameSignup, emailSignup, setEmailSignup, 
                   passwordSignup, setPasswordSignup, valErrors, rcSiteKey, handleValidate, signupValidationMsgs,
-                  handleSubmit, setSignupValidationMsgs, googleCreds
+                  handleSubmit, setSignupValidationMsgs, googleCreds, showSignUpLoader, setShowSignUpLoader
                 }) => {
 
   const recaptchaRef = useRef();
@@ -48,11 +49,21 @@ const SignUp = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [passwordSignup]);
 
+  useEffect(() => {
+    if (valErrors && valErrors.msg){
+      setShowSignUpLoader(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [valErrors]);
+
 
   const handleFormSubmit = async e => {
     e.preventDefault();
+    setShowSignUpLoader(true);
     if (handleValidate()){
       await recaptchaRef.current.executeAsync();
+    } else {
+      setShowSignUpLoader(false);
     }
   }
 
@@ -67,9 +78,9 @@ const SignUp = ({
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
       { (valErrors && (valErrors.msg === "Please log in using your previously created email account."))
-        ?  <div className="login__error-wrapper">
-              <p className="login__error">{valErrors.msg}</p>
-            </div>
+        ? <div className="login__error-wrapper">
+            <p className="login__error">{valErrors.msg}</p>
+          </div>
         : null
       }
       <div className="signup__names">
@@ -116,12 +127,21 @@ const SignUp = ({
       { signupValidationMsgs.password !== ''
         && <div className="signup__input-error">{signupValidationMsgs.password}</div>
       }
-      <div className="signup__submit" onClick={handleFormSubmit}>Sign Up</div>
+      <div className="signup__submit" onClick={handleFormSubmit}>
+        { showSignUpLoader 
+          ? <Loader className="signup__submit-loader" type="ThreeDots" color="#ffffff" height={40} width={40} /> 
+          : "Sign Up"
+        }
+      </div>
       <div className="login__auth-divider-wrapper">
         <div className="login__auth-divider-line"/>
         <div className="login__auth-divider-text">or</div>
       </div>
-      <GoogleSignup setSignupValidationMsgs={setSignupValidationMsgs} googleCreds={googleCreds}/> 
+      <GoogleSignup 
+        setSignupValidationMsgs={setSignupValidationMsgs} 
+        googleCreds={googleCreds} 
+        valErrors={valErrors}
+      />
       <div className="login__terms">
         By clicking 'Sign Up' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
       </div>

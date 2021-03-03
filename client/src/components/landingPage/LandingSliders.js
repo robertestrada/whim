@@ -52,7 +52,6 @@ const LandingSliders = ({ landingBlurSupported, slidersNotLoaded, setSlidersNotL
   useEffect(() => {
     slideBuild();
   }, []);
-  
 
   useEffect(() => {
     let slideCounter = slideBulkCount;
@@ -66,7 +65,6 @@ const LandingSliders = ({ landingBlurSupported, slidersNotLoaded, setSlidersNotL
     }, 20);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slideBulk]);
-
 
   useEffect(() => {
     if (slideAmount * 8 === successfullImages) {

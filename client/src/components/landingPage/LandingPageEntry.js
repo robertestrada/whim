@@ -11,6 +11,8 @@ const LandingPageEntry = ({ button, setButton, emailLogin, setEmailLogin,
                             emailSignup, setEmailSignup, passwordSignup, setPasswordSignup,
                             rcSiteKey, valErrors, handleValidate, handleSubmit, googleCreds,
                             signupValidationMsgs, setSignupValidationMsgs, loginValidationMsg,
+                            showLoginLoader, setShowLoginLoader, showDemoLoginLoader, setShowDemoLoginLoader,
+                            showSignUpLoader, setShowSignUpLoader
                           }) => {
 
 
@@ -39,6 +41,10 @@ const LandingPageEntry = ({ button, setButton, emailLogin, setEmailLogin,
                 handleValidate={handleValidate}
                 valErrors={valErrors}
                 loginValidationMsg={loginValidationMsg}
+                showLoginLoader={showLoginLoader}
+                setShowLoginLoader={setShowLoginLoader}
+                showDemoLoginLoader={showDemoLoginLoader}
+                setShowDemoLoginLoader={setShowDemoLoginLoader}
               />
             : <SignUp 
                 googleCreds={googleCreds}
@@ -56,6 +62,8 @@ const LandingPageEntry = ({ button, setButton, emailLogin, setEmailLogin,
                 handleSubmit={handleSubmit}
                 signupValidationMsgs={signupValidationMsgs}
                 setSignupValidationMsgs={setSignupValidationMsgs}
+                showSignUpLoader={showSignUpLoader}
+                setShowSignUpLoader={setShowSignUpLoader}
               />
           }
         </div>
