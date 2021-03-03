@@ -1,20 +1,37 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../../../styles/logIn.css';
 import DemoButton from './DemoButton';
 import GoogleSignin from './GoogleSignin.js';
+import Loader from 'react-loader-spinner';
 
 
 const LogIn = ({ 
                 emailLogin, setEmailLogin, passwordLogin, setPasswordLogin, 
                 handleValidate, valErrors, loginValidationMsg, googleCreds,
+                showLoginLoader, setShowLoginLoader, showDemoLoginLoader, setShowDemoLoginLoader
               }) => {
+
+  useEffect(() => {
+    if (valErrors && valErrors.msg) {
+      setShowLoginLoader(false);
+      setShowDemoLoginLoader(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [valErrors]);
   
   const handleEnterPress = e => {
     if (e.keyCode === 13) {
       e.preventDefault();
+      setShowLoginLoader(true);
       handleValidate();
     }
   }
+
+  const handleLoginClick = () => {
+    setShowLoginLoader(true);
+    handleValidate();
+  }
+
 
   return (
     <div className="login" style={{ animation: `fadeIn 0.5s` }}>
@@ -45,8 +62,21 @@ const LogIn = ({
         >
       </input>
       <div className="login__buttons">
-        <DemoButton emailLogin={emailLogin} setEmailLogin={setEmailLogin} passwordLogin={passwordLogin} setPasswordLogin={setPasswordLogin}/>
-        <button className="login__submit login-button" onClick={handleValidate}>Log In</button>
+        <DemoButton 
+          emailLogin={emailLogin} 
+          setEmailLogin={setEmailLogin} 
+          passwordLogin={passwordLogin} 
+          setPasswordLogin={setPasswordLogin}
+          showDemoLoginLoader={showDemoLoginLoader}
+          setShowDemoLoginLoader={setShowDemoLoginLoader}
+          handleValidate={handleValidate}
+        />
+        <button className="login__submit login-button" onClick={handleLoginClick}>
+          { showLoginLoader
+            ? <Loader className="signup__submit-loader" type="ThreeDots" color="#ffffff" height={40} width={40} />
+            : "Log In"
+          }
+        </button>
       </div>
       <div className="login__auth-divider-wrapper">
         <div className="login__auth-divider-line"/>

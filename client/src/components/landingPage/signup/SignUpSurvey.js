@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Loader from 'react-loader-spinner';
 import { useDispatch } from 'react-redux';
 import * as AuthActions from '../../../actions/authentication';
 import { baseUrl } from '../../../config';
@@ -11,7 +12,8 @@ const SignUpSurvey = ({ emailSignup }) => {
   const [gender, setGender] = useState(0);
   const [ageShow, setAgeShow] = useState(false);
   const [age, setAge] = useState(0);
-  const ageOptions = ["13 - 17", "18 - 24", "25 - 29", "30 - 34", "35 - 39", "40 - 44", "45 - 49", "50 - 54", "55 - 64", "65+"]
+  const ageOptions = ["13 - 17", "18 - 24", "25 - 29", "30 - 34", "35 - 39", "40 - 44", "45 - 49", "50 - 54", "55 - 64", "65+"];
+  const [showSurveyLoader, setShowSurveyLoader] = useState(false);
 
   const node = useRef();
 
@@ -67,6 +69,7 @@ const SignUpSurvey = ({ emailSignup }) => {
 
 
   const handleFinishSurvey = () => {
+    setShowSurveyLoader(true);
     dispatch(AuthActions.toggleShowSurvey());
   }
 
@@ -115,7 +118,12 @@ const SignUpSurvey = ({ emailSignup }) => {
             </div>
           </div>
         </div>
-        <div className="signup-user-collect__button-finish button-finish-pressed" onClick={handleFinishSurvey}>Finish</div>
+        <div className="signup-user-collect__button-finish button-finish-pressed" onClick={handleFinishSurvey}>
+          {showSurveyLoader
+            ? <Loader className="signup__submit-loader" type="ThreeDots" color="#ffffff" height={40} width={40} />
+            : "Finish"
+          }
+        </div>
         <div className="signup-user-collect__trust-wrapper">
           <svg className="signup-user-collect__trust-svg" viewBox="0 0 36 36" fill="none">
             <path fillRule="evenodd" clipRule="evenodd" d="M9.3999 13.7866C11.2935 12.6455 14.0428 11.062 17.3187 9.90259C19.8352 10.9126 22.3144 11.9481 25.3488 13.7866C24.6554 23.2856 17.3743 27.3173 17.3743 27.3173C17.3743 27.3173 9.54144 22.0155 9.3999 13.7866Z" fill="#2fb7ec"></path>
