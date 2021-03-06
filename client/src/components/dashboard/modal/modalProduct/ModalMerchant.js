@@ -16,7 +16,6 @@ const ModalMerchant = ({ productData }) => {
             <div className="modal__merchant-name">
               {productData.merchant && productData.merchant.merchant_name}
             </div>
-
           </div>
         </div>
       </div>
