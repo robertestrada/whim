@@ -10,8 +10,10 @@ import Modal from './modal/Modal';
 import '../../styles/dashboard.css';
 
 
-const DashBoard = ({ panelType, setPanelType, modalData, setModalData }) => {
+const DashBoard = () => {
     const dispatch = useDispatch();
+    const [panelType, setPanelType] = useState('feed');
+    const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
     const currentUser = useSelector(state => state.authentication.user);
     const [modalType, setModalType] = useState('hidden');
     const [viewSwitchHold, setViewSwitchHold] = useState(null);
@@ -29,6 +31,7 @@ const DashBoard = ({ panelType, setPanelType, modalData, setModalData }) => {
     const [allowSearch, setAllowSearch] = useState(false);
     const [catShow, setCatShow] = useState(false);
     const [scrollPosition, setScrollPosition] = useState(0);
+    
 
 
     useEffect(() => {
@@ -57,6 +60,22 @@ const DashBoard = ({ panelType, setPanelType, modalData, setModalData }) => {
         }
             // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [scrollPosition]);
+
+    useEffect(() => {
+        if (panelType === 'feed') {
+            document.body.classList.remove('cart-visible');
+        } else {
+            document.body.classList.add('cart-visible');
+        }
+    }, [panelType]);
+
+    useEffect(() => {
+        if (modalData.showModal) {
+            document.body.classList.add('no-scroll');
+        } else {
+            document.body.classList.remove('no-scroll');
+        }
+    }, [modalData.showModal]);
 
     useEffect(() => {
         window.scrollTo(0, 0);

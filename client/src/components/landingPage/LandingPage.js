@@ -9,8 +9,9 @@ import LandingPageLoader from './LandingPageLoader';
 import LandingPageEntry from './LandingPageEntry';
 
 
-const LandingPage = ({ googleCreds, rcSiteKey, showSurvey, landingBlurSupported }) => {
+const LandingPage = ({ googleCreds, rcSiteKey, showSurvey }) => {
   const dispatch = useDispatch();
+  const [landingBlurSupported, setLandingBlurSupported] = useState(null);
   const [emailLogin, setEmailLogin] = useState('');
   const [passwordLogin, setPasswordLogin] = useState('');
   const [emailSignup, setEmailSignup] = useState('');
@@ -27,6 +28,14 @@ const LandingPage = ({ googleCreds, rcSiteKey, showSurvey, landingBlurSupported 
   const [showSignUpLoader, setShowSignUpLoader] = useState(false);
   const [showLoginLoader, setShowLoginLoader] = useState(false);
   const [showDemoLoginLoader, setShowDemoLoginLoader] = useState(false);
+
+  useEffect(() => {
+    if (window.CSS.supports(`(filter: blur(48px)) or (-webkit-filter: blur(48px)) or (-moz-filter: blur(48px)) or (-o-filter: blur(48px)) or (-ms-filter: blur(48px))`)) {
+      setLandingBlurSupported(true);
+    } else {
+      setLandingBlurSupported(false);
+    }
+  }, []);
 
   const handleClearErrors = () => {
     dispatch(AuthActions.removeValErrors());

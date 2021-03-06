@@ -12,9 +12,8 @@ const App = () => {
     const dispatch = useDispatch();
     const needSignIn = useSelector(state => !state.authentication.token);
     const showSurvey = useSelector(state => state.authentication.showSurvey);
-    const [panelType, setPanelType] = useState('feed');
-    const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
-    const [landingBlurSupported, setLandingBlurSupported] = useState(null);
+
+    
     const [rcSiteKey, setRCSiteKey] = useState('');
     const [googleCreds, setGoogleCreds] = useState('');
 
@@ -31,13 +30,7 @@ const App = () => {
     }, []);
 
 
-    useEffect(() => {
-        if (window.CSS.supports(`(filter: blur(48px)) or (-webkit-filter: blur(48px)) or (-moz-filter: blur(48px)) or (-o-filter: blur(48px)) or (-ms-filter: blur(48px))`)) {
-            setLandingBlurSupported(true);
-        } else {
-            setLandingBlurSupported(false);
-        }
-    }, []);
+
 
     useEffect(() => {
         const getToken = () => {
@@ -47,21 +40,8 @@ const App = () => {
         getToken();
     }, [dispatch]);
 
-    useEffect(() => {
-        if (panelType === 'feed') {
-            document.body.classList.remove('cart-visible');
-        } else {
-            document.body.classList.add('cart-visible');
-        }
-    }, [panelType]);
 
-    useEffect(() => {
-        if (modalData.showModal) {
-            document.body.classList.add('no-scroll');
-        } else {
-            document.body.classList.remove('no-scroll');
-        }
-    }, [modalData.showModal]);
+
 
     return (
         <BrowserRouter>
@@ -72,14 +52,8 @@ const App = () => {
                                 googleCreds={googleCreds}
                                 rcSiteKey={rcSiteKey}
                                 showSurvey={showSurvey}
-                                landingBlurSupported={landingBlurSupported}
                             />
-                        :   () => <DashBoard
-                                panelType={panelType}
-                                setPanelType={setPanelType}
-                                modalData={modalData}
-                                setModalData={setModalData}
-                            />
+                        :   () => <DashBoard/>
                     }
                 />
             </Switch>
