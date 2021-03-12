@@ -16,15 +16,12 @@ const LandingPageEntry = ({ button, setButton, emailLogin, setEmailLogin,
                             showSignUpLoader, setShowSignUpLoader
                           }) => {
 
-  const [rcSiteKey, setRCSiteKey] = useState('');
-  const [googleCreds, setGoogleCreds] = useState('');
-
+  const [backendKeys, setBackendKeys] = useState({ 'client_id': '', 'api_key': '', 'rcSiteKey': '' });
 
   const handleGetSecretKeys = async () => {
     const secretsFetch = await fetch(`${baseUrl}/backend-keys`);
     const secretsJSON = await secretsFetch.json();
-    setGoogleCreds({ 'client_id': secretsJSON.client_id, 'api_key': secretsJSON.api_key });
-    setRCSiteKey(secretsJSON.rcSiteKey);
+    setBackendKeys({ ...backendKeys, 'client_id': secretsJSON.client_id, 'api_key': secretsJSON.api_key, 'rcSiteKey': secretsJSON.rcSiteKey });
   };
 
   useEffect(() => {
@@ -50,7 +47,7 @@ const LandingPageEntry = ({ button, setButton, emailLogin, setEmailLogin,
           </div>
           { button === "login"
             ? <LogIn 
-                googleCreds={googleCreds}
+                backendKeys={backendKeys}
                 emailLogin={emailLogin}
                 setEmailLogin={setEmailLogin}
                 passwordLogin={passwordLogin}
@@ -64,7 +61,7 @@ const LandingPageEntry = ({ button, setButton, emailLogin, setEmailLogin,
                 setShowDemoLoginLoader={setShowDemoLoginLoader}
               />
             : <SignUp 
-                googleCreds={googleCreds}
+                backendKeys={backendKeys}
                 firstNameSignup={firstNameSignup}
                 setFirstNameSignup={setFirstNameSignup}
                 lastNameSignup={lastNameSignup}
@@ -73,7 +70,6 @@ const LandingPageEntry = ({ button, setButton, emailLogin, setEmailLogin,
                 setEmailSignup={setEmailSignup}
                 passwordSignup={passwordSignup}
                 setPasswordSignup={setPasswordSignup}
-                rcSiteKey={rcSiteKey}
                 valErrors={valErrors}
                 handleValidate={handleValidate}
                 handleSubmit={handleSubmit}

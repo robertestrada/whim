@@ -25,8 +25,8 @@ const App = () => {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path="/" exact component={
-                        needSignIn || showSurvey
+                <Route path="/" exact render={
+                        showSurvey || needSignIn
                         ?   () => <LandingPage showSurvey={showSurvey}/>
                         :   () => <DashBoard/>
                     }

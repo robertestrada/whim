@@ -9,7 +9,7 @@ import LandingPageLoader from './LandingPageLoader';
 import LandingPageEntry from './LandingPageEntry';
 
 
-const LandingPage = ({ showSurvey }) => {
+const LandingPage = ({showSurvey}) => {
   const dispatch = useDispatch();
   const [landingBlurSupported, setLandingBlurSupported] = useState(null);
   const [emailLogin, setEmailLogin] = useState('');
@@ -31,11 +31,11 @@ const LandingPage = ({ showSurvey }) => {
 
 
   useEffect(() => {
-    if (window.CSS.supports(`(filter: blur(48px)) or (-webkit-filter: blur(48px)) or (-moz-filter: blur(48px)) or (-o-filter: blur(48px)) or (-ms-filter: blur(48px))`)) {
-      setLandingBlurSupported(true);
-    } else {
-      setLandingBlurSupported(false);
-    }
+      if (window.CSS.supports(`(filter: blur(48px)) or (-webkit-filter: blur(48px)) or (-moz-filter: blur(48px)) or (-o-filter: blur(48px)) or (-ms-filter: blur(48px))`)) {
+        setLandingBlurSupported(true);
+      } else {
+        setLandingBlurSupported(false);
+      }
   }, []);
 
   const handleClearErrors = () => {

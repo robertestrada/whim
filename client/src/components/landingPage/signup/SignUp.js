@@ -7,8 +7,8 @@ import Loader from 'react-loader-spinner';
 
 const SignUp = ({ 
                   firstNameSignup, setFirstNameSignup, lastNameSignup, setLastNameSignup, emailSignup, setEmailSignup, 
-                  passwordSignup, setPasswordSignup, valErrors, rcSiteKey, handleValidate, signupValidationMsgs,
-                  handleSubmit, setSignupValidationMsgs, googleCreds, showSignUpLoader, setShowSignUpLoader
+                  passwordSignup, setPasswordSignup, valErrors, backendKeys, handleValidate, signupValidationMsgs,
+                  handleSubmit, setSignupValidationMsgs, showSignUpLoader, setShowSignUpLoader
                 }) => {
 
   const recaptchaRef = useRef();
@@ -139,7 +139,7 @@ const SignUp = ({
       </div>
       <GoogleSignup 
         setSignupValidationMsgs={setSignupValidationMsgs} 
-        googleCreds={googleCreds} 
+        backendKeys={backendKeys} 
         valErrors={valErrors}
       />
       <div className="login__terms">
@@ -148,7 +148,7 @@ const SignUp = ({
       <ReCAPTCHA
         className="signup__recaptcha"
         ref={recaptchaRef}
-        sitekey={rcSiteKey}
+        sitekey={backendKeys.rcSiteKey}
         size="invisible"
         onChange={handleSubmit}
       />
