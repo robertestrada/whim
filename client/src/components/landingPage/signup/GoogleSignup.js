@@ -6,7 +6,7 @@ import * as CartActions from '../../../actions/cart';
 import Loader from 'react-loader-spinner';
 import '../../../styles/logIn.css';
 
-const GoogleSignUp = ({ googleCreds, setSignupValidationMsgs, valErrors }) => {
+const GoogleSignUp = ({ backendKeys, setSignupValidationMsgs, valErrors }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [showGoogleSignUpLoader, setShowGoogleSignUpLoader] = useState(false);
@@ -28,9 +28,9 @@ const GoogleSignUp = ({ googleCreds, setSignupValidationMsgs, valErrors }) => {
 
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({
-        clientId: `${googleCreds.client_id}`,
+        clientId: `${backendKeys.client_id}`,
         scope: 'email',
-        apiKey: `${googleCreds.api_key}`,
+        apiKey: `${backendKeys.api_key}`,
       }).then(() => {
         const authorized = window.gapi.auth2.getAuthInstance();
         try {

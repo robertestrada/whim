@@ -7,7 +7,7 @@ import Loader from 'react-loader-spinner';
 
 const LogIn = ({ 
                 emailLogin, setEmailLogin, passwordLogin, setPasswordLogin, 
-                handleValidate, valErrors, loginValidationMsg, googleCreds,
+                handleValidate, valErrors, loginValidationMsg, backendKeys,
                 showLoginLoader, setShowLoginLoader, showDemoLoginLoader, setShowDemoLoginLoader
               }) => {
 
@@ -82,7 +82,7 @@ const LogIn = ({
         <div className="login__auth-divider-line"/>
         <div className="login__auth-divider-text">or</div>
       </div>
-      <GoogleSignin googleCreds={googleCreds}/> 
+      <GoogleSignin backendKeys={backendKeys}/> 
       <div className="login__terms">
         By clicking 'Log In' or 'Google' you agree to the Whim Terms of Use and Privacy Policy. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
       </div>

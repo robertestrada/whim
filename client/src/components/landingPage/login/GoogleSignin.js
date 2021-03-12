@@ -5,7 +5,7 @@ import { signInGoogle, removeAuth } from '../../../actions/authentication';
 import * as CartActions from '../../../actions/cart';
 import '../../../styles/logIn.css';
 
-const GoogleSignin = ({ googleCreds }) => {
+const GoogleSignin = ({ backendKeys }) => {
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -16,9 +16,9 @@ const GoogleSignin = ({ googleCreds }) => {
 
     window.gapi.load('client:auth2', () => {
       window.gapi.client.init({
-        clientId: `${googleCreds.client_id}`,
+        clientId: `${backendKeys.client_id}`,
         scope: 'email',
-        apiKey: `${googleCreds.api_key}`,
+        apiKey: `${backendKeys.api_key}`,
       }).then(() => {
         const authorized = window.gapi.auth2.getAuthInstance();
         try {
