@@ -4,7 +4,6 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import * as AuthActions from './actions/authentication';
 import LandingPage from './components/landingPage/LandingPage';
 import DashBoard from './components/dashboard/DashBoard';
-import './styles/main.css';
 
 
 const App = () => {
