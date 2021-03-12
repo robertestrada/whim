@@ -43,6 +43,20 @@ export const toggleShowSurvey = () => async dispatch => {
   await dispatch(setShowSurvey());
 }
 
+export const loadTokenUser = () => async dispatch => {
+  const token = window.localStorage.getItem(TOKEN_KEY);
+  const user = JSON.parse(window.localStorage.getItem(CURRENT_USER));
+  if (user) {
+    dispatch(setUser(user));
+  }
+  if (token) {
+    dispatch(setToken(token));
+    return true;
+  } else {
+    return false;
+  }
+};
+
 export const loadToken = () => async dispatch => {
   const token = window.localStorage.getItem(TOKEN_KEY);
   if (token) {

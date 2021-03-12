@@ -13,8 +13,7 @@ const App = () => {
     const showSurvey = useSelector(state => state.authentication.showSurvey);
 
     const getToken = () => {
-        dispatch(AuthActions.loadToken());
-        dispatch(AuthActions.loadUser());
+        dispatch(AuthActions.loadTokenUser());
     }
 
     useEffect(() => {
