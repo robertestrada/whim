@@ -15,7 +15,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
                 panelType, setPanelType, modalChange, viewSwitch, setViewSwitch, 
                 handleRemoveItem, itemHold, setItemHold 
               }) => {
-  let isMounted = true;
 
   const { promiseInProgress } = usePromiseTracker();
   
@@ -27,7 +26,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
   
   
   const fetchData = async () => {
-    console.log("FETCHING!");
     const fetchPoint = {
       "popular": `popular/${pageData.page}`,
       "express": `express/${pageData.page}`,
@@ -111,7 +109,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
   }, [viewSwitch]);
 
   useEffect(() => {
-    
     if (pageData.tab !== "search"){
       setResultsForSearchTerm(null);
       setLastSearchTerm({ 'term': '' });
@@ -124,15 +121,7 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
     }
     setPanelType('feed');
     setAllowScroll(true);
-    
-    console.log("PRE", isMounted);
-    if (isMounted) {
-      fetchData();
-    }
-    return () => {
-      isMounted = false;
-      console.log("POST", isMounted);
-    }
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageData.tab]);
 
@@ -143,24 +132,14 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
       setResultsForSearchTerm(lastSearchTerm.term.trim());
       setPanelType('feed');
       setAllowScroll(true);
-      if (isMounted) {
-        fetchData();
-      }
-    }
-    return () => {
-      isMounted = false;
+      fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allowSearch]);
   
   useEffect(() => {
     if (pageData.page > 1){
-      if (isMounted) {
-        fetchData();
-      }
-    }
-    return () => {
-      isMounted = false;
+      fetchData();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageData.page]);
@@ -208,7 +187,6 @@ const Feed = ({ setAllowScroll, productsData, setProductsData, tagTerm, setTagTe
     )
   }
 
-  console.log("FEED");
 
   return (
     <div className="feed__scroll-wrapper">
