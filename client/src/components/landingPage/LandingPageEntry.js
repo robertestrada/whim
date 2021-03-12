@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { baseUrl } from '../../config';
 import '../../styles/landingPage.css';
 import LogIn from './login/LogIn.js';
 import SignUp from './signup/SignUp.js';
@@ -9,11 +10,27 @@ const LandingPageEntry = ({ button, setButton, emailLogin, setEmailLogin,
                             passwordLogin, setPasswordLogin, firstNameSignup, 
                             setFirstNameSignup, lastNameSignup, setLastNameSignup,
                             emailSignup, setEmailSignup, passwordSignup, setPasswordSignup,
-                            rcSiteKey, valErrors, handleValidate, handleSubmit, googleCreds,
+                            valErrors, handleValidate, handleSubmit, 
                             signupValidationMsgs, setSignupValidationMsgs, loginValidationMsg,
                             showLoginLoader, setShowLoginLoader, showDemoLoginLoader, setShowDemoLoginLoader,
                             showSignUpLoader, setShowSignUpLoader
                           }) => {
+
+  const [rcSiteKey, setRCSiteKey] = useState('');
+  const [googleCreds, setGoogleCreds] = useState('');
+
+
+  const handleGetSecretKeys = async () => {
+    const secretsFetch = await fetch(`${baseUrl}/backend-keys`);
+    const secretsJSON = await secretsFetch.json();
+    setGoogleCreds({ 'client_id': secretsJSON.client_id, 'api_key': secretsJSON.api_key });
+    setRCSiteKey(secretsJSON.rcSiteKey);
+  };
+
+  useEffect(() => {
+    handleGetSecretKeys();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   return (

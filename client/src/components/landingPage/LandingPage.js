@@ -9,7 +9,7 @@ import LandingPageLoader from './LandingPageLoader';
 import LandingPageEntry from './LandingPageEntry';
 
 
-const LandingPage = ({ googleCreds, rcSiteKey, showSurvey }) => {
+const LandingPage = ({ showSurvey }) => {
   const dispatch = useDispatch();
   const [landingBlurSupported, setLandingBlurSupported] = useState(null);
   const [emailLogin, setEmailLogin] = useState('');
@@ -28,6 +28,7 @@ const LandingPage = ({ googleCreds, rcSiteKey, showSurvey }) => {
   const [showSignUpLoader, setShowSignUpLoader] = useState(false);
   const [showLoginLoader, setShowLoginLoader] = useState(false);
   const [showDemoLoginLoader, setShowDemoLoginLoader] = useState(false);
+
 
   useEffect(() => {
     if (window.CSS.supports(`(filter: blur(48px)) or (-webkit-filter: blur(48px)) or (-moz-filter: blur(48px)) or (-o-filter: blur(48px)) or (-ms-filter: blur(48px))`)) {
@@ -150,7 +151,6 @@ const LandingPage = ({ googleCreds, rcSiteKey, showSurvey }) => {
             setSignupSurvey={setSignupSurvey}
           />
         : <LandingPageEntry
-            googleCreds={googleCreds}
             button={button}
             setButton={setButton}
             emailLogin={emailLogin}
@@ -166,7 +166,6 @@ const LandingPage = ({ googleCreds, rcSiteKey, showSurvey }) => {
             setEmailSignup={setEmailSignup}
             passwordSignup={passwordSignup}
             setPasswordSignup={setPasswordSignup}
-            rcSiteKey={rcSiteKey}
             valErrors={valErrors}
             handleValidate={handleValidate}
             handleSubmit={handleSubmit}
