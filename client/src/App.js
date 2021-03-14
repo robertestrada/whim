@@ -24,6 +24,9 @@ const App = () => {
     return (
         <BrowserRouter>
             <Switch>
+                <Route path="/feed/:tab">
+                    <DashBoard/>
+                </Route>
                 <Route path="/" exact render={
                         showSurvey || needSignIn
                         ?   () => <LandingPage showSurvey={showSurvey}/>
