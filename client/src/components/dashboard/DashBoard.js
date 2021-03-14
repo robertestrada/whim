@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import { loadCart, removeCartItem } from '../../actions/cart';
 import NavBar from './navbar/NavBar';
@@ -12,6 +13,7 @@ import '../../styles/dashboard.css';
 
 const DashBoard = () => {
     const dispatch = useDispatch();
+    const { tab } = useParams()
     const [panelType, setPanelType] = useState('feed');
     const [modalData, setModalData] = useState({ "productId": null, "showModal": false });
     const currentUser = useSelector(state => state.authentication.user);
@@ -32,6 +34,11 @@ const DashBoard = () => {
     const [catShow, setCatShow] = useState(false);
     const [scrollPosition, setScrollPosition] = useState(0);
     
+    useEffect(() => {
+        if (tab){
+            setPageData({ "page": 1, "loadMore": false, "tab": tab });
+        }
+    }, [tab]);
 
 
     useEffect(() => {
