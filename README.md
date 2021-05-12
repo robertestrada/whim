@@ -4,6 +4,7 @@ Whim, a [Wish.com](https://whim-app.herokuapp.com/) clone, is a full-stack singl
 Live Demo: [whim-app.herokuapp.com](https://whim-app.herokuapp.com/)
 <br />
 <br />
+
 ## Technologies
 * Backend: Python / Flask / SQLAlchemy / Alembic / PostgreSQL
 * Frontend: React / Redux / JavaScript / CSS3 / HTML / Google Oauth2 / Google ReCAPTCHA / Webpack / NPM
@@ -11,6 +12,7 @@ Live Demo: [whim-app.herokuapp.com](https://whim-app.herokuapp.com/)
 * Hosting: Heroku / SSL / AWS S3 (images)
 <br />
 <br />
+
 ## Features
 * Secure frontend to backend user authentication using Werkzeug
 * Dashboard displaying infinite feed of products available for purchase
@@ -21,6 +23,7 @@ Live Demo: [whim-app.herokuapp.com](https://whim-app.herokuapp.com/)
 * Developed randomized, infinitely scrolling, and dynamically-resizing image carousels using CSS and React functions to entice user login
 <br />
 <br />
+
 ## User Actions
 #### Authorization & Authentication
 ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-dynamic-1.gif)
@@ -32,6 +35,7 @@ Auth features:
 - When the user attempts to sign up and create an account, Google ReCAPTCHA runs invisibly to make sure the user behavior is legitimately human and prompts the user with an iframe from Google if more verification is necessary.
 <br />
 <br />
+
 ### Dashboard & Feed
 ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-scroll-1.gif)
 ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-filter-1.gif)
@@ -42,6 +46,7 @@ Dashboard & Feed features:
 - The feed shows a feed filter and filtering tabs when a search is executed and displayed in the feed.
 <br />
 <br />
+
 #### Fetching Product Information
 ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-select-product-1.gif)
 <br />
@@ -50,6 +55,7 @@ Fetching features:
 - A further more detailed query is made to display product information through a modal overlay when a product is clicked from the feed.
 <br />
 <br />
+
 #### Search
 ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-search-1.gif)
 <br />
@@ -59,6 +65,7 @@ Search features:
 - A keyword in the list can be selected by cursor or directional keys and tabbing, and set as the search term to find specific products.
 <br />
 <br />
+
 #### Cart
 ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-checkout-1.gif)
 <br />
