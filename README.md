@@ -105,8 +105,10 @@ The whim_server app backend uses Python, Flask, SQLAlchemy, Alembic, and Postgre
 ### **Heroku Deployment & Docker Setup**
 - First, create a new project in Heroku.  
 - Then, under Resources click "Find more add-ons" and add the add on called "Heroku Postgres".  
+- Then, you need to add the trigram postgres extension to Heroku's postgres like you did for your local dev environment.  To do this, in terminal, login to Heroku with "heroku pg:psql -a whim-app", where "whim-app" is the name of your Heroku app.  Then, while noticing the command prompt changing to "whim-app::DATABASE=>" to show that you are in Heroku, use the command "create extension pg_trgm;", and then you will see the confirmation "CREATE EXTENSION".
 - For the environment variables, input the values consistent with what you used for the development.env file, except FLASK_ENV should be set to "production".  The "DATABASE_URL" key will be set automaticcally by heroku/postgres.  
 - Then, install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line) in terminal.  In terminal in the top most folder, run "heroku login", and then log in to the heroku container registry "heroku container:login".  
 - Update the `REACT_APP_BASE_URL` variable in the Dockerfile if you have not already.  This should be the full URL of your react app: i.e. "https://whim-app.herokuapp.com".  
 - Push your docker container to heroku (this will build the dockerfile, and push) with "heroku container:push web -a whim-app", then release your docker container to heroku "heroku container:release web -a whim-app".  
 - Finally, set up your database with "heroku run python -m database -a whim-app".
+- Note that SSL is set up through Heroku's included SSL feature as a bonus.
