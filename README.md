@@ -78,14 +78,14 @@ Cart features:
 ## Installation
 After downloading this repo, you must setup the front-end & back-end apps, as well as deployment files.
 ### Docker Setup
-- In the Dockerfile at the top-level folder, you must set the "REACT_APP_BASE_URL" to the domain you wish to use: i.e. "https://whim-app.herokuapp.com".
+- In the Dockerfile at the top-level folder, you must set the "REACT_APP_BASE_URL" to the domain you wish to use: i.e. ```https://whim-app.herokuapp.com```.
 
 ### Back-end Setup
-The whim_server app backend uses Python, Flask, SQLAlchemy, Alembic, and PostgreSQL for routing, models, and database migrations.  In development, the back-end address is "http://localhost:5000".
+The whim_server app backend uses Python, Flask, SQLAlchemy, Alembic, and PostgreSQL for routing, models, and database migrations.  In development, the back-end address is ```http://localhost:5000```.
 
 *Python Shell Setup:*
-- In the /whim_server folder, you can install the python pip dependencies with: "pipenv install --python=python3".
-- Once installed, you must enter the pipenv shell with "pipenv shell".  You can then start the backend with "flask run".
+- In the /whim_server folder, you can install the python pip dependencies with: ```pipenv install --python=python3```.
+- Once installed, you must enter the pipenv shell with ```pipenv shell```.  You can then start the backend with "flask run".
 
 *.env Setup:*
 - In the top-level folder, you must set your own key values in a .env file that follows the example of the .env.example file.  In particular, the following keys must be created by you: SECRET_KEY, DATABASE_URL, JWT_SECRET_KEY, RC_SITE_KEY, GOOGLE_API_KEY, GOOGLE_CLIENT_ID.  
@@ -93,22 +93,22 @@ The whim_server app backend uses Python, Flask, SQLAlchemy, Alembic, and Postgre
 
 *Database Setup:* 
 - This app uses PostgreSQL for the database, so you will need to create a database with name, username, and password that you then use to adjust the DATABASE_URL key's value.  
-- Also, this app requires installing trigram functionality in postgres.  Log in to postgres's interface in terminal and connect to the database you made with "psql -U <DB_USERNAME>" and then "\c <DB_NAME>".  
-- Install the extension with: "CREATE EXTENSION pg_trgm;".   Then, upgrade the database with the models/tables with "pipenv run flask db upgrade".
-- Then, to seed the database with the users, products, reviews, etc., run the following in the top most folder up a level: "python database.py".  This will take some time (~30 minutes) depending on your computer to create many tens of thousands of seeds.  
-- Also, to re-initialize and run a new migration later, use the following commands in this order in /whim_server: "pipenv run flask db init", "pipenv run flask db migrate -m "create simple_people table"", "pipenv run flask db upgrade".  To downgrade the db, run: "pipenv run flask db downgrade".
+- Also, this app requires installing trigram functionality in postgres.  Log in to postgres's interface in terminal and connect to the database you made with ```psql -U <DB_USERNAME>``` and then ```\c <DB_NAME>```.  
+- Install the extension with: ```CREATE EXTENSION pg_trgm;```.   Then, upgrade the database with the models/tables with ```pipenv run flask db upgrade```.
+- Then, to seed the database with the users, products, reviews, etc., run the following in the top most folder up a level: ```python database.py```.  This will take some time (~30 minutes) depending on your computer to create many tens of thousands of seeds.  
+- Also, to re-initialize and run a new migration later, use the following commands in this order in /whim_server: ```pipenv run flask db init```, ```pipenv run flask db migrate -m "create simple_people table"```, ```pipenv run flask db upgrade```.  To downgrade the db, run: ```pipenv run flask db downgrade```.
 
 ### **Front-end React App Setup**
-- In the /client folder, install dependencies by running "npm install --client".  Then, you can start the client app with "npm start".  The front-end address is "http://localhost:3000".  
+- In the /client folder, install dependencies by running ```npm install --client```.  Then, you can start the client app with ```npm start```.  The front-end address is ```http://localhost:3000```.  
 - The front-end will fetch images from an AWS S3 bucket that have already been pulled and uploaded from real products on Wish.com.  There are 200 products in total, along with AI-generated fake user images and miscellaneous resource images.
 
 ### **Heroku Deployment & Docker Setup**
 - First, create a new project in Heroku.  
-- Then, under Resources click "Find more add-ons" and add the add on called "Heroku Postgres".  
-- Then, you need to add the trigram postgres extension to Heroku's postgres like you did for your local dev environment.  To do this, in terminal, login to Heroku with "heroku pg:psql -a whim-app", where "whim-app" is the name of your Heroku app.  Then, while noticing the command prompt changing to "whim-app::DATABASE=>" to show that you are in Heroku, use the command "create extension pg_trgm;", and then you will see the confirmation "CREATE EXTENSION".
+- Then, under Resources click "Find more add-ons" and add the add-on called "Heroku Postgres".  
+- Then, you need to add the trigram postgres extension to Heroku's postgres like you did for your local dev environment.  To do this, in terminal, login to Heroku with ```heroku pg:psql -a whim-app```, where "whim-app" is the name of your Heroku app.  Then, while noticing the command prompt changing to ```whim-app::DATABASE=>``` to show that you are in Heroku, use the command ```create extension pg_trgm;```, and then you will see the confirmation ```CREATE EXTENSION```.
 - For the environment variables, input the values consistent with what you used for the development.env file, except FLASK_ENV should be set to "production".  The "DATABASE_URL" key will be set automaticcally by heroku/postgres.  
-- Then, install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line) in terminal.  In terminal in the top most folder, run "heroku login", and then log in to the heroku container registry "heroku container:login".  
-- Update the `REACT_APP_BASE_URL` variable in the Dockerfile if you have not already.  This should be the full URL of your react app: i.e. "https://whim-app.herokuapp.com".  
-- Push your docker container to heroku (this will build the dockerfile, and push) with "heroku container:push web -a whim-app", then release your docker container to heroku "heroku container:release web -a whim-app".  
-- Finally, set up your database with "heroku run python -m database -a whim-app".
+- Then, install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-command-line) in terminal.  In terminal in the top most folder, run ```heroku login```, and then log in to the heroku container registry ```heroku container:login```.  
+- Update the "REACT_APP_BASE_URL" variable in the Dockerfile if you have not already.  This should be the full URL of your react app: i.e. ```https://whim-app.herokuapp.com```.  
+- Push your docker container to heroku (this will build the dockerfile, and push) with ```heroku container:push web -a whim-app```, then release your docker container to heroku with ```heroku container:release web -a whim-app```.  
+- Finally, set up your database with ```heroku run python -m database -a whim-app``` which will take at least as long as it did to seed (~30min) for your local development postgres.
 - Note that SSL is set up through Heroku's included SSL feature as a bonus.
