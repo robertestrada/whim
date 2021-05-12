@@ -27,7 +27,8 @@ Live Demo: [whim-app.herokuapp.com](https://whim-app.herokuapp.com/)
 ## User Actions
 #### Authorization & Authentication
 ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-dynamic-1.gif)
-![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-signup-recaptcha-s-1.gif)
+![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-dynamic-2.gif)
+<!-- ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-signup-recaptcha-s-1.gif) -->
 <br />
 Auth features:
 - Users must sign up and login to use any of the apps features.  The user has the option of traditionally signing up or creating an account through Google Oauth2.  
@@ -37,8 +38,8 @@ Auth features:
 <br />
 
 ### Dashboard & Feed
-![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-scroll-1.gif)
-![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-filter-1.gif)
+<!-- ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-scroll-1.gif) -->
+<!-- ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-filter-1.gif) -->
 <br />
 Dashboard & Feed features:
 - Once a user logs in, they are immediately redirected to their dashboard, which shows a product feed, navbar, search bar, and sidecart if there are products in their cart. 
@@ -48,7 +49,7 @@ Dashboard & Feed features:
 <br />
 
 #### Fetching Product Information
-![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-select-product-1.gif)
+<!-- ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-select-product-1.gif) -->
 <br />
 Fetching features:
 - For each product displayed in the feed, an SQLAlchemy query is executed on the backend which produces all the relevant product data, from S3 hosted images to descriptive information.  
@@ -57,7 +58,7 @@ Fetching features:
 <br />
 
 #### Search
-![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-search-1.gif)
+<!-- ![](https://rme-portfolio.s3-us-west-2.amazonaws.com/whim-search-1.gif) -->
 <br />
 Search features:
 - As soon as a user enters a single character into the search field at the top of the Dashboard, a dropdown list of 10 keywords that start with that character immediately displays ranked in order according to most commonly found in all products.  
